@@ -1,0 +1,59 @@
+C51 COMPILER V8.09   RE2                                                                   10/14/2010 14:31:45 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE RE2
+OBJECT MODULE PLACED IN .\Re2.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE .\Re2.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #include <stdio.h>
+   3          #include <string.h>
+   4          #define U8 unsigned char
+   5          #define U16 unsigned int
+   6          
+   7          int add(int a,int b)
+   8          {
+   9   1              return a+b;
+  10   1      }
+  11          
+  12          int sub(int a,int b)
+  13          {
+  14   1              return a-b;
+  15   1      }
+  16          
+  17          int mul(int a,int b)
+  18          {
+  19   1              return a*b;
+  20   1      }
+  21          
+  22          int div(int a,int b)
+  23          {
+  24   1              return a/b;
+  25   1      }
+  26          
+  27          void result(int(*p)(),int a,int b)
+  28          {
+  29   1              int value;
+  30   1              value=(*p)(a,b);
+*** ERROR C267 IN LINE 30 OF .\RE2.C: 'function': requires ANSI-style prototype
+  31   1              return value;
+  32   1      }
+  33          
+  34          void main()
+  35          {
+  36   1              int i=10,j=5,val;
+  37   1              int (*pt)();
+  38   1              pt=add;
+  39   1              val=result(pt,i,j);
+  40   1              pt=sub;
+  41   1              val=result(pt,i,j);
+  42   1              pt=mul;
+  43   1              val=result(pt,i,j);
+  44   1              pt=div;
+  45   1              val=result(pt,i,j);
+  46   1              while(1);
+  47   1      }
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  1 ERROR(S)

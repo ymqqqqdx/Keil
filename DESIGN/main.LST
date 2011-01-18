@@ -1,0 +1,56 @@
+C51 COMPILER V6.12  MAIN                                                                   04/07/2010 20:23:29 PAGE 1   
+
+
+C51 COMPILER V6.12, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\main.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE .\main.c DEBUG OBJECTEXTEND
+
+stmt level    source
+
+   1          #include <reg52.h>
+   2          #include "declare.h"
+   3          unsigned char year,week,month,day,hour,minute,second,i,week,mode;
+   4          unsigned char alarmhour,alarmminute;
+   5          unsigned int val;
+   6          void init7219();
+   7          void write7219one(unsigned char,unsigned char);
+   8          void write7219two(unsigned char,unsigned char);
+   9          void write7219three(unsigned char,unsigned char);
+  10          void refreshtime();
+  11          void refreshsecond();
+  12          void delay(int);
+  13          void adjusttime();
+  14          void displaytime();
+  15          void keyscan();
+  16          void display18b20();
+  17          void displayalarm();
+  18          unsigned char read_clock(unsigned char);
+  19          void main()
+  20          {
+  21   1      	P0=0;
+  22   1      	init7219();
+  23   1      	while(1)
+  24   1      	{
+  25   2      		keyscan();
+  26   2      		if(mode==0)
+  27   2      			displaytime();
+  28   2      		if(mode==1)
+  29   2      			adjusttime();
+  30   2      		if(mode==2)
+  31   2      			displayalarm();
+  32   2      	}
+  33   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     34    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     13    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

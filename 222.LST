@@ -1,0 +1,58 @@
+C51 COMPILER V6.12  222                                                                    01/01/2010 16:22:28 PAGE 1   
+
+
+C51 COMPILER V6.12, COMPILATION OF MODULE 222
+OBJECT MODULE PLACED IN .\222.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE .\222.c DEBUG OBJECTEXTEND
+
+stmt level    source
+
+   1          #include<reg52.h>
+   2          #include<intrins.h>
+   3          #define uint unsigned int;
+   4          #define uchar unsigned char;
+   5          #define ulong	unsigned long int;
+   6          sbit k1=P1^0;
+   7          sbit k2=P1^1;
+   8          sbit k3=P1^2;
+   9          sbit k4=P1^3;
+  10          sbit ln=P2^0;
+  11          sbit ls=P2^1;
+  12          sbit d=P2^6;
+  13          sbit w=P2^7;
+  14          ulong  add,dat[20]=0;
+  15          uchar t,aa,max,min1,min0,sec1,sec0,one;
+  16          uchar code table[]="Number ";
+*** ERROR C247 IN LINE 16 OF .\222.C: non-address/-constant initializer
+  17          uchar code table1[]="0123456789";
+  18          uchar code table2[]=":.";
+  19          void delay(int z)
+  20          {
+  21   1      	int i,j;
+  22   1         for(i=z;i>0;i--)
+  23   1         for(j=110;j>0;j--);
+  24   1      }
+  25          void write_com(uchar com)
+*** ERROR C141 IN LINE 25 OF .\222.C: syntax error near ';'
+  26          {
+  27   1      	ls=0;
+  28   1         P0=com;
+*** ERROR C202 IN LINE 28 OF .\222.C: 'com': undefined identifier
+  29   1         delay(5);
+  30   1         ln=1;
+  31   1         delay(5);
+  32   1         ln=0;
+  33   1      }
+  34          void write_data(uchar date)
+*** ERROR C141 IN LINE 34 OF .\222.C: syntax error near ';'
+  35          {
+  36   1      	ls=1;
+  37   1         P0=date;
+*** ERROR C202 IN LINE 37 OF .\222.C: 'date': undefined identifier
+  38   1         delay(5);
+  39   1         ln=1;
+  40   1         delay(5);
+  41   1         ln=0;
+  42   1      }
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  5 ERROR(S)

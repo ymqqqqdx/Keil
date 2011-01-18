@@ -1,0 +1,407 @@
+C51 COMPILER V8.09   FINAL                                                                 10/15/2010 20:06:23 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE FINAL
+OBJECT MODULE PLACED IN final.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE final.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #include <stdio.h>
+   3          #define U8 unsigned char
+   4          #define U16 unsigned int
+   5          U8 code table[]={0x0c,0xf9,0xa4,0xb0,0x99,0x92,0x82,0xf8,0x80,0x90};
+   6          void delay_1ms(U16 z)
+   7          {
+   8   1              U8 i;
+   9   1              while(z--)
+  10   1                      for(i=0;i<110;i++);
+  11   1      }
+  12          void hc595_write(U8 dat)
+  13          {
+  14   1              U8 i,save_P1=P1;
+  15   1              for(i=0;i<8;i++)
+  16   1              {
+  17   2                      dat<<=1;
+  18   2                      hc595_dat=CY;
+*** ERROR C202 IN LINE 18 OF FINAL.C: 'hc595_dat': undefined identifier
+  19   2                      hc595_clk=0;
+*** ERROR C202 IN LINE 19 OF FINAL.C: 'hc595_clk': undefined identifier
+  20   2                      hc595_clk=1;
+*** ERROR C202 IN LINE 20 OF FINAL.C: 'hc595_clk': undefined identifier
+  21   2              }
+  22   1              hc595_sclk=0;
+*** ERROR C202 IN LINE 22 OF FINAL.C: 'hc595_sclk': undefined identifier
+  23   1              hc595_sclk=1;
+*** ERROR C202 IN LINE 23 OF FINAL.C: 'hc595_sclk': undefined identifier
+  24   1              P1=save_P1;
+  25   1      }
+  26          
+  27          void leds(U16 dat)
+  28          {
+  29   1              U8 temp=0;
+  30   1              temp|=(dat&(0xf<<9))>>5;
+  31   1              temp|=(U8)(bit)(dat&(1<<0))<<1;
+  32   1              temp|=(U8)(bit)(dat&(1<<1))<<0;
+  33   1              temp|=(U8)(bit)(dat&(1<<2))<<3;
+  34   1              temp|=(U8)(bit)(dat&(1<<3))<<2;
+  35   1              hc595_write(temp);
+  36   1              P1=(dat&(0x1f<<4))>>4;
+  37   1      }
+  38          
+  39          void digit(U8 add,U8 dat)
+  40          {
+  41   1              P2=(~1<<(add-1));
+  42   1              OE=0;
+*** ERROR C202 IN LINE 42 OF FINAL.C: 'OE': undefined identifier
+  43   1              P0=table[dat];
+  44   1              clk=0;
+*** ERROR C202 IN LINE 44 OF FINAL.C: 'clk': undefined identifier
+  45   1              clk=1;
+*** ERROR C202 IN LINE 45 OF FINAL.C: 'clk': undefined identifier
+  46   1              delay_1ms(5);
+  47   1      }
+C51 COMPILER V8.09   FINAL                                                                 10/15/2010 20:06:23 PAGE 2   
+
+  48          
+  49          void start()
+  50          {
+  51   1              sda=1;
+*** ERROR C202 IN LINE 51 OF FINAL.C: 'sda': undefined identifier
+  52   1              scl=1;
+*** ERROR C202 IN LINE 52 OF FINAL.C: 'scl': undefined identifier
+  53   1              sda=0;
+*** ERROR C202 IN LINE 53 OF FINAL.C: 'sda': undefined identifier
+  54   1      }
+  55          
+  56          void stop()
+  57          {
+  58   1              sda=0;
+*** ERROR C202 IN LINE 58 OF FINAL.C: 'sda': undefined identifier
+  59   1              scl=1;
+*** ERROR C202 IN LINE 59 OF FINAL.C: 'scl': undefined identifier
+  60   1              sda=1;
+*** ERROR C202 IN LINE 60 OF FINAL.C: 'sda': undefined identifier
+  61   1      }
+  62          
+  63          void response()
+  64          {
+  65   1              U8 i=0;
+  66   1              scl=1;
+*** ERROR C202 IN LINE 66 OF FINAL.C: 'scl': undefined identifier
+  67   1              while(sda==1&&i<250)
+*** ERROR C202 IN LINE 67 OF FINAL.C: 'sda': undefined identifier
+  68   1                      i++;
+  69   1              scl=0;
+*** ERROR C202 IN LINE 69 OF FINAL.C: 'scl': undefined identifier
+  70   1      }
+  71          
+  72          void iic_writeonechar(U8 dat)
+  73          {
+  74   1              U8 i;
+  75   1              for(i=0;i<8;i++)
+  76   1              {
+  77   2                      dat<<=1;
+  78   2                      scl=0;
+*** ERROR C202 IN LINE 78 OF FINAL.C: 'scl': undefined identifier
+  79   2                      sda=CY;
+*** ERROR C202 IN LINE 79 OF FINAL.C: 'sda': undefined identifier
+  80   2                      scl=1;
+*** ERROR C202 IN LINE 80 OF FINAL.C: 'scl': undefined identifier
+  81   2              }
+  82   1              scl=0;
+*** ERROR C202 IN LINE 82 OF FINAL.C: 'scl': undefined identifier
+  83   1              sda=1;
+*** ERROR C202 IN LINE 83 OF FINAL.C: 'sda': undefined identifier
+  84   1              response();
+  85   1      }
+  86          
+  87          U8 iic_readonechar()
+  88          {
+  89   1              U8 i,temp=0;
+  90   1              scl=0;
+*** ERROR C202 IN LINE 90 OF FINAL.C: 'scl': undefined identifier
+  91   1              sda=1;
+*** ERROR C202 IN LINE 91 OF FINAL.C: 'sda': undefined identifier
+  92   1              for(i=0;i<8;i++)
+  93   1              {
+C51 COMPILER V8.09   FINAL                                                                 10/15/2010 20:06:23 PAGE 3   
+
+  94   2                      scl=1;
+*** ERROR C202 IN LINE 94 OF FINAL.C: 'scl': undefined identifier
+  95   2                      temp|=((U8)sda)<<(7-i);
+*** ERROR C202 IN LINE 95 OF FINAL.C: 'sda': undefined identifier
+  96   2                      scl=0;
+*** ERROR C202 IN LINE 96 OF FINAL.C: 'scl': undefined identifier
+  97   2              }
+  98   1              return temp;
+  99   1      }
+ 100          
+ 101          void iic_write(U8 add,U8 dat)
+ 102          {
+ 103   1              start();
+ 104   1              iic_writeonechar(0xa0);
+ 105   1              iic_writeonechar(add);
+ 106   1              iic_writeonechar(dat);
+ 107   1              stop();
+ 108   1      }
+ 109          
+ 110          U8 iic_read(U8 add)
+ 111          {
+ 112   1              U8 temp;
+ 113   1              start();
+ 114   1              iic_writeonechar(0xa0);
+ 115   1              iic_writeonechar(add);
+ 116   1              start();
+ 117   1              iic_writeonechar(0xa1);
+ 118   1              temp=iic_readonechar();
+ 119   1              return temp;
+ 120   1      }
+ 121          
+ 122          void iic_init()
+ 123          {
+ 124   1              scl=1;
+*** ERROR C202 IN LINE 124 OF FINAL.C: 'scl': undefined identifier
+ 125   1              sda=1;
+*** ERROR C202 IN LINE 125 OF FINAL.C: 'sda': undefined identifier
+ 126   1      }
+ 127          
+ 128          void temp_init()
+ 129          {
+ 130   1              bit s;
+ 131   1              DQ=1;
+*** ERROR C202 IN LINE 131 OF FINAL.C: 'DQ': undefined identifier
+ 132   1              delayus(8);
+ 133   1              DQ=0;
+ 134   1              delayus(80);
+ 135   1              DQ=1;
+ 136   1              delayus(14);
+ 137   1              s=DQ;
+ 138   1              delayus(20);
+ 139   1      }
+ 140          
+ 141          void temp_writeonechar(U8 dat)
+ 142          {
+ 143   1              U8 i;
+ 144   1              for(i=0;i<8;i++)
+ 145   1              {
+ 146   2                      dat>>=1;
+ 147   2                      DQ=0;
+ 148   2                      DQ=CY;
+ 149   2                      delayus(5);
+C51 COMPILER V8.09   FINAL                                                                 10/15/2010 20:06:23 PAGE 4   
+
+ 150   2                      DQ=1;
+ 151   2              }
+ 152   1              delayus(4);
+ 153   1      }
+ 154          
+ 155          U8 temp_readonechar()
+ 156          {
+ 157   1              U8 i,temp=0;
+ 158   1              for(i=0;i<8;i++)
+ 159   1              {
+ 160   2                      DQ=0;
+ 161   2                      DQ=1;
+ 162   2                      temp|=((U8)DQ)<<i;
+ 163   2                      delayus(4);
+ 164   2              }
+ 165   1              return temp;
+ 166   1      }
+ 167          
+ 168          U16 temp_read()
+ 169          {
+ 170   1              U16 t;
+ 171   1              float tt;
+ 172   1              U8 low,high;
+ 173   1              temp_init();
+ 174   1              temp_writeonechar(0xcc);
+ 175   1              temp_writeonechar(0x44);
+ 176   1              temp_init();
+ 177   1              temp_writeonechar(0xcc);
+ 178   1              temp_writeonechar(0xbe);
+ 179   1              low=temp_readonechar();
+ 180   1              high=temp_readonechar();
+ 181   1              t=high;
+ 182   1              t<<=8;
+ 183   1              t|=low;
+ 184   1              tt=t*0.0625;
+ 185   1              t=tt*10+0.5;
+ 186   1              return t;
+ 187   1      }
+ 188          
+ 189          void temp_rom()
+ 190          {
+ 191   1              U8 i;
+ 192   1              temp_init();
+ 193   1              temp_writeonechar(0x33);
+ 194   1              for(i=0;i<8;i++)
+ 195   1                      printf(" %x ",temp_readonechar());
+ 196   1      }
+ 197          
+ 198          void lcd_writeonechar(U8 dat)
+ 199          {
+ 200   1              U8 i;
+ 201   1              for(i=0;i<8;i++)
+ 202   1              {
+ 203   2                      dat<<=1;
+ 204   2                      lcd_sid=CY;
+ 205   2                      lcd_clk=0;
+ 206   2                      lcd_clk=1;
+ 207   2              }
+ 208   1      }
+ 209          
+ 210          void lcd_writecd(bit cd,U8 dat)
+ 211          {
+C51 COMPILER V8.09   FINAL                                                                 10/15/2010 20:06:23 PAGE 5   
+
+ 212   1              lcd_cs=1;
+ 213   1              lcd_writeonechar(cd==0?0xf8:0xfa);
+ 214   1              lcd_writeonechar(dat&0xf0);
+ 215   1              lcd_writeonechar(dat<<4);
+ 216   1              lcd_cs=0;
+ 217   1      }
+ 218          
+ 219          void lcd_string(U8 add,U8 *pt)
+ 220          {
+ 221   1              lcd_writecd(0,add);
+ 222   1              while(*pt!='\0')
+ 223   1                      lcd_writecd(1,*pt++);
+ 224   1      }
+ 225          
+ 226          void rtc_writeonechar(U8 dat)
+ 227          {
+ 228   1              U8 i;
+ 229   1              for(i=0;i<8;i++)
+ 230   1              {
+ 231   2                      dat>>=1;
+ 232   2                      rtc_clk=0;
+ 233   2                      rtc_dat=CY;
+ 234   2                      rtc_clk=1;
+ 235   2              }
+ 236   1      }
+ 237          
+ 238          U8 rtc_readonechar()
+ 239          {
+ 240   1              U8 i,temp=0;
+ 241   1              for(i=0;i<8;i++)
+ 242   1              {
+ 243   2                      rtc_clk=0;
+ 244   2                      temp|=((U8)rtc_dat)<<i;
+ 245   2                      rtc_clk=1;
+ 246   2              }
+ 247   1              return temp/16*10+temp%16;
+ 248   1      }
+ 249          
+ 250          void rtc_write(U8 add,U8 dat)
+ 251          {
+ 252   1              rtc_rst=0;
+ 253   1              rtc_clk=0;
+ 254   1              rtc_rst=1;
+ 255   1              rtc_writeonechar(add);
+ 256   1              rtc_writeonechar((dat/10)<<4|dat%10);
+ 257   1              rtc_rst=0;
+ 258   1      }
+ 259          
+ 260          U8 rtc_read(U8 add)
+ 261          {
+ 262   1              U8 temp=0;
+ 263   1              rtc_rst=0;
+ 264   1              rtc_clk=0;
+ 265   1              rtc_rst=1;
+ 266   1              rtc_writeonechar(add|1);
+ 267   1              temp=rtc_readonechar();
+ 268   1              rtc_rst=0;
+ 269   1              return temp;
+ 270   1      }
+ 271          
+ 272          void hd_longdelay()
+ 273          {
+C51 COMPILER V8.09   FINAL                                                                 10/15/2010 20:06:23 PAGE 6   
+
+ 274   1              U8 i;
+ 275   1              for(i=0;i<50;i++);
+ 276   1      }
+ 277          
+ 278          void hd_shortdelay()
+ 279          {
+ 280   1              U8 i;
+ 281   1              for(i=0;i<8;i++);
+ 282   1      }
+ 283          
+ 284          void hd_writeonechar(U8 dat)
+ 285          {
+ 286   1              U8 i;
+ 287   1              hd_cs=0;
+ 288   1              hd_dat=0;
+ 289   1              hd_longdelay();
+ 290   1              for(i=0;i<8;i++)
+ 291   1              {
+ 292   2                      dat<<=1;
+ 293   2                      hd_dat=CY;
+ 294   2                      hd_clk=1; hd_shortdelay();
+ 295   2                      hd_clk=0; hd_shortdelay();
+ 296   2              }
+ 297   1              hd_dat=0;
+ 298   1      }
+ 299          
+ 300          U8 hd_readonechar()
+ 301          {
+ 302   1              U8 i,temp=0;
+ 303   1              hd_dat=1;
+ 304   1              hd_longdelay();
+ 305   1              for(i=0;i<8;i++)
+ 306   1              {
+ 307   2                      hd_clk=1; hd_shortdelay();
+ 308   2                      temp|=((U8)hd_dat)<<(7-i);
+ 309   2                      hd_clk=0; hd_shortdelay();
+ 310   2              }
+ 311   1              hd_dat=0;
+ 312   1      }
+ 313          
+ 314          void hd_write(U8 cmd,U8 dat)
+ 315          {
+ 316   1              hd_writeonechar(cmd);
+ 317   1              hd_writeonechar(dat);
+ 318   1      }
+ 319          
+ 320          U8 hd_read(U8 cmd)
+ 321          {
+ 322   1              hd_writeonechar(cmd);
+ 323   1              return(hd_readonechar());
+ 324   1      }
+ 325          
+ 326          U8 ad_read()
+ 327          {
+ 328   1              U8 i,temp=0;
+ 329   1              ad_cs=0;
+ 330   1              for(i=0;i<8;i++)
+ 331   1              {
+ 332   2                      temp|=((U8)ad_dat)<<(7-i);
+ 333   2                      ad_clk=1;
+ 334   2                      ad_clk=0;
+ 335   2              }
+C51 COMPILER V8.09   FINAL                                                                 10/15/2010 20:06:23 PAGE 7   
+
+ 336   1              ad_cs=1;
+ 337   1              return temp;
+ 338   1      }
+ 339          
+ 340          void da_write(U16 dat)
+ 341          {
+ 342   1              U8 i;
+ 343   1              dat<<=2;
+ 344   1              dat|=0x02;
+ 345   1              da_cs=0;
+ 346   1              for(i=0;i<16;i++)
+ 347   1              {
+ 348   2                      dat<<=1;
+ 349   2                      da_clk=1;
+ 350   2                      da_dat=CY;
+ 351   2                      da_clk=0;
+ 352   2              }
+ 353   1              da_cs=1;
+ 354   1      }
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  30 ERROR(S)

@@ -1,0 +1,4 @@
+"ds18b20.obj",
+"ds18b20e.obj" 
+TO "ds18b20" 
+RAMSIZE(256) 

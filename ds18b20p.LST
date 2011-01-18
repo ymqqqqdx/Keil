@@ -1,0 +1,38 @@
+C51 COMPILER V6.12  DS18B20P                                                               01/17/2010 20:06:36 PAGE 1   
+
+
+C51 COMPILER V6.12, COMPILATION OF MODULE DS18B20P
+OBJECT MODULE PLACED IN .\ds18b20p.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE .\ds18b20p.c DEBUG OBJECTEXTEND
+
+stmt level    source
+
+   1          #include "reg52.h"
+   2          #include "1602.h"
+   3          #include "ds18b20p.h"
+   4          //#include "mscomm.h"
+   5          unsigned int tt;
+   6          void main()
+   7          {
+   8   1      		init_1602();
+   9   1      	//	init_comm();
+  10   1      	while(1)
+  11   1      	{   
+  12   2      
+  13   2      		displayfour(0x40+3,readtemp());
+  14   2      	} 
+  15   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    543    ----
+   CONSTANT SIZE    =     70    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      9      12
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

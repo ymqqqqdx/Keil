@@ -1,0 +1,172 @@
+C51 COMPILER V8.09   MAIN                                                                  04/27/2010 20:20:21 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE main.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #define uchar unsigned char
+   3          #define uint unsigned int
+   4          sbit i1=P0^0;
+   5          sbit i2=P0^1;
+   6          sbit i3=P0^2;
+   7          sbit i4=P0^3;
+   8          sbit wei1=P2^0;
+   9          sbit wei2=P2^1;
+  10          uchar keyvalue=0,keyvalueold=0;
+  11          uchar key;
+  12          uchar code table[]={0x3f,0x06,0x5b,0x4f,0x66,0x6d,0x7d,0x07,0x7f,0x6f};
+  13          void delay(int z)
+  14          {
+  15   1              uchar i,j;
+  16   1              for(i=z;i>0;i--)
+  17   1                      for(j=110;j>0;j--);
+  18   1      }
+  19          uchar keyscan()
+  20          {
+  21   1              P0=0xfe;
+  22   1              if(i2==0)
+  23   1              {
+  24   2                      i1=1;
+  25   2                      if(i2==0) keyvalue=14;
+  26   2                      else keyvalue=1;
+  27   2                      while(i2==0);
+  28   2                      goto end;
+  29   2              }
+  30   1              if(i3==0)
+  31   1              {
+  32   2                      i1=1;
+  33   2                      if(i3==0) keyvalue=15;
+  34   2                      else keyvalue=2;
+  35   2                      while(i3==0);
+  36   2                      goto end;
+  37   2              }
+  38   1              if(i4==0)
+  39   1              {
+  40   2                      i1=1;
+  41   2                      if(i4==0) keyvalue=16;
+  42   2                      else keyvalue=3;
+  43   2                      while(i3==0);
+  44   2                      goto end;
+  45   2              }
+  46   1              P0=0xfd;
+  47   1              if(i3==0)
+  48   1              {
+  49   2                      i2=1;
+  50   2                      if(i3==0) keyvalue=15;
+  51   2                      else keyvalue=4;
+  52   2                      while(i3==0);
+  53   2                      goto end;
+  54   2              }
+  55   1              if(i4==0)
+C51 COMPILER V8.09   MAIN                                                                  04/27/2010 20:20:21 PAGE 2   
+
+  56   1              {
+  57   2                      i2=1;
+  58   2                      if(i4==0) keyvalue=16;
+  59   2                      else keyvalue=5;
+  60   2                      while(i3==0);
+  61   2                      goto end;
+  62   2              }
+  63   1              P0=0xfb;
+  64   1              if(i4==0)
+  65   1              {
+  66   2                      i3=1;
+  67   2                      if(i4==0) keyvalue=16;
+  68   2                      else keyvalue=6;
+  69   2                      while(i4==0);
+  70   2                      goto end;
+  71   2              }
+  72   1              P0=0xf7;
+  73   1              if(i1==0)
+  74   1              {
+  75   2                      i4=1;
+  76   2                      if(i1==0) keyvalue=13;
+  77   2                      else keyvalue=7;
+  78   2                      while(i1==0);
+  79   2                      goto end;
+  80   2              }
+  81   1              if(i2==0)
+  82   1              {
+  83   2                      i4=1;
+  84   2                      if(i2==0) keyvalue=14;
+  85   2                      else keyvalue=8;
+  86   2                      while(i2==0);
+  87   2                      goto end;
+  88   2              }
+  89   1              if(i3==0)
+  90   1              {
+  91   2                      i4=1;
+  92   2                      if(i3==0) keyvalue=15;
+  93   2                      else keyvalue=9;
+  94   2                      while(i3==0);
+  95   2                      goto end;
+  96   2              }
+  97   1              P0=0xfb;
+  98   1              if(i1==0)
+  99   1              {
+ 100   2                      i3=1;
+ 101   2                      if(i1==0) keyvalue=13;
+ 102   2                      else keyvalue=10;
+ 103   2                      while(i1==0);
+ 104   2                      goto end;
+ 105   2              }
+ 106   1              if(i2==0)
+ 107   1              {
+ 108   2                      i3=1;
+ 109   2                      if(i2==0) keyvalue=13;
+ 110   2                      else keyvalue=11;
+ 111   2                      while(i2==0);
+ 112   2                      goto end;
+ 113   2              }
+ 114   1              P0=0xfd;
+ 115   1              if(i1==0)
+ 116   1              {
+ 117   2                      i2=1;
+C51 COMPILER V8.09   MAIN                                                                  04/27/2010 20:20:21 PAGE 3   
+
+ 118   2                      if(i1==0) keyvalue=13;
+ 119   2                      else keyvalue=12;
+ 120   2                      while(i1==0);
+ 121   2                      goto end;
+ 122   2              }
+ 123   1              end: 
+ 124   1              if(keyvalue!=keyvalueold)
+ 125   1              {
+ 126   2                      return keyvalue;
+ 127   2                      keyvalueold=keyvalue;
+ 128   2              }
+ 129   1      }
+ 130          void main()
+ 131          {
+ 132   1              while(1)
+ 133   1              {
+ 134   2                      key=keyscan();
+ 135   2                      wei1=0; wei2=1;
+ 136   2                      P1=table[key/10];
+ 137   2                      delay(5);
+ 138   2                      P1=0x00;
+ 139   2                      
+ 140   2                      wei1=1; wei2=0;
+ 141   2                      P1=table[key%10];
+ 142   2                      delay(5);
+ 143   2                      P1=0x00;
+ 144   2              }
+ 145   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    360    ----
+   CONSTANT SIZE    =     10    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      3    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

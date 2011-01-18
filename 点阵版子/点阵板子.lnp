@@ -1,0 +1,5 @@
+"STARTUP.obj",
+"main.obj",
+"EEPROM.obj" 
+TO "ЕуеѓАхзг" 
+RAMSIZE(256) 

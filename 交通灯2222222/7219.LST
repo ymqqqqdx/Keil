@@ -1,0 +1,63 @@
+C51 COMPILER V8.09   7219                                                                  07/23/2010 14:28:54 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE 7219
+OBJECT MODULE PLACED IN 7219.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE 7219.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #define decode_mode 0X09 //解码模式，0xff全部解码，0x0f解前四个
+   3          #define intensity 0x0a
+   4          #define scan_limit 0x0b//扫描限度，0x00-0x07
+   5          #define shut_down 0x0c//关闭模式，0x00为关机,0x01为正常
+   6          #define display_test 0x0f//显示模式
+   7          
+   8          sbit load=P2^1;
+   9          sbit din=P2^0;//data in
+  10          sbit clk=P2^2;//clock
+  11          
+  12          void write7219onechar(unsigned char temp)
+  13          {
+  14   1              unsigned char i;
+  15   1              for(i=0;i<8;i++)
+  16   1              {
+  17   2                      clk=0;
+  18   2                      din=(bit)(temp&0x80);
+  19   2                      temp<<=1;
+  20   2                      clk=1;
+  21   2              }
+  22   1      }
+  23          
+  24          void write7219(unsigned char address,unsigned char dat)
+  25          {
+  26   1              load=0;
+  27   1              write7219onechar(address);
+  28   1              write7219onechar(dat);
+  29   1              load=1;
+  30   1      }
+  31          
+  32          
+  33          void init7219()
+  34          {
+  35   1              write7219(shut_down,0x01);
+  36   1              write7219(display_test,0x00);
+  37   1              write7219(decode_mode,0xff);
+  38   1              write7219(scan_limit,0x07);
+  39   1              write7219(intensity,0x04);
+  40   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     66    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

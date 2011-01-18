@@ -1,0 +1,52 @@
+C51 COMPILER V8.09   MAIN                                                                  10/09/2010 20:37:28 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE main.c LARGE BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #define U8 unsigned char
+   3          #define U16 unsigned int
+   4          sbit clk=P3^6;
+   5          sbit OE=P2^4;
+   6          U8 code table[]={0xC0,/*0*/0xF9,/*1*/0xA4,/*2*/0xB0,/*3*/0x99,/*4*/0x92,/*5*/0x82,/*6*/0xF8,/*7*/0x80,/*8*
+             -/0x90,/*9*/};
+   7          void delay(U16 z)
+   8          {
+   9   1              U8 i;
+  10   1              while(z--)
+  11   1                      for(i=0;i<110;i++);
+  12   1      }
+  13          void main()
+  14          {
+  15   1              U8 i;
+  16   1              while(1)
+  17   1              {
+  18   2                      for(i=0;i<4;i++)
+  19   2                      {
+  20   3                              P2=~(1<<i);
+  21   3                              OE=0;
+  22   3                              P0=table[i+1];
+  23   3                              clk=0;
+  24   3                              clk=1;
+  25   3                              delay(5);
+  26   3                      }
+  27   2              }
+  28   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     65    ----
+   CONSTANT SIZE    =     10    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

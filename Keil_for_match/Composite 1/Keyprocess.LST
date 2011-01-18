@@ -1,0 +1,71 @@
+C51 COMPILER V8.09   KEYPROCESS                                                            10/08/2010 19:08:44 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE KEYPROCESS
+OBJECT MODULE PLACED IN Keyprocess.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Keyprocess.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #include <declare.h>
+   3          extern U8 stat,offset,count,key_record;
+   4          extern RTC time;
+   5          void key_process(U8 key)
+   6          {
+   7   1              if(key>10)
+   8   1              {
+   9   2                      switch(key)
+  10   2                      {
+  11   3                              case 11 : if(offset==4) offset++; if(offset<6) lcd_position(++offset); break;
+  12   3                              case 12 : if(offset==6) offset--; if(offset>0) lcd_position(--offset); break;
+  13   3                              case 13 : stat=0; rtc_writertc(); lcd_normal_init(); break;
+  14   3                              case 14 : stat=1; lcd_adjust_init(); break;
+  15   3                      }
+  16   2              }
+  17   1              else if(stat==1)
+  18   1              {
+  19   2                      if(count==0)
+  20   2                      {
+  21   3                              lcd_position(offset);
+  22   3                              lcd_writecd(DATA,' ');
+  23   3                              lcd_writecd(DATA,' ');
+  24   3                              lcd_position(offset);
+  25   3                              lcd_writecd(DATA,key+'0');
+  26   3                              count++;
+  27   3                              key_record=10*key;
+  28   3                      }
+  29   2                      else
+  30   2                      {
+  31   3                              lcd_writecd(DATA,key+'0');
+  32   3                              lcd_position(offset);
+  33   3                              count=0;
+  34   3                              key_record+=key;
+  35   3                              if(!rtc_range(offset,key_record))
+  36   3                                      rtc_settime(offset,key_record);
+  37   3                              else
+  38   3                              {
+  39   4                                      lcd_position(offset);
+  40   4                                      lcd_writecd(DATA,range[offset][0]/10+'0');
+  41   4                                      lcd_writecd(DATA,range[offset][0]%10+'0');
+  42   4                                      lcd_position(offset);
+  43   4                              }
+  44   3                      }
+  45   2              }
+  46   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    257    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       1
+   IDATA SIZE       =   ----    ----
+C51 COMPILER V8.09   KEYPROCESS                                                            10/08/2010 19:08:44 PAGE 2   
+
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

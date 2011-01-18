@@ -1,0 +1,159 @@
+C51 COMPILER V8.09   MAIN                                                                  10/10/2010 18:33:51 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE main.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #include <stdio.h>
+   3          #define U8 unsigned char
+   4          #define U16 unsigned int
+   5          #define JUMP 0xcc
+   6          #define START 0x44
+   7          #define READ 0xbe
+   8          sbit DQ=P1^0;
+   9          sbit clk=P3^6;
+  10          sbit OE=P2^4;
+  11          U8 code table[]={0xC0,/*0*/0xF9,/*1*/0xA4,/*2*/0xB0,/*3*/0x99,/*4*/0x92,/*5*/0x82,/*6*/0xF8,/*7*/0x80,/*8*
+             -/0x90,/*9*/};
+  12          void delay(U16 z)
+  13          {       
+  14   1              U8 i;
+  15   1              while(z--)
+  16   1                      for(i=0;i<110;i++);
+  17   1      }
+  18          void delayus(U16 z)
+  19          {
+  20   1              while(z--);
+  21   1      }
+  22          void Uart_Init()
+  23          {
+  24   1              REN=1;
+  25   1              SCON=0x52;
+  26   1              TMOD=0X21;
+  27   1              TH1=0XFD;
+  28   1              TL1=0XFD;
+  29   1              TR1=1;
+  30   1              SM0=0;
+  31   1              SM1=1;
+  32   1              EA=1;
+  33   1      }
+  34          bit DS18B20_Init()
+  35          {
+  36   1              bit s;
+  37   1              DQ=1;
+  38   1              delayus(8);
+  39   1              DQ=0;
+  40   1              delayus(80);
+  41   1              DQ=1;
+  42   1              delayus(14);
+  43   1              s=DQ;
+  44   1              delayus(20);
+  45   1              return s;
+  46   1      }
+  47          U8 Read_One_Char(void)
+  48          {
+  49   1              U8 i,temp=0;
+  50   1              for(i=0;i<8;i++)
+  51   1              {
+  52   2                      DQ=0;
+  53   2                      DQ=1;
+  54   2                      temp|=((U8)DQ)<<i;
+C51 COMPILER V8.09   MAIN                                                                  10/10/2010 18:33:51 PAGE 2   
+
+  55   2                      delayus(4);
+  56   2              }
+  57   1              return temp;
+  58   1      }
+  59          void Write_One_Char(U8 dat)
+  60          {
+  61   1              U8 i;
+  62   1              for(i=0;i<8;i++)
+  63   1              {
+  64   2                      dat>>=1;
+  65   2                      DQ=0;
+  66   2                      DQ=CY;
+  67   2                      delayus(5);
+  68   2                      DQ=1;
+  69   2              }
+  70   1              delayus(4);
+  71   1      }
+  72          U16 Read_Tempreture()
+  73          {
+  74   1              U8 low=0,high=0;
+  75   1              U16 t=0;
+  76   1              float tt=0;
+  77   1              DS18B20_Init();
+  78   1              Write_One_Char(JUMP);
+  79   1              Write_One_Char(START);
+  80   1              DS18B20_Init();
+  81   1              Write_One_Char(JUMP);
+  82   1              Write_One_Char(READ);
+  83   1              low=Read_One_Char();
+  84   1              high=Read_One_Char();
+  85   1              t=high;
+  86   1              t<<=8;
+  87   1              t|=low;
+  88   1              tt=t*0.0625;
+  89   1              t=tt*10+0.5;
+  90   1              return(t);
+  91   1      }
+  92          void Display(U16 dat)
+  93          {
+  94   1              U8 shi,ge,one;
+  95   1              shi=dat/100;
+  96   1              ge=dat%100/10;
+  97   1              one=dat%10;
+  98   1              P2=~(1<<1);
+  99   1              OE=0;
+ 100   1              P0=table[shi];
+ 101   1              clk=0;
+ 102   1              clk=1;
+ 103   1              delay(3);
+ 104   1              P2=~(1<<2);
+ 105   1              OE=0;
+ 106   1              P0=table[ge]&0x7f;
+ 107   1              clk=0;
+ 108   1              clk=1;
+ 109   1              delay(3);
+ 110   1              P2=~(1<<3);
+ 111   1              OE=0;
+ 112   1              P0=table[one];
+ 113   1              clk=0;
+ 114   1              clk=1;
+ 115   1      }
+ 116          void main()
+C51 COMPILER V8.09   MAIN                                                                  10/10/2010 18:33:51 PAGE 3   
+
+ 117          {
+ 118   1              U16 temp,tempold;
+ 119   1              Uart_Init();
+ 120   1              puts("\n###################Tempreture###################\n");
+ 121   1              while(1)
+ 122   1              {
+ 123   2                      temp=Read_Tempreture();
+ 124   2                      Display(temp);
+ 125   2                      if(temp!=tempold)
+ 126   2                      {
+ 127   3                              printf("Tempreture:%.1f\n",((float)temp)/10);
+ 128   3                              tempold=temp;
+ 129   3                      }
+ 130   2              }
+ 131   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    454    ----
+   CONSTANT SIZE    =     78    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----      10
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----       1
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

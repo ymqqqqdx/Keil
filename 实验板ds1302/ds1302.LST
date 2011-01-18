@@ -1,0 +1,123 @@
+C51 COMPILER V6.12  DS1302                                                                 03/28/2010 13:33:41 PAGE 1   
+
+
+C51 COMPILER V6.12, COMPILATION OF MODULE DS1302
+OBJECT MODULE PLACED IN .\ds1302.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE .\ds1302.h DEBUG OBJECTEXTEND
+
+stmt level    source
+
+   1          #include <reg52.h>
+   2          #define readyear read_clock(0x8d)
+   3          #define readweek read_clock(0x8b)
+   4          #define readmonth read_clock(0x89)
+   5          #define readday read_clock(0x87)
+   6          #define readhour read_clock(0x85)
+   7          #define readminute read_clock(0x83)
+   8          #define readsecond read_clock(0x81)
+   9          #define writeyear write_clock(0x8c,year)
+  10          #define writeweek write_clock(0x8a,week)
+  11          #define writemonth write_clock(0x88,month)
+  12          #define writeday write_clock(0x86,day)
+  13          #define writehour write_clock(0x84,hour)
+  14          #define writeminute write_clock(0x82,minute)
+  15          #define writesecond write_clock(0x80,second)
+  16          sbit  DS1302_CLK = P3^7;              //实时时钟时钟线引脚 
+  17          sbit  DS1302_IO  = P3^6;              //实时时钟数据线引脚 
+  18          sbit  DS1302_RST = P2^5;              //实时时钟复位线引脚
+  19          sbit  ACC0 = ACC^0;
+  20          sbit  ACC7 = ACC^7;
+  21          static xdata unsigned char year;
+  22          static xdata unsigned char week;
+  23          static xdata unsigned char month;
+  24          static xdata unsigned char day;
+  25          static xdata unsigned char hour;
+  26          static xdata unsigned char minute;
+  27          static xdata unsigned char second;
+  28          unsigned char bcdconvert(unsigned char bcd)
+  29          {
+  30   1      	unsigned char target;
+  31   1      	target=bcd>>4;
+  32   1      	target=target*10+(bcd&=0x0f);
+  33   1      	return(target);
+  34   1      }
+  35          unsigned char convertbcd(unsigned char ten)
+  36          {
+  37   1      	unsigned char bcd,a,b;
+  38   1      	a=ten/10;
+  39   1      	b=ten%10;
+  40   1      	a=a<<4;
+  41   1      	bcd=(a&=0xf0)+(b&=0x0f);
+  42   1      	return(bcd);
+  43   1      }
+  44          void DS1302InputByte(unsigned char d) 	//实时时钟写入一字节(内部函数)
+  45          { 
+  46   1          unsigned char i;
+  47   1          ACC = d;
+  48   1          for(i=8; i>0; i--)
+  49   1          {
+  50   2              DS1302_IO = ACC0;           	//相当于汇编中的 RRC
+  51   2              DS1302_CLK = 1;
+  52   2              DS1302_CLK = 0;
+  53   2              ACC = ACC >> 1; 
+  54   2          } 
+  55   1      }
+C51 COMPILER V6.12  DS1302                                                                 03/28/2010 13:33:41 PAGE 2   
+
+  56          unsigned char DS1302OutputByte(void) 	//实时时钟读取一字节(内部函数)
+  57          { 
+  58   1          unsigned char i;
+  59   1          for(i=8; i>0; i--)
+  60   1          {
+  61   2              ACC = ACC >>1;         			//相当于汇编中的 RRC 
+  62   2              ACC7 = DS1302_IO;
+  63   2              DS1302_CLK = 1;
+  64   2              DS1302_CLK = 0;
+  65   2          } 
+  66   1          return(ACC); 
+  67   1      }
+  68          void write_clock(unsigned char ucAddr, unsigned char ucDa)	//ucAddr: DS1302地址, ucData: 要写的数据
+  69          {
+  70   1          DS1302_RST = 0;
+  71   1          DS1302_CLK = 0;
+  72   1          DS1302_RST = 1;
+  73   1          DS1302InputByte(ucAddr);       	// 地址，命令 
+  74   1          DS1302InputByte(convertbcd(ucDa));       	// 写1Byte数据
+  75   1          DS1302_CLK = 1;
+  76   1          DS1302_RST = 0;
+  77   1      } 
+  78          unsigned char read_clock(unsigned char ucAddr)	//读取DS1302某地址的数据
+  79          {
+  80   1          unsigned char ucData;
+  81   1          DS1302_RST = 0;
+  82   1          DS1302_CLK = 0;
+  83   1          DS1302_RST = 1;
+  84   1          DS1302InputByte(ucAddr|0x01);        // 地址，命令 
+  85   1          ucData = DS1302OutputByte();         // 读1Byte数据
+  86   1          DS1302_CLK = 1;
+  87   1          DS1302_RST = 0;
+  88   1          return(bcdconvert(ucData));
+  89   1      }
+  90          void init_ds1302()
+  91          {
+  92   1      	year=10; writeyear;
+  93   1      	month=3; writemonth;
+  94   1      	day=15; writeday;
+  95   1      	hour=17; writehour;
+  96   1      	minute=41; writeminute;
+  97   1      	second=14; writesecond;
+  98   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    197    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =      7    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

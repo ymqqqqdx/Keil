@@ -1,0 +1,37 @@
+C51 COMPILER V8.09   COMM_INIT                                                             05/04/2010 22:04:48 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE COMM_INIT
+OBJECT MODULE PLACED IN comm_init.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE 实验板实验\comm_init.c DEBUG OBJECTEXTEND PRINT(.\comm_init.lst) OBJECT(com
+                    -m_init.obj)
+
+line level    source
+
+   1          #include <reg52.h>
+   2          void comm_init()
+   3          {
+   4   1              REN=1; //串行允许
+   5   1              SCON=0x52;
+   6   1              TMOD=0X21;//设置定时器1工作方式
+   7   1              TH1=0XF3;//装初值
+   8   1              TL1=0XF3;//装初值
+   9   1              TR1=1;//打开定时器1
+  10   1              SM0=0; //设置方式1
+  11   1              SM1=1;
+  12   1              EA=1;
+  13   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     23    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

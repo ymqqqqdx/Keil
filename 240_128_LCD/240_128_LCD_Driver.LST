@@ -1,0 +1,150 @@
+C51 COMPILER V8.09   240_128_LCD_DRIVER                                                    06/09/2010 21:45:55 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE 240_128_LCD_DRIVER
+OBJECT MODULE PLACED IN 240_128_LCD_Driver.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE 240_128_LCD_Driver.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include<reg52.h>
+   2          #define uchar unsigned char
+   3          #define uint unsigned int 
+   4          sbit ce=P2^7;
+   5          sbit rw=P3^6;
+   6          sbit rd=P3^7;
+   7          sbit cd=P2^6;
+   8          sbit rst=P2^5;
+   9          uint address;
+  10          uchar data1,data2,cmd;
+  11          void clear();
+  12          void delay(uint z)
+  13          {
+  14   1              uint i,j;
+  15   1              for(i=z;i>0;i--)
+  16   1                      for(j=110;j>0;j--);
+  17   1      }
+  18          //void delayus(uint z)
+  19          //{
+  20          //      while(z--);
+  21          //}
+  22          void writedata(uchar dat)           //写数据    
+  23          {    ce=1;
+  24   1           cd=0;
+  25   1          rw=0;
+  26   1           P0=dat; 
+  27   1       //  delayus(10);
+  28   1      
+  29   1              ce=0;
+  30   1           rw=1;
+  31   1      }   
+  32          void writecommand(uchar cmd)           //写命令    
+  33          {   ce=1;
+  34   1           cd=1;
+  35   1           rw=0;
+  36   1           P0=cmd;
+  37   1      //delayus(10);
+  38   1              ce=0;
+  39   1           rw=1;
+  40   1      } 
+  41          /*void writedc(uchar dat,uchar cmd)      //写一个数据和一个指令 
+  42          {   
+  43               writedata(dat);   
+  44               writecommand(cmd);   
+  45          } */
+  46          void writeddc(uchar data1, uchar data2, uchar cmd)   //写两个数据和一个指令 
+  47          {   
+  48   1           writedata(data1);         
+  49   1           writedata(data2);   
+  50   1           writecommand(cmd);     
+  51   1      }   
+  52          void LCD_Init(void)         //液晶初始化 
+  53          {   
+  54   1           uchar data1,data2,cmd;    
+  55   1                      rw=1;
+C51 COMPILER V8.09   240_128_LCD_DRIVER                                                    06/09/2010 21:45:55 PAGE 2   
+
+  56   1                      rst=0;
+  57   1              delay(5);
+  58   1              rst=1;
+  59   1              rd=1;  
+  60   1              
+  61   1           
+  62   1           data1 = 0x00;   
+  63   1           data2 = 0x10;              //图形显示占用32*128=0xfff，故文本从0x1000开始
+  64   1           cmd = 0x40;                //设置文本显示区首地址    
+  65   1           writeddc(data1,data2,cmd);   
+  66   1           data1 = 0x20;              //可以整屏显示
+  67   1           data2 = 0x00;   
+  68   1           cmd = 0x41;                //设置文本显示区宽度    
+  69   1           writeddc(data1,data2,cmd);   
+  70   1           data1 = 0x00;   
+  71   1           data2 = 0x00;   
+  72   1           cmd = 0x42;                //设置图形显示区首地址    
+  73   1           writeddc(data1,data2,cmd);   
+  74   1           data1 = 0x1e;   
+  75   1           data2 = 0x00;   
+  76   1           cmd = 0x43;                //设置图形显示区宽度    
+  77   1           writeddc(data1,data2,cmd); 
+  78   1         cmd =0xa2;                 //设置光标形状 
+  79   1         writecommand(cmd); 
+  80   1           cmd = 0x80;                //显示方式设置
+  81   1                                    //启用外部字符发生器,显示方式是文本与图形与 
+  82   1           writecommand(cmd); 
+  83   1           cmd = 0x9e;                //启用光标闪烁,光标不显示,文本显示与图形显示    
+  84   1           writecommand(cmd);   
+  85   1      }
+  86          
+  87          
+  88          
+  89          /*void writeonechinese(uchar *codes)
+  90          {
+  91                  uchar i=0,j=0;
+  92                  for(i=0;i<32;i++)
+  93                  {
+  94                          writedata(codes[i]);
+  95                          j++;
+  96                          if(j==2)
+  97                          {
+  98                                  writecommand(0xb2);           //退出自动写模式
+  99                              address=address+30;
+ 100                              data1 = address;                 //取地址低八位    
+ 101                              data2 = address>>8;                //取地址高八位    
+ 102                              cmd = 0x24; 
+ 103                              writeddc(data1,data2,cmd);
+ 104                              j=0;
+ 105                              writecommand(0xb0);         //进入自动写模式                
+ 106                          }
+ 107                  }
+ 108          }*/
+ 109          void clearlcd()
+ 110          {
+ 111   1              uint i;
+ 112   1              writecommand(0xb2);
+ 113   1              data1 = 0x00;                 //取地址低八位    
+ 114   1              data2 = 0x00;                //取地址高八位    
+ 115   1              cmd = 0x24; 
+ 116   1              writeddc(data1,data2,cmd);
+ 117   1              writecommand(0xb0);//自动写模式
+C51 COMPILER V8.09   240_128_LCD_DRIVER                                                    06/09/2010 21:45:55 PAGE 3   
+
+ 118   1              for(i=0;i<5000;i++)
+ 119   1              {
+ 120   2                      writedata(0x00);
+ 121   2              }
+ 122   1                      writecommand(0xb2);
+ 123   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    194    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      5    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

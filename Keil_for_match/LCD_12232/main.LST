@@ -1,0 +1,86 @@
+C51 COMPILER V8.09   MAIN                                                                  09/25/2010 18:19:54 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE main.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #include <stdio.h>
+   3          #define U8 unsigned char
+   4          #define U16 unsigned int
+   5          #define CMD 0
+   6          #define DATA 1
+   7          sbit LCD_CS=P0^3;
+   8          sbit LCD_SCLK=P1^2;
+   9          sbit LCD_SID=P0^2;
+  10          U8 code table[]={"I LOVE MCU!"};
+  11          void Delay_1ms(U16 z)
+  12          {
+  13   1              U8 i;
+  14   1              while(z--)
+  15   1                      for(i=0;i<110;i++);
+  16   1      }
+  17          void LCD_Send_Byte(U8 dat)
+  18          {
+  19   1              U8 i;
+  20   1              for(i=0;i<8;i++)
+  21   1              {
+  22   2                      LCD_SID=(bit)(dat&(1<<(7-i)));
+  23   2                      LCD_SCLK=0;
+  24   2                      LCD_SCLK=1;
+  25   2              }
+  26   1      }
+  27          void LCD_Send_CD(bit CD,U8 dat)
+  28          {
+  29   1              U8 temp;
+  30   1              if(!CD) temp=0xf8;
+  31   1                      else temp=0xfa;
+  32   1              LCD_CS=1;
+  33   1              LCD_SCLK=0;
+  34   1              LCD_Send_Byte(temp);
+  35   1              temp=dat;
+  36   1              temp&=0xf0;
+  37   1              LCD_Send_Byte(temp);
+  38   1              temp=dat;
+  39   1              temp<<=4;
+  40   1              LCD_Send_Byte(temp);
+  41   1              LCD_CS=0;
+  42   1              Delay_1ms(10);
+  43   1      }
+  44          void LCD_Init()
+  45          {
+  46   1      //      Delay_1ms(100);
+  47   1      //      LCD_Send_CD(CMD,0x30);
+  48   1      //      LCD_Send_CD(CMD,0x02);
+  49   1      //      LCD_Send_CD(CMD,0x06);
+  50   1              LCD_Send_CD(CMD,0x0c);
+  51   1      //      LCD_Send_CD(CMD,0x01);
+  52   1      }
+  53          void main()
+  54          {
+  55   1              U8 i;
+C51 COMPILER V8.09   MAIN                                                                  09/25/2010 18:19:54 PAGE 2   
+
+  56   1              LCD_Init();
+  57   1              LCD_Send_CD(CMD,0x80);
+  58   1              for(i=0;i<11;i++)
+  59   1                      LCD_Send_CD(DATA,table[i]);
+  60   1              while(1);
+  61   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    154    ----
+   CONSTANT SIZE    =     12    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       1
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----       1
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

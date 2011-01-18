@@ -1,0 +1,56 @@
+C51 COMPILER V6.12  MAINDOWN                                                               04/11/2010 16:48:25 PAGE 1   
+
+
+C51 COMPILER V6.12, COMPILATION OF MODULE MAINDOWN
+OBJECT MODULE PLACED IN .\maindown.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE .\maindown.c DEBUG OBJECTEXTEND
+
+stmt level    source
+
+   1          #include <reg52.h>
+   2          #include <stdio.h>
+   3          unsigned char i,t;
+   4          void comm_init();
+   5          void init7219();
+   6          void write7219one(unsigned char,unsigned char);
+   7          void delay(int);
+   8          void main()
+   9          {
+  10   1      	comm_init();
+  11   1      	init7219();
+  12   1      	ES=1;
+  13   1      	while(1);
+  14   1      /*	{
+  15   1      		t=_getkey();
+  16   1      		P2=t;
+  17   1      		for(i=1;i<9;i++)
+  18   1      		{
+  19   1      			write7219one(i,t-48);
+  20   1      		}
+  21   1      		delay(2000);
+  22   1      	}*/
+  23   1      }
+  24          void ser() interrupt 4
+  25          {
+  26   1      	t=SBUF;
+  27   1      	for(i=1;i<9;i++)
+  28   1      	{
+  29   2      		write7219one(i,t-48);
+  30   2      	}
+  31   1      	RI=0;
+  32   1      	delay(1000);
+  33   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    100    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      2    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

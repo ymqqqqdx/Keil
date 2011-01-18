@@ -1,0 +1,172 @@
+C51 COMPILER V6.12  I2C                                                                    03/26/2010 21:33:24 PAGE 1   
+
+
+C51 COMPILER V6.12, COMPILATION OF MODULE I2C
+OBJECT MODULE PLACED IN .\i2c.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE .\i2c.c DEBUG OBJECTEXTEND
+
+stmt level    source
+
+   1          #include <stdio.h>
+   2          #include <series.h>
+   3          bit write=0;
+   4          sbit sda=P1^2;
+   5          sbit scl=P1^1;
+   6          sbit wp=P1^0;
+   7          unsigned char read,i,t,temp;
+   8          void delay(int z)
+   9          {
+  10   1      	int i,j;
+  11   1              for(i=z;i>0;i--)
+  12   1               for(j=110;j>0;j--);
+  13   1      }
+  14          void delay0()
+  15          {;;}
+  16          void start()
+  17          {
+  18   1      	sda=1;
+  19   1      	delay0();
+  20   1      	scl=1;
+  21   1      	delay0();
+  22   1      	sda=0;
+  23   1      	delay0();
+  24   1      }
+  25          void stop()
+  26          {
+  27   1      	sda=0;
+  28   1      	delay0();
+  29   1      	scl=1;
+  30   1      	delay0();
+  31   1      	sda=1;
+  32   1      	delay0();
+  33   1      }
+  34          void respons()
+  35          {
+  36   1      	unsigned char i;
+  37   1      	scl=1;
+  38   1      	delay0();
+  39   1      	while((sda==1)&&(i<250))
+  40   1      		i++;
+  41   1      	scl=0;
+  42   1      	delay0();
+  43   1      }
+  44          void init_24c02()
+  45          {
+  46   1      	sda=1;
+  47   1      	delay0();
+  48   1      	scl=1;
+  49   1      	delay0();
+  50   1      	wp=0;
+  51   1      }
+  52          void write_byte(unsigned char date)
+  53          {
+  54   1      	unsigned char i,temp;
+  55   1      	temp=date;
+C51 COMPILER V6.12  I2C                                                                    03/26/2010 21:33:24 PAGE 2   
+
+  56   1      	for(i=0;i<8;i++)
+  57   1      	{
+  58   2      		temp=temp<<1;
+  59   2      		scl=0;
+  60   2      		delay0();
+  61   2      		sda=CY;
+  62   2      		delay0();
+  63   2      		scl=1;
+  64   2      		delay0();
+  65   2      	}
+  66   1      	scl=0;
+  67   1      	delay0();
+  68   1      	sda=1;
+  69   1      	delay0();
+  70   1      }
+  71          unsigned char read_byte()
+  72          {
+  73   1      	unsigned char i,k;
+  74   1      	scl=0;
+  75   1      	delay0();
+  76   1      	sda=1;
+  77   1      	delay0();
+  78   1      	for(i=0;i<8;i++)
+  79   1      	{
+  80   2      		scl=1;
+  81   2      		delay0();
+  82   2      		k=(k<<1)|sda;
+  83   2      		scl=0;
+  84   2      		delay0();
+  85   2      	}
+  86   1      	return k;
+  87   1      }
+  88          void write_add(unsigned char address,unsigned char date)
+  89          {
+  90   1      	start();
+  91   1      	write_byte(0xa0);
+  92   1      	respons();
+  93   1      	write_byte(address);
+  94   1      	respons();
+  95   1      	write_byte(date);
+  96   1      	respons();
+  97   1      	stop();
+  98   1      	delay(1);
+  99   1      }
+ 100          char read_add(unsigned char address)
+ 101          {
+ 102   1      	unsigned char date;
+ 103   1      	start();
+ 104   1      	write_byte(0xa0);
+ 105   1      	respons();
+ 106   1      	write_byte(address);
+ 107   1      	respons();
+ 108   1      	start();
+ 109   1      	write_byte(0xa1);
+ 110   1      	respons();
+ 111   1      	date=read_byte();
+ 112   1      	stop();
+ 113   1      	return date;
+ 114   1      	delay(1);
+ 115   1      }
+ 116          void commscan()
+ 117          {
+C51 COMPILER V6.12  I2C                                                                    03/26/2010 21:33:24 PAGE 3   
+
+ 118   1      	temp=_getkey();
+ 119   1      	if(temp=='&')
+ 120   1      	{
+ 121   2      		while(temp!='$')
+ 122   2      		{
+ 123   3      			temp=_getkey();
+ 124   3      			write_add(i++,temp);
+ 125   3      		}
+ 126   2      		i=0;
+ 127   2      	}
+ 128   1      	if(temp=='^')
+ 129   1      	{
+ 130   2      		while(read_add(t++)!='$')
+ 131   2      		{
+ 132   3      			printf("%c",read_add(t-1));
+ 133   3      		}
+ 134   2      		t=0;
+ 135   2      	}
+ 136   1      }
+ 137          void main()
+ 138          {
+ 139   1      	comm_init();
+ 140   1      	init_24c02();
+ 141   1      	while(1)
+ 142   1      	{
+ 143   2      		commscan();
+ 144   2      	}
+ 145   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    336    ----
+   CONSTANT SIZE    =      3    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      4       1
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      1    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

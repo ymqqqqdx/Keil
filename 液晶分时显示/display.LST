@@ -1,0 +1,242 @@
+C51 COMPILER V6.12  DISPLAY                                                                04/20/2010 21:33:11 PAGE 1   
+
+
+C51 COMPILER V6.12, COMPILATION OF MODULE DISPLAY
+OBJECT MODULE PLACED IN .\display.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE .\display.c DEBUG OBJECTEXTEND
+
+stmt level    source
+
+   1          #include <reg52.h>
+   2          #include "declare.h"
+   3          sbit beep=P3^3;
+   4          int tempold,tempnew;
+   5          unsigned char secondold,minuteold,hourold,dayold,monthold,yearold,weekold,alarmhourold,alarmminuteold;
+   6          unsigned char code table[]="0123456789";
+   7          unsigned char code table1[]="年月日: 周";
+   8          unsigned char code table2[]="板上18B20 温度:摄氏度 ";
+   9          unsigned char code table4[]=" 7123456";
+  10          unsigned char code table11[]="闹钟设置";
+  11          void write_com(unsigned char);
+  12          void write_data(unsigned char);
+  13          void delay(int);
+  14          void displaytwo(unsigned char,unsigned char);
+  15          unsigned char keyscan();
+  16          int readtemp();
+  17          unsigned char read_clock(unsigned char);
+  18          void displaytemp(int);
+  19          void write_com(unsigned char);
+  20          void write_add(unsigned char,unsigned char);
+  21          /*************获取显示当前时间***************/
+  22          void gettime()
+  23          {
+  24   1      		displaytwo(1,readyear);
+  25   1      		write_add(1,readyear);
+  26   1      		delay(5);
+  27   1      		displaytwo(3,readmonth);
+  28   1      		write_add(2,readmonth);
+  29   1      		delay(5);
+  30   1      		displaytwo(5,readday);
+  31   1      		write_add(3,readday);
+  32   1      		delay(5);
+  33   1      		displaytwo(10,readhour);
+  34   1      		write_add(4,readhour);
+  35   1      		delay(5);
+  36   1      		displaytwo(12,readminute);
+  37   1      		write_add(5,readminute);
+  38   1      		delay(5);
+  39   1      		displaytwo(14,readsecond);
+  40   1      		write_add(6,readsecond);
+  41   1      		week=readweek;
+  42   1      		write_com(0x97);
+  43   1      			write_data(table4[week]);
+  44   1      		write_add(7,readweek);
+  45   1      		delay(5);	
+  46   1      }
+  47          /*************初始化1302显示界面**************/
+  48          void init1302display()//初始化1302显示
+  49          {
+  50   1      	write_com(0x01);
+  51   1      	write_com(0x0c);
+  52   1      	write_com(0x82);
+  53   1      	write_data(table1[0]);
+  54   1      	write_data(table1[1]);
+  55   1      	write_com(0x84);
+C51 COMPILER V6.12  DISPLAY                                                                04/20/2010 21:33:11 PAGE 2   
+
+  56   1      	write_data(table1[2]);
+  57   1      	write_data(table1[3]);
+  58   1      	write_com(0x86);
+  59   1      	write_data(table1[4]);
+  60   1      	write_data(table1[5]);
+  61   1      	write_com(0x91);
+  62   1      	write_data(table1[6]);
+  63   1      	write_com(0x93);
+  64   1      	write_data(table1[6]);
+  65   1      	write_com(0x80);
+  66   1      	write_data('2');
+  67   1      	write_data('0');
+  68   1      	write_com(0x96);
+  69   1      	write_data(table1[8]);
+  70   1      	write_data(table1[9]);
+  71   1      	gettime();
+  72   1      	write_com(0x81);
+  73   1      }
+  74          /*****************正常显示界面***************/
+  75          void display1302()
+  76          {
+  77   1      	init1302display();
+  78   1      	secondold=readsecond; 
+  79   1      	while(mode==1)
+  80   1      	{
+  81   2      		second=readsecond;
+  82   2      		delay(100);
+  83   2      		if(second!=secondold&&second<60) 
+  84   2      		{
+  85   3      			displaytwo(14,second);
+  86   3      		   write_add(6,second); secondold=second;
+  87   3      			if(second==0)
+  88   3      			{
+  89   4      				gettime();
+  90   4      				if(readminute==alarmminute&&readhour==alarmhour)
+  91   4      				{
+  92   5      					beep=0;
+  93   5      				}
+  94   4      			}
+  95   3      		}
+  96   2      		keyscan();
+  97   2      	}	
+  98   1      }
+  99          /***************18B20显示界面*******************/
+ 100          void display18b20()
+ 101          {
+ 102   1      	write_com(0x01);
+ 103   1      	write_com(0x0c);
+ 104   1      	write_com(0x80);
+ 105   1      	for(i=0;i<15;i++)
+ 106   1      	{
+ 107   2      		write_data(table2[i]);
+ 108   2      	}
+ 109   1      	write_com(0x93);
+ 110   1      	for(i=0;i<6;i++)
+ 111   1      	{
+ 112   2      		write_data(table2[i+15]);
+ 113   2      	}
+ 114   1      	displaytemp(tempold);
+ 115   1      	while(mode==2)
+ 116   1      	{
+ 117   2      		tempnew=readtemp();
+C51 COMPILER V6.12  DISPLAY                                                                04/20/2010 21:33:11 PAGE 3   
+
+ 118   2      		delay(100);
+ 119   2      		if(tempnew!=tempold)
+ 120   2      		{
+ 121   3      			displaytemp(tempnew);
+ 122   3      			tempold=tempnew;
+ 123   3      		}
+ 124   2      		keyscan();
+ 125   2      	}
+ 126   1      }
+ 127          /*****************调整时间显示界面******************/
+ 128          void adjust1302()
+ 129          {
+ 130   1      	init1302display();
+ 131   1      	write_com(0x0f);//有光标闪
+ 132   1      	delay(100);
+ 133   1      	yearold=year; weekold=week; monthold=month; dayold=day; hourold=hour; minuteold=minute; secondold=second;
+ 134   1      	while(mode==4)
+ 135   1      	{
+ 136   2      		if(year!=yearold)
+ 137   2      		{
+ 138   3      			displaytwo(1,year);
+ 139   3      			yearold=year;
+ 140   3      			write_com(0x81);
+ 141   3      		}
+ 142   2      		if(month!=monthold)
+ 143   2      		{
+ 144   3      			displaytwo(3,month);
+ 145   3      			monthold=month;
+ 146   3      			write_com(0x83);
+ 147   3      		}
+ 148   2      		if(day!=dayold)
+ 149   2      		{
+ 150   3      			displaytwo(5,day);
+ 151   3      			dayold=day;
+ 152   3      			write_com(0x85);
+ 153   3      		}
+ 154   2      		if(hour!=hourold)
+ 155   2      		{
+ 156   3      			displaytwo(10,hour);
+ 157   3      			hourold=hour;
+ 158   3      			write_com(0x90);
+ 159   3      		}
+ 160   2      		if(minute!=minuteold)
+ 161   2      		{
+ 162   3      			displaytwo(12,minute);
+ 163   3      			minuteold=minute;
+ 164   3      			write_com(0x92);
+ 165   3      		}
+ 166   2      		if(second!=secondold)
+ 167   2      		{
+ 168   3      			displaytwo(14,second);
+ 169   3      			secondold=second;
+ 170   3      			write_com(0x94);
+ 171   3      		}
+ 172   2      		if(week!=weekold)
+ 173   2      		{
+ 174   3      			write_com(0x97);
+ 175   3      				write_data(table4[week]);
+ 176   3      			write_com(0x97);
+ 177   3      		}
+ 178   2      		keyscan();
+ 179   2      	}
+C51 COMPILER V6.12  DISPLAY                                                                04/20/2010 21:33:11 PAGE 4   
+
+ 180   1      }
+ 181          /****************闹钟设置界面*****************/
+ 182          void alarmsetting()
+ 183          {
+ 184   1      	write_com(0x01);
+ 185   1      	write_com(0x82);
+ 186   1      	for(i=0;i<8;i++)
+ 187   1      	{
+ 188   2      		write_data(table11[i]);
+ 189   2      	}
+ 190   1      	displaytwo(12,alarmhour);
+ 191   1      	write_data(':');
+ 192   1      	write_data(' ');
+ 193   1      	displaytwo(14,alarmminute);
+ 194   1      	alarmminuteold=alarmminute;
+ 195   1      	alarmhourold=alarmhour;
+ 196   1      	write_com(0x92);
+ 197   1      	while(mode==5)
+ 198   1      	{
+ 199   2      		if(alarmminute!=alarmminuteold)
+ 200   2      		{
+ 201   3      			displaytwo(14,alarmminute);
+ 202   3      			write_com(0x94);
+ 203   3      			alarmminuteold=alarmminute;
+ 204   3      		}
+ 205   2      		if(alarmhour!=alarmhourold)
+ 206   2      		{
+ 207   3      			displaytwo(12,alarmhour);
+ 208   3      			write_com(0x92);
+ 209   3      			alarmhourold=alarmhour;
+ 210   3      		}
+ 211   2      		keyscan();
+ 212   2      	}
+ 213   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    985    ----
+   CONSTANT SIZE    =     63    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     13    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

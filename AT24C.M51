@@ -1,0 +1,290 @@
+BL51 BANKED LINKER/LOCATER V4.13                                                        01/01/2010  16:05:05  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V4.13, INVOKED BY:
+C:\KEIL\C51\BIN\BL51.EXE AT24C.obj TO AT24C RAMSIZE (256)
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  AT24C.obj (AT24C)
+
+
+LINK MAP OF MODULE:  AT24C (AT24C)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            DATA    0008H     0001H     UNIT         ?DT?RESPONS?AT24C
+                    0009H     0017H                  *** GAP ***
+            BIT     0020H.0   0000H.1   UNIT         ?BI?AT24C
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0025H     UNIT         ?PR?READ_BYTE?AT24C
+            CODE    0025H     0020H     UNIT         ?PR?RESPONS?AT24C
+            CODE    0045H     001FH     UNIT         ?PR?_READ_ADD?AT24C
+            CODE    0064H     001EH     UNIT         ?PR?_WRITE_BYTE?AT24C
+            CODE    0082H     0018H     UNIT         ?PR?_WRITE_ADD?AT24C
+            CODE    009AH     000AH     UNIT         ?PR?STOP?AT24C
+            CODE    00A4H     0008H     UNIT         ?PR?DELAY0?AT24C
+            CODE    00ACH     0008H     UNIT         ?PR?START?AT24C
+            CODE    00B4H     0003H     UNIT         ?PR?INIT_24C02?AT24C
+            CODE    00B7H     0002H     UNIT         ?C_INITSEG
+
+
+
+OVERLAY MAP OF MODULE:   AT24C (AT24C)
+
+
+SEGMENT
+  +--> CALLED SEGMENT
+---------------------
+
+
+SYMBOL TABLE OF MODULE:  AT24C (AT24C)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        AT24C
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:0090H         PUBLIC        P1
+  D:00A0H         PUBLIC        P2
+  D:00B0H         PUBLIC        P3
+  B:00B0H.4       PUBLIC        T0
+  B:00D0H.6       PUBLIC        AC
+  B:00B0H.5       PUBLIC        T1
+BL51 BANKED LINKER/LOCATER V4.13                                                      01/01/2010  16:05:05  PAGE 2
+
+
+  B:0090H.0       PUBLIC        T2
+  B:00A8H.7       PUBLIC        EA
+  C:0045H         PUBLIC        _read_add
+  D:00A8H         PUBLIC        IE
+  C:002DH         PUBLIC        respons
+  B:00C8H.6       PUBLIC        EXF2
+  B:00B0H.7       PUBLIC        RD
+  B:00A8H.4       PUBLIC        ES
+  C:0082H         PUBLIC        _write_add
+  D:00B8H         PUBLIC        IP
+  B:0098H.0       PUBLIC        RI
+  B:00B0H.2       PUBLIC        INT0
+  B:00D0H.7       PUBLIC        CY
+  B:0098H.1       PUBLIC        TI
+  B:00B0H.3       PUBLIC        INT1
+  B:00B8H.4       PUBLIC        PS
+  B:0090H.1       PUBLIC        T2EX
+  C:0064H         PUBLIC        _write_byte
+  B:00D0H.2       PUBLIC        OV
+  B:00C8H.1       PUBLIC        C_T2
+  B:00B0H.6       PUBLIC        WR
+  B:00C8H.5       PUBLIC        RCLK
+  B:0020H.0       PUBLIC        write
+  B:00C8H.4       PUBLIC        TCLK
+  C:00ACH         PUBLIC        start
+  D:0098H         PUBLIC        SCON
+  C:0000H         PUBLIC        read_byte
+  D:0088H         PUBLIC        TCON
+  B:00A0H.7       PUBLIC        sda
+  B:0088H.1       PUBLIC        IE0
+  B:0088H.3       PUBLIC        IE1
+  C:00ABH         PUBLIC        delay0
+  C:00B4H         PUBLIC        init_24c02
+  B:00A0H.6       PUBLIC        scl
+  B:00C8H.0       PUBLIC        CP_RL2
+  C:009AH         PUBLIC        stop
+  B:00A8H.1       PUBLIC        ET0
+  B:00A8H.3       PUBLIC        ET1
+  B:0088H.5       PUBLIC        TF0
+  B:00A8H.5       PUBLIC        ET2
+  B:0088H.7       PUBLIC        TF1
+  B:00C8H.7       PUBLIC        TF2
+  B:0098H.2       PUBLIC        RB8
+  B:00A8H.0       PUBLIC        EX0
+  B:0088H.0       PUBLIC        IT0
+  B:0098H.3       PUBLIC        TB8
+  B:00A8H.2       PUBLIC        EX1
+  B:0088H.2       PUBLIC        IT1
+  B:00D0H.0       PUBLIC        P
+  B:0098H.7       PUBLIC        SM0
+  B:0098H.6       PUBLIC        SM1
+  B:0098H.5       PUBLIC        SM2
+  B:00B8H.1       PUBLIC        PT0
+  B:00B8H.3       PUBLIC        PT1
+  B:00D0H.3       PUBLIC        RS0
+  B:00B8H.5       PUBLIC        PT2
+  B:0088H.4       PUBLIC        TR0
+BL51 BANKED LINKER/LOCATER V4.13                                                      01/01/2010  16:05:05  PAGE 3
+
+
+  B:00D0H.4       PUBLIC        RS1
+  B:0088H.6       PUBLIC        TR1
+  B:00C8H.2       PUBLIC        TR2
+  B:00B8H.0       PUBLIC        PX0
+  B:00B8H.2       PUBLIC        PX1
+  B:00C8H.3       PUBLIC        EXEN2
+  B:0098H.4       PUBLIC        REN
+  D:00C8H         PUBLIC        T2CON
+  B:00B0H.0       PUBLIC        RXD
+  B:00B0H.1       PUBLIC        TXD
+  B:00D0H.5       PUBLIC        F0
+  D:00D0H         PUBLIC        PSW
+  C:00A6H         SYMBOL        L?0020
+  -------         PROC          L?0019
+  -------         ENDPROC       L?0019
+  C:00A6H         SYMBOL        L?0020
+  -------         PROC          DELAY0
+  C:00ABH         LINE#         5
+  C:00ABH         LINE#         6
+  -------         ENDPROC       DELAY0
+  -------         PROC          START
+  C:00ACH         LINE#         7
+  C:00ACH         LINE#         8
+  C:00ACH         LINE#         9
+  C:00ACH         LINE#         10
+  C:00ACH         LINE#         11
+  C:00ACH         LINE#         12
+  C:00AFH         LINE#         13
+  C:00B1H         LINE#         14
+  -------         ENDPROC       START
+  -------         PROC          STOP
+  C:009AH         LINE#         16
+  C:009AH         LINE#         17
+  C:009AH         LINE#         18
+  C:009CH         LINE#         19
+  C:009CH         LINE#         20
+  C:009CH         LINE#         21
+  C:009FH         LINE#         22
+  C:00A1H         LINE#         23
+  -------         ENDPROC       STOP
+  -------         PROC          L?0018
+  -------         ENDPROC       L?0018
+  -------         PROC          RESPONS
+  -------         DO            RESPONS
+  D:0008H         SYMBOL        i
+  -------         ENDDO         i
+  C:002DH         LINE#         25
+  C:002DH         LINE#         26
+  C:002DH         LINE#         28
+  C:002FH         LINE#         29
+  C:0032H         LINE#         30
+  C:003CH         LINE#         31
+  C:0040H         LINE#         32
+  C:0042H         LINE#         33
+  -------         ENDPROC       RESPONS
+  -------         PROC          INIT_24C02
+  C:00B4H         LINE#         35
+BL51 BANKED LINKER/LOCATER V4.13                                                      01/01/2010  16:05:05  PAGE 4
+
+
+  C:00B4H         LINE#         36
+  C:00B4H         LINE#         37
+  C:00B4H         LINE#         38
+  C:00B4H         LINE#         39
+  C:00B4H         LINE#         40
+  -------         ENDPROC       INIT_24C02
+  -------         PROC          _WRITE_BYTE
+  D:0007H         SYMBOL        date
+  -------         DO            date
+  D:0006H         SYMBOL        i
+  D:0007H         SYMBOL        temp
+  -------         ENDDO         temp
+  C:0064H         LINE#         42
+  C:0064H         LINE#         43
+  C:0064H         LINE#         45
+  C:0064H         LINE#         46
+  C:0066H         LINE#         47
+  C:0066H         LINE#         48
+  C:006AH         LINE#         49
+  C:006CH         LINE#         50
+  C:006FH         LINE#         51
+  C:0071H         LINE#         52
+  C:0071H         LINE#         53
+  C:0071H         LINE#         54
+  C:0074H         LINE#         55
+  C:0078H         LINE#         56
+  C:007AH         LINE#         57
+  C:007DH         LINE#         58
+  C:007FH         LINE#         59
+  -------         ENDPROC       _WRITE_BYTE
+  -------         PROC          READ_BYTE
+  -------         DO            READ_BYTE
+  D:0006H         SYMBOL        i
+  D:0007H         SYMBOL        k
+  -------         ENDDO         k
+  C:0000H         LINE#         61
+  C:0000H         LINE#         62
+  C:0000H         LINE#         64
+  C:0002H         LINE#         65
+  C:0005H         LINE#         66
+  C:0007H         LINE#         67
+  C:000AH         LINE#         68
+  C:000CH         LINE#         69
+  C:000CH         LINE#         70
+  C:000EH         LINE#         71
+  C:0011H         LINE#         72
+  C:001BH         LINE#         73
+  C:001DH         LINE#         74
+  C:0020H         LINE#         75
+  C:0024H         LINE#         76
+  C:0024H         LINE#         77
+  -------         ENDPROC       READ_BYTE
+  -------         PROC          _WRITE_ADD
+  D:0004H         SYMBOL        address
+  D:0005H         SYMBOL        date
+  C:0082H         LINE#         78
+  C:0084H         LINE#         79
+BL51 BANKED LINKER/LOCATER V4.13                                                      01/01/2010  16:05:05  PAGE 5
+
+
+  C:0084H         LINE#         80
+  C:0084H         LINE#         81
+  C:0084H         LINE#         82
+  C:0087H         LINE#         83
+  C:008CH         LINE#         84
+  C:008FH         LINE#         85
+  C:0094H         LINE#         86
+  C:0097H         LINE#         87
+  -------         ENDPROC       _WRITE_ADD
+  -------         PROC          _READ_ADD
+  D:0005H         SYMBOL        address
+  -------         DO            address
+  D:0007H         SYMBOL        date
+  -------         ENDDO         date
+  C:0045H         LINE#         89
+  C:0047H         LINE#         90
+  C:0047H         LINE#         92
+  C:0047H         LINE#         93
+  C:0047H         LINE#         94
+  C:004AH         LINE#         95
+  C:004FH         LINE#         96
+  C:0052H         LINE#         97
+  C:0055H         LINE#         98
+  C:005AH         LINE#         99
+  C:005DH         LINE#         100
+  C:0060H         LINE#         101
+  C:0063H         LINE#         102
+  C:0063H         LINE#         103
+  -------         ENDPROC       _READ_ADD
+  -------         ENDMOD        AT24C
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?INIT_24C02?AT24C
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_WRITE_ADD?AT24C
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_READ_ADD?AT24C
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?C_INITSEG
+
+*** WARNING L10: CANNOT DETERMINE ROOT SEGMENT
+
+LINK/LOCATE RUN COMPLETE.  5 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,15 @@
+"comm_init.obj",
+"delay.obj",
+"led.obj",
+"main.obj",
+"seriesinterrupt.obj",
+"shumaguan.obj",
+"comm_scan.obj",
+"declare.obj",
+"i2c.obj",
+"ds1302.obj",
+"ds18b20_driver.obj",
+"18b20.obj",
+"timer.obj" 
+TO "ÊµÑé°å" 
+RAMSIZE(256) 

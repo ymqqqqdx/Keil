@@ -1,0 +1,174 @@
+C51 COMPILER V6.12  DIGITAL                                                                12/26/2009 19:55:35 PAGE 1   
+
+
+C51 COMPILER V6.12, COMPILATION OF MODULE DIGITAL
+OBJECT MODULE PLACED IN .\digital.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE .\digital.c DEBUG OBJECTEXTEND
+
+stmt level    source
+
+   1          #include<reg52.h>
+   2          #include<intrins.h>
+   3          sbit dula=P3^0;
+   4          sbit wela=P3^1;
+   5          sbit h1=P3^2;
+   6          sbit h2=P3^3;
+   7          sbit h3=P3^4;
+   8          sbit h4=P3^5;
+   9          #define uint unsigned int;
+  10          #define uchar unsigned char;
+  11          unsigned char code table[]={0x3f,0x06,0x5b,0x4f,
+  12          0x66,0x6d,0x7d,0x07,
+  13          0x7f,0x6f,0x77,0x7c,
+  14          0x39,0x5e,0x79,0x71};
+  15          unsigned char code point[]={
+  16                  0xBF,/*0p*/
+  17          		0x86,/*1p*/
+  18                  0xDB,/*2p*/
+  19                  0xCF,/*3p*/
+  20                  0xE6,/*4p*/
+  21                  0xED,/*5p*/
+  22                  0xFD,/*6p*/
+  23                  0x87,/*7p*/
+  24                  0xFF,/*8p*/
+  25                  0xEF,/*9p*/
+  26          };
+  27          unsigned char code table1[]={0xff,0xfe,0xfd,0xfb,0xf7,0xef,0xdf,0x00};
+  28          unsigned char i,aa,one=0,two=0,shi=0,ge=0,time=0;
+  29          unsigned int num;
+  30          void delay(int z)
+  31          {
+  32   1      	int i,j;
+  33   1              for(i=z;i>0;i--)
+  34   1               for(j=110;j>0;j--);
+  35   1      }
+  36          void init()        
+  37          {
+  38   1      	TMOD=0x01;
+  39   1      	TH0=(65536-10000)/256; 
+  40   1      	TL0=(65536-10000)%256;
+  41   1      	EA=1; //开总中断
+  42   1      	ET0=1; //计时器0开启
+  43   1      	TR0=1; //计时器开始运行
+  44   1      }
+  45          void duan(unsigned char z)
+  46          {
+  47   1      	P2=table[z];
+  48   1      	delay(1);
+  49   1      	P2=0x00;
+  50   1      }
+  51          void wei(unsigned char z)
+  52          {
+  53   1      	P1=table1[z];
+  54   1      }
+  55          void duanpoint(unsigned char z)
+C51 COMPILER V6.12  DIGITAL                                                                12/26/2009 19:55:35 PAGE 2   
+
+  56          {
+  57   1      	P2=point[z];
+  58   1      	delay(1);
+  59   1      }
+  60          void display()
+  61          {
+  62   1      	wei(3);
+  63   1      	duan(shi);
+  64   1      	wei(4);
+  65   1      	duanpoint(ge);
+  66   1      	wei(5);
+  67   1      	duan(one);
+  68   1      	wei(6);
+  69   1      	duan(two);
+  70   1      }
+  71          void display2()
+  72          {
+  73   1      	wei(3);
+  74   1      	duan(time/10);
+  75   1      	wei(4);
+  76   1      	duan(time%10);
+  77   1      }
+  78          void keyscan()
+  79          {
+  80   1      	if(h1==0)
+  81   1      	{
+  82   2      		delay(5);
+  83   2      		if(h1==0)
+  84   2      		{
+  85   3      			TR0=0;
+  86   3      			while(h1==0)
+  87   3          	 	display();
+  88   3      		}
+  89   2      	}
+  90   1      	if(h2==0)
+  91   1      	{
+  92   2      		delay(5);
+  93   2      		if(h2==0)
+  94   2      		{
+  95   3      			TR0=1;
+  96   3      			while(h2==0)
+  97   3              		display();
+  98   3      		}
+  99   2      	}
+ 100   1      	if(h3==0)
+ 101   1      	{
+ 102   2      		delay(5);
+ 103   2      		if(h3==0)
+ 104   2      		{
+ 105   3      		aa=0;num=0;
+ 106   3      		while(h3==0)
+ 107   3           		{display();
+ 108   4      			 shi=ge=one=two=0;
+ 109   4      			}
+ 110   3      		}
+ 111   2      	}
+ 112   1      	if(h4==0)
+ 113   1      	{
+ 114   2      		delay(5);
+ 115   2      		if(h4==0)
+ 116   2      		{
+ 117   3      			while(h4==0)
+C51 COMPILER V6.12  DIGITAL                                                                12/26/2009 19:55:35 PAGE 3   
+
+ 118   3              		display2();
+ 119   3      		}
+ 120   2      	}
+ 121   1      }
+ 122          void main()
+ 123          {
+ 124   1      	init();
+ 125   1      	while(1)
+ 126   1      	{
+ 127   2      		display();
+ 128   2      		keyscan();
+ 129   2      	}
+ 130   1      }
+ 131          void timer0() interrupt 1
+ 132          {
+ 133   1      		TH0=(65536-10000)/256;
+ 134   1      	   TL0=(65536-10000)%256;
+ 135   1      		aa++;
+ 136   1      		if(aa==1)
+ 137   1      		{   
+ 138   2      			aa=0;
+ 139   2      			num++;
+ 140   2      			if(num==6000)
+ 141   2      			{num=0;time++;}
+ 142   2      		shi=num/1000;
+ 143   2              ge=num%1000/100;
+ 144   2              one=num%100/10;
+ 145   2      		two=num%10;
+ 146   2      		  }
+ 147   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    417    ----
+   CONSTANT SIZE    =     34    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      9    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

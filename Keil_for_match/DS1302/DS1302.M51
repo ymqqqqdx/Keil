@@ -1,0 +1,297 @@
+BL51 BANKED LINKER/LOCATER V6.05                                                        10/13/2010  18:59:11  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V6.05, INVOKED BY:
+C:\KEIL\C51\BIN\BL51.EXE STARTUP.obj, ReDo.obj TO DS1302 RAMSIZE (256)
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  STARTUP.obj (?C_STARTUP)
+  ReDo.obj (REDO)
+  C:\KEIL\C51\LIB\C51S.LIB (?C?CLDPTR)
+
+
+LINK MAP OF MODULE:  DS1302 (?C_STARTUP)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            DATA    0008H     0005H     UNIT         _DATA_GROUP_
+                    000DH     0013H                  *** GAP ***
+            BIT     0020H.0   0000H.1   UNIT         _BIT_GROUP_
+                    0020H.1   0000H.7                *** GAP ***
+            IDATA   0021H     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+            CODE    0003H     0050H     UNIT         ?PR?MAIN?REDO
+            CODE    0053H     002EH     UNIT         ?PR?_LCD_STRING?REDO
+            CODE    0081H     002AH     UNIT         ?PR?RTC_READONECHAR?REDO
+            CODE    00ABH     0022H     UNIT         ?PR?LCD_WRITECD?REDO
+            CODE    00CDH     0021H     UNIT         ?PR?_RTC_WRITE?REDO
+            CODE    00EEH     0019H     UNIT         ?C?LIB_CODE
+            CODE    0107H     0016H     UNIT         ?PR?_DELAY_1MS?REDO
+            CODE    011DH     0013H     UNIT         ?PR?_RTC_READ?REDO
+            CODE    0130H     0011H     UNIT         ?PR?_RTC_WRITEONECHAR?REDO
+            CODE    0141H     0011H     UNIT         ?PR?_LCD_WRITEONECHAR?REDO
+            CODE    0152H     000CH     UNIT         ?C_C51STARTUP
+            CODE    015EH     0003H     UNIT         ?CO?REDO
+
+
+
+OVERLAY MAP OF MODULE:   DS1302 (?C_STARTUP)
+
+
+SEGMENT                               BIT_GROUP          DATA_GROUP 
+  +--> CALLED SEGMENT              START    LENGTH     START    LENGTH
+----------------------------------------------------------------------
+?C_C51STARTUP                      -----    -----      -----    -----
+  +--> ?PR?MAIN?REDO
+
+?PR?MAIN?REDO                      -----    -----      0008H    0001H
+  +--> ?PR?LCD_WRITECD?REDO
+  +--> ?CO?REDO
+  +--> ?PR?_LCD_STRING?REDO
+  +--> ?PR?_RTC_READ?REDO
+BL51 BANKED LINKER/LOCATER V6.05                                                      10/13/2010  18:59:11  PAGE 2
+
+
+  +--> ?PR?_DELAY_1MS?REDO
+
+?PR?LCD_WRITECD?REDO               0020H.0  0000H.1    000CH    0001H
+  +--> ?PR?_LCD_WRITEONECHAR?REDO
+
+?PR?_LCD_STRING?REDO               -----    -----      0009H    0003H
+  +--> ?PR?LCD_WRITECD?REDO
+
+?PR?_RTC_READ?REDO                 -----    -----      -----    -----
+  +--> ?PR?_RTC_WRITEONECHAR?REDO
+  +--> ?PR?RTC_READONECHAR?REDO
+
+
+
+SYMBOL TABLE OF MODULE:  DS1302 (?C_STARTUP)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        ?C_STARTUP
+  C:0152H         SEGMENT       ?C_C51STARTUP
+  I:0021H         SEGMENT       ?STACK
+  C:0000H         PUBLIC        ?C_STARTUP
+  D:00E0H         SYMBOL        ACC
+  D:00F0H         SYMBOL        B
+  D:0083H         SYMBOL        DPH
+  D:0082H         SYMBOL        DPL
+  N:0000H         SYMBOL        IBPSTACK
+  N:0100H         SYMBOL        IBPSTACKTOP
+  N:0080H         SYMBOL        IDATALEN
+  C:0155H         SYMBOL        IDATALOOP
+  N:0000H         SYMBOL        PBPSTACK
+  N:0100H         SYMBOL        PBPSTACKTOP
+  N:0000H         SYMBOL        PDATALEN
+  N:0000H         SYMBOL        PDATASTART
+  N:0000H         SYMBOL        PPAGE
+  N:0000H         SYMBOL        PPAGEENABLE
+  D:00A0H         SYMBOL        PPAGE_SFR
+  D:0081H         SYMBOL        SP
+  C:0152H         SYMBOL        STARTUP1
+  N:0000H         SYMBOL        XBPSTACK
+  N:0000H         SYMBOL        XBPSTACKTOP
+  N:0000H         SYMBOL        XDATALEN
+  N:0000H         SYMBOL        XDATASTART
+  C:0000H         LINE#         126
+  C:0152H         LINE#         133
+  C:0154H         LINE#         134
+  C:0155H         LINE#         135
+  C:0156H         LINE#         136
+  C:0158H         LINE#         185
+  C:015BH         LINE#         196
+  -------         ENDMOD        ?C_STARTUP
+
+  -------         MODULE        REDO
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:0080H         PUBLIC        P0
+  D:0090H         PUBLIC        P1
+BL51 BANKED LINKER/LOCATER V6.05                                                      10/13/2010  18:59:11  PAGE 3
+
+
+  D:00B0H         PUBLIC        P3
+  B:0090H.7       PUBLIC        rtc_io
+  C:0107H         PUBLIC        _delay_1ms
+  B:00B0H.0       PUBLIC        rtc_rst
+  C:00ABH         PUBLIC        lcd_writecd
+  D:00A8H         PUBLIC        IE
+  D:00B8H         PUBLIC        IP
+  B:00D0H.7       PUBLIC        CY
+  C:0003H         PUBLIC        main
+  C:0141H         PUBLIC        _lcd_writeonechar
+  C:0081H         PUBLIC        rtc_readonechar
+  C:0053H         PUBLIC        _lcd_string
+  D:0098H         PUBLIC        SCON
+  D:0088H         PUBLIC        TCON
+  C:0130H         PUBLIC        _rtc_writeonechar
+  C:011DH         PUBLIC        _rtc_read
+  B:0090H.2       PUBLIC        lcd_clk
+  B:0080H.2       PUBLIC        lcd_sid
+  C:00CDH         PUBLIC        _rtc_write
+  B:0090H.6       PUBLIC        rtc_clk
+  D:00C8H         PUBLIC        T2CON
+  B:0080H.3       PUBLIC        lcd_cs
+  D:00D0H         PUBLIC        PSW
+  -------         PROC          _DELAY_1MS
+  D:0006H         SYMBOL        z
+  -------         DO            
+  D:0005H         SYMBOL        i
+  -------         ENDDO         
+  C:0107H         LINE#         16
+  C:0107H         LINE#         17
+  C:0107H         LINE#         19
+  C:0111H         LINE#         20
+  C:011CH         LINE#         21
+  -------         ENDPROC       _DELAY_1MS
+  -------         PROC          _RTC_WRITEONECHAR
+  D:0007H         SYMBOL        dat
+  -------         DO            
+  D:0006H         SYMBOL        i
+  -------         ENDDO         
+  C:0130H         LINE#         23
+  C:0130H         LINE#         24
+  C:0130H         LINE#         26
+  C:0132H         LINE#         27
+  C:0132H         LINE#         28
+  C:0136H         LINE#         29
+  C:0138H         LINE#         30
+  C:013AH         LINE#         31
+  C:013CH         LINE#         32
+  C:0140H         LINE#         33
+  -------         ENDPROC       _RTC_WRITEONECHAR
+  -------         PROC          RTC_READONECHAR
+  -------         DO            
+  D:0006H         SYMBOL        i
+  D:0007H         SYMBOL        temp
+  -------         ENDDO         
+  C:0081H         LINE#         35
+  C:0081H         LINE#         36
+BL51 BANKED LINKER/LOCATER V6.05                                                      10/13/2010  18:59:11  PAGE 4
+
+
+  C:0081H         LINE#         37
+  C:0083H         LINE#         38
+  C:0084H         LINE#         39
+  C:0084H         LINE#         40
+  C:0086H         LINE#         41
+  C:0096H         LINE#         42
+  C:0098H         LINE#         43
+  C:009CH         LINE#         44
+  C:00AAH         LINE#         45
+  -------         ENDPROC       RTC_READONECHAR
+  -------         PROC          _RTC_WRITE
+  D:0007H         SYMBOL        add
+  D:0005H         SYMBOL        dat
+  C:00CDH         LINE#         47
+  C:00CDH         LINE#         48
+  C:00CDH         LINE#         49
+  C:00CFH         LINE#         50
+  C:00D1H         LINE#         51
+  C:00D3H         LINE#         52
+  C:00D6H         LINE#         53
+  C:00EBH         LINE#         54
+  C:00EDH         LINE#         55
+  -------         ENDPROC       _RTC_WRITE
+  -------         PROC          _RTC_READ
+  D:0007H         SYMBOL        add
+  -------         DO            
+  D:0007H         SYMBOL        temp
+  -------         ENDDO         
+  C:011DH         LINE#         57
+  C:011DH         LINE#         58
+  C:011DH         LINE#         60
+  C:011FH         LINE#         61
+  C:0121H         LINE#         62
+  C:0123H         LINE#         63
+  C:012AH         LINE#         64
+  C:012DH         LINE#         65
+  C:012FH         LINE#         66
+  C:012FH         LINE#         67
+  -------         ENDPROC       _RTC_READ
+  -------         PROC          _LCD_WRITEONECHAR
+  D:0007H         SYMBOL        dat
+  -------         DO            
+  D:0006H         SYMBOL        i
+  -------         ENDDO         
+  C:0141H         LINE#         69
+  C:0141H         LINE#         70
+  C:0141H         LINE#         72
+  C:0143H         LINE#         73
+  C:0143H         LINE#         74
+  C:0147H         LINE#         75
+  C:0149H         LINE#         76
+  C:014BH         LINE#         77
+  C:014DH         LINE#         78
+  C:0151H         LINE#         79
+  -------         ENDPROC       _LCD_WRITEONECHAR
+  -------         PROC          LCD_WRITECD
+  B:0020H.0       SYMBOL        cd
+BL51 BANKED LINKER/LOCATER V6.05                                                      10/13/2010  18:59:11  PAGE 5
+
+
+  D:000CH         SYMBOL        dat
+  C:00ABH         LINE#         81
+  C:00ABH         LINE#         82
+  C:00ABH         LINE#         83
+  C:00ADH         LINE#         84
+  C:00B9H         LINE#         85
+  C:00C1H         LINE#         86
+  C:00CAH         LINE#         87
+  C:00CCH         LINE#         88
+  -------         ENDPROC       LCD_WRITECD
+  -------         PROC          _LCD_STRING
+  D:0007H         SYMBOL        add
+  D:0009H         SYMBOL        pt
+  C:0053H         LINE#         90
+  C:0059H         LINE#         91
+  C:0059H         LINE#         92
+  C:005FH         LINE#         93
+  C:006AH         LINE#         94
+  C:0080H         LINE#         95
+  -------         ENDPROC       _LCD_STRING
+  -------         PROC          MAIN
+  -------         DO            
+  D:0005H         SYMBOL        second
+  D:0008H         SYMBOL        second_old
+  -------         ENDDO         
+  C:0003H         LINE#         97
+  C:0003H         LINE#         98
+  C:0003H         LINE#         100
+  C:000BH         LINE#         101
+  C:0016H         LINE#         102
+  C:0016H         LINE#         103
+  C:0016H         LINE#         104
+  C:001DH         LINE#         105
+  C:0022H         LINE#         106
+  C:0022H         LINE#         107
+  C:0024H         LINE#         108
+  C:002CH         LINE#         109
+  C:003AH         LINE#         110
+  C:004AH         LINE#         111
+  C:004AH         LINE#         112
+  C:0051H         LINE#         113
+  -------         ENDPROC       MAIN
+  -------         ENDMOD        REDO
+
+  -------         MODULE        ?C?CLDPTR
+  C:00EEH         PUBLIC        ?C?CLDPTR
+  -------         ENDMOD        ?C?CLDPTR
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_RTC_WRITE?REDO
+
+Program Size: data=14.1 xdata=0 code=353
+LINK/LOCATE RUN COMPLETE.  1 WARNING(S),  0 ERROR(S)

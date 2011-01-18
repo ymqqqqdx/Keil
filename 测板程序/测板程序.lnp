@@ -1,0 +1,8 @@
+"74ls164.obj",
+"delay.obj",
+"main.obj",
+"7219.obj",
+"ds1302_driver.obj",
+"18b20_driver.obj" 
+TO "²â°å³ÌÐò" 
+RAMSIZE(256) 

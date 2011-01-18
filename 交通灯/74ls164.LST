@@ -1,0 +1,40 @@
+C51 COMPILER V6.12  74LS164                                                                04/11/2010 22:10:12 PAGE 1   
+
+
+C51 COMPILER V6.12, COMPILATION OF MODULE 74LS164
+OBJECT MODULE PLACED IN .\74ls164.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE .\74ls164.c DEBUG OBJECTEXTEND
+
+stmt level    source
+
+   1          #include <reg52.h>
+   2          sbit clock=P1^6;
+   3          sbit dat=P1^7;
+   4          void write_onechar(unsigned char temp)
+   5          {
+   6   1      		int i;
+   7   1      		for(i=0;i<8;i++)
+   8   1      		{
+   9   2      			dat=temp&0x01;
+  10   2      			clock=1;
+  11   2      			temp>>=1;			
+  12   2      			clock=0;
+  13   2      		}
+  14   1      //		clock=1;
+  15   1      //		delay(1);
+  16   1      }
+  17          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     27    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

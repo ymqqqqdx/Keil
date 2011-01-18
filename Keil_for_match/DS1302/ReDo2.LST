@@ -1,0 +1,252 @@
+C51 COMPILER V8.09   REDO2                                                                 10/13/2010 18:52:38 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE REDO2
+OBJECT MODULE PLACED IN ReDo2.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE ReDo2.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #define CMD 0
+   3          #define DATA 1
+   4          sbit rtc_clk=P1^6;
+   5          sbit rtc_io=P1^7;
+   6          sbit rtc_rst=P3^0;
+   7          
+   8          sbit lcd_cs=P0^3;
+   9          sbit lcd_clk=P1^2;
+  10          sbit lcd_sid=P0^2;
+  11          
+  12          sbit key1=P3^4;
+  13          sbit key2=P3^5;
+  14          sbit key3=P3^2;
+  15          
+  16          U8 stat=0,key=0;
+  17          U8 second_old;
+  18          
+  19          U8 code range[3][2]={{0,59},{0,59},{0,23}};
+  20          
+  21          struct RTC
+  22          {
+  23                  U8 second;
+  24                  U8 minute;
+  25                  U8 hour;
+  26          } time;
+  27          
+  28          void delay_1ms(U16 z)
+  29          {
+  30   1              U8 i;
+  31   1              while(z--)
+  32   1                      for(i=0;i<110;i++);
+  33   1      }
+  34          
+  35          void rtc_writeonechar(U8 dat)
+  36          {
+  37   1              U8 i;
+  38   1              for(i=0;i<8;i++)
+  39   1              {
+  40   2                      dat>>=1;
+  41   2                      rtc_clk=0;
+  42   2                      rtc_io=CY;
+  43   2                      rtc_clk=1;
+  44   2              }
+  45   1      }
+  46          
+  47          U8 rtc_readonechar()
+  48          {
+  49   1              U8 i,temp=0;
+  50   1              for(i=0;i<8;i++)
+  51   1              {
+  52   2                      rtc_clk=0;
+  53   2                      temp|=((U8)rtc_io)<<i;
+  54   2                      rtc_clk=1;
+  55   2              }
+C51 COMPILER V8.09   REDO2                                                                 10/13/2010 18:52:38 PAGE 2   
+
+  56   1              return temp/16*10+temp%16;
+  57   1      }
+  58          
+  59          void rtc_write(U8 add,U8 dat)
+  60          {
+  61   1              rtc_rst=0;
+  62   1              rtc_clk=0;
+  63   1              rtc_rst=1;
+  64   1              rtc_writeonechar(add);
+  65   1              rtc_writeonechar((dat/10)<<4|dat%10);
+  66   1              rtc_rst=0;
+  67   1      }
+  68          
+  69          U8 rtc_read(U8 add)
+  70          {
+  71   1              U8 temp;
+  72   1              rtc_rst=0;
+  73   1              rtc_clk=0;
+  74   1              rtc_rst=1;
+  75   1              rtc_writeonechar(add|1);
+  76   1              temp=rtc_readonechar();
+  77   1              rtc_rst=0;
+  78   1              return temp;
+  79   1      }
+  80          
+  81          void lcd_writeonechar(U8 dat)
+  82          {
+  83   1              U8 i;
+  84   1              for(i=0;i<8;i++)
+  85   1              {
+  86   2                      dat<<=1;
+  87   2                      lcd_sid=CY;
+  88   2                      lcd_clk=0;
+  89   2                      lcd_clk=1;
+  90   2              }
+  91   1      }
+  92          
+  93          void lcd_writecd(bit cd,U8 dat)
+  94          {
+  95   1              lcd_cs=1;
+  96   1              lcd_writeonechar(cd==0?0xf8:0xfa);
+  97   1              lcd_writeonechar(dat&0xf0);
+  98   1              lcd_writeonechar(dat<<4);
+  99   1              lcd_cs=0;
+ 100   1      }
+ 101          
+ 102          void lcd_string(U8 add,U8 *pt)
+ 103          {
+ 104   1              lcd_writecd(0,add);
+ 105   1              while(*pt!='\0')
+ 106   1                      lcd_writecd(1,*pt++);
+ 107   1      }
+ 108          
+ 109          void lcd_normal_init()
+ 110          {
+ 111   1              lcd_writecd(0,0x0c);
+ 112   1              lcd_string(0x82,"当前时间：");
+ 113   1              lcd_writecd(0,0x92);
+ 114   1              lcd_writecd(1,':');
+ 115   1              lcd_writecd(0,0x94);
+ 116   1              lcd_writecd(1,':');
+ 117   1      }
+C51 COMPILER V8.09   REDO2                                                                 10/13/2010 18:52:38 PAGE 3   
+
+ 118          
+ 119          void lcd_adjust_init()
+ 120          {
+ 121   1              lcd_writecd(0,0x0f);
+ 122   1              lcd_string(0x82,"调时模式：");  
+ 123   1              lcd_writecd(0,0x92);
+ 124   1              lcd_writecd(1,':');
+ 125   1              lcd_writecd(0,0x94);
+ 126   1              lcd_writecd(1,':');     
+ 127   1              lcd_writecd(0,0x95);    
+ 128   1      }
+ 129          
+ 130          void lcd_displaytwo(U8 add,U8 dat)
+ 131          {
+ 132   1              lcd_writecd(0,add);
+ 133   1              lcd_writecd(1,dat/10+'0');
+ 134   1              lcd_writecd(1,dat%10+'0');
+ 135   1              lcd_writecd(0,add);
+ 136   1      }
+ 137          
+ 138          void rtc_gettime()
+ 139          {
+ 140   1              U8 i,*pt=&time.second;
+ 141   1              for(i=0;i<3;i++)
+ 142   1                      *pt++=rtc_read(0x80+i*2);
+ 143   1              lcd_displaytwo(0x91,time.hour);
+ 144   1              lcd_displaytwo(0x93,time.minute);
+ 145   1              lcd_displaytwo(0x95,time.second);
+ 146   1      }
+ 147          
+ 148          void lcd_normal()
+ 149          {
+ 150   1              time.second=rtc_read(0x80);
+ 151   1              if(time.second!=second_old)
+ 152   1              {
+ 153   2                      lcd_displaytwo(0x95,time.second);
+ 154   2                      if(time.second==0)
+ 155   2                              rtc_gettime();
+ 156   2                      second_old=time.second;
+ 157   2              }
+ 158   1      }
+ 159          
+ 160          U8 rtc_range(U8 offset,U8 dat)
+ 161          {
+ 162   1              if(dat<range[offset][0] | dat>range[offset][1])
+ 163   1                      return range[offset][0];
+ 164   1              else
+ 165   1                      return dat;
+ 166   1      }
+ 167          
+ 168          void keyscan()
+ 169          {
+ 170   1              U8 *pt,i;
+ 171   1              if(!key1)
+ 172   1              {
+ 173   2                      key++;
+ 174   2                      if(key==1)
+ 175   2                      {
+ 176   3                              lcd_adjust_init();
+ 177   3                              stat=1;
+ 178   3                      }
+ 179   2                      lcd_writecd(0,0x95-(key-1)*2);
+C51 COMPILER V8.09   REDO2                                                                 10/13/2010 18:52:38 PAGE 4   
+
+ 180   2                      if(key==4)
+ 181   2                      {
+ 182   3                              lcd_normal_init();
+ 183   3                              key=0;
+ 184   3                              stat=0;
+ 185   3                              pt=&time.second;
+ 186   3                              for(i=0;i<3;i++)
+ 187   3                                      rtc_write(0x80+i*2,*(pt+i));
+ 188   3                      }
+ 189   2                      while(!key1);
+ 190   2              }
+ 191   1              else if(!key2)
+ 192   1              {
+ 193   2                      pt=&time.second;
+ 194   2                      (*(pt+key-1))++;
+ 195   2                      *(pt+key-1)=rtc_range(key-1,*(pt+key-1));
+ 196   2                      lcd_displaytwo(0x95-(key-1)*2,*(pt+key-1));
+ 197   2                      while(!key2);
+ 198   2              }
+ 199   1              else if(!key3)
+ 200   1              {
+ 201   2                      pt=&time.second;
+ 202   2                      (*(pt+key-1))--;
+ 203   2                      *(pt+key-1)=rtc_range(key-1,*(pt+key-1));
+ 204   2                      lcd_displaytwo(0x95-(key-1)*2,*(pt+key-1));
+ 205   2              }while(!key3);
+ 206   1      }
+ 207          
+ 208          void main()
+ 209          {
+ 210   1              rtc_write(0x8e,0);
+ 211   1              lcd_normal_init();
+ 212   1              rtc_gettime();
+ 213   1              while(1)
+ 214   1              {
+ 215   2                      switch(stat)
+ 216   2                      {
+ 217   3                              case 0 : lcd_normal(); break;
+ 218   3                              case 1 : break;
+ 219   3                      }
+ 220   2                      keyscan();
+ 221   2                      delay_1ms(5);
+ 222   2              }
+ 223   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    778    ----
+   CONSTANT SIZE    =     28    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      6      10
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----       1
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

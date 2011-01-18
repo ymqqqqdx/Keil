@@ -1,0 +1,64 @@
+C51 COMPILER V6.12  7219                                                                   04/11/2010 17:34:07 PAGE 1   
+
+
+C51 COMPILER V6.12, COMPILATION OF MODULE 7219
+OBJECT MODULE PLACED IN .\7219.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE .\7219.c DEBUG OBJECTEXTEND
+
+stmt level    source
+
+   1          #include <reg52.h>
+   2          #define decode_mode 0X09 //解码模式，0xff全部解码，0x0f解前四个
+   3          #define intensity 0x0a
+   4          #define scan_limit 0x0b//扫描限度，0x00-0x07
+   5          #define shut_down 0x0c//关闭模式，0x00为关机,0x01为正常
+   6          #define display_test 0x0f//显示模式
+   7          
+   8          sbit load=P2^1;//第一片
+   9          sbit din=P2^0;//data in
+  10          sbit clk=P2^2;//clock
+  11          
+  12          
+  13          void write7219onechar0(unsigned char temp)
+  14          {
+  15   1      	unsigned char i;
+  16   1      	for(i=0;i<8;i++)
+  17   1      	{
+  18   2      		clk=0;
+  19   2      		din=(bit)(temp&0x80);
+  20   2      		temp<<=1;
+  21   2      		clk=1;
+  22   2      	}
+  23   1      }
+  24          
+  25          
+  26          void write7219one(unsigned char address,unsigned char dat)
+  27          {
+  28   1      	load=0;
+  29   1      	write7219onechar0(address);
+  30   1      	write7219onechar0(dat);
+  31   1      	load=1;
+  32   1      }
+  33          
+  34          void init7219()
+  35          {
+  36   1      	write7219one(shut_down,0x01);
+  37   1      	write7219one(display_test,0x00);
+  38   1      	write7219one(decode_mode,0x00);
+  39   1      	write7219one(scan_limit,0x07);
+  40   1      	write7219one(intensity,0x04);
+  41   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     66    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

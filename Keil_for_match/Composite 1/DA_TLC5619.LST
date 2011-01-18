@@ -1,0 +1,48 @@
+C51 COMPILER V8.09   DA_TLC5619                                                            10/08/2010 19:08:43 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE DA_TLC5619
+OBJECT MODULE PLACED IN DA_TLC5619.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE DA_TLC5619.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #include <declare.h>
+   3          sbit DA_DAT=P3^5;
+   4          sbit DA_CLK=P3^6;
+   5          sbit DA_CS=P3^7;
+   6          void da_write(U16 dat)
+   7          {
+   8   1              U8 i;
+   9   1              DA_CS=0;
+  10   1              dat<<=2;
+  11   1              dat|=0x02;
+  12   1              for(i=0;i<16;i++)
+  13   1              {
+  14   2                      DA_CLK=1;
+  15   2                      dat<<=1;
+  16   2                      DA_DAT=CY;
+  17   2                      DA_CLK=0;
+  18   2              }
+  19   1              DA_CS=1;
+  20   1      }
+  21          void da_process(U8 dat)
+  22          {
+  23   1              dat=dat%10;
+  24   1              da_write(700-dat*70);
+  25   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     64    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

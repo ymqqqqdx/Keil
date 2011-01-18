@@ -1,0 +1,43 @@
+C51 COMPILER V6.12  TIMER                                                                  04/02/2010 19:25:41 PAGE 1   
+
+
+C51 COMPILER V6.12, COMPILATION OF MODULE TIMER
+OBJECT MODULE PLACED IN .\timer.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE .\timer.c DEBUG OBJECTEXTEND
+
+stmt level    source
+
+   1          #include <reg52.h>
+   2          #include "declare.h"
+   3          sbit k1=P1^7;
+   4          sbit k2=P1^6;
+   5          sbit k3=P1^5;
+   6          int count;
+   7          void keyscan();
+   8          void timer0() interrupt 1
+   9          {
+  10   1      	TH0=(65536-50000)/256; 
+  11   1      	TL0=(65536-50000)%256;
+  12   1      	count++;
+  13   1      	keyscan();
+  14   1      /*	if(count==100&&buff==1)
+  15   1      	{
+  16   1      		count=0;
+  17   1      		if(mode==1) mode=2;
+  18   1      		else if(mode==2) mode=1;
+  19   1      	}*/
+  20   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     73    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      2    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

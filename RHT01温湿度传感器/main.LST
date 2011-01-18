@@ -1,0 +1,109 @@
+C51 COMPILER V8.09   MAIN                                                                  06/04/2010 19:23:20 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE main.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #include <stdio.h>
+   3          #define uchar unsigned char
+   4          #define uint unsigned int
+   5          sbit rst=P1^0;
+   6          sbit dat=P1^1;
+   7          sbit clk=P3^4;
+   8          sbit cs=P3^5;
+   9          void delay(uint z)
+  10          {
+  11   1              uint i,j;
+  12   1              for(i=0;i<z;i++)
+  13   1                      for(j=0;j<1100;j++);
+  14   1      }
+  15          void comm_init()
+  16          {
+  17   1              REN=1; //串行允许
+  18   1              SCON=0x52;
+  19   1              TMOD=0X21;//设置定时器1工作方式
+  20   1              TH1=0XFD;//装初值
+  21   1              TL1=0XFD;//装初值
+  22   1              TR1=1;//打开定时器1
+  23   1              SM0=0; //设置方式1
+  24   1              SM1=1;
+  25   1              EA=1;
+  26   1      }
+  27          int getonechar()
+  28          {
+  29   1              int temp=0,i;
+  30   1              for(i=0;i<8;i++)
+  31   1              {
+  32   2                      while(clk==0);
+  33   2                      if(clk)
+  34   2                      {
+  35   3                              if(i)
+  36   3                                      temp<<=1;
+  37   3                              if(dat)
+  38   3                                      temp|=0x01;
+  39   3                              while(clk);     
+  40   3                      }       
+  41   2              }
+  42   1              return temp;
+  43   1      }
+  44          
+  45          void readtemphumi()
+  46          {
+  47   1              int a=0,b=0,c=0,d=0,e=0;
+  48   1              int tempreture=0;
+  49   1              int humidity=0;
+  50   1              rst=1;
+  51   1              
+  52   1              cs=0;
+  53   1              delay(8);
+  54   1              
+  55   1              a=getonechar();
+C51 COMPILER V8.09   MAIN                                                                  06/04/2010 19:23:20 PAGE 2   
+
+  56   1              b=getonechar();
+  57   1              c=getonechar();
+  58   1              d=getonechar();
+  59   1              e=getonechar();
+  60   1              
+  61   1      //      delay(240);
+  62   1              cs=1;
+  63   1              
+  64   1              
+  65   1              tempreture=a;
+  66   1              tempreture<<=8;
+  67   1              tempreture+=b;
+  68   1              tempreture-=400;
+  69   1              
+  70   1              humidity=c;
+  71   1              humidity<<=8;
+  72   1              humidity+=d;
+  73   1              
+  74   1              printf(" %d %d ",tempreture,humidity);
+  75   1      }
+  76          void main()
+  77          {
+  78   1              comm_init();
+  79   1              while(1)
+  80   1              {
+  81   2                      readtemphumi();
+  82   2                      delay(2000);
+  83   2              }
+  84   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    234    ----
+   CONSTANT SIZE    =      8    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       6
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

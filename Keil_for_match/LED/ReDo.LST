@@ -1,0 +1,89 @@
+C51 COMPILER V8.09   REDO                                                                  10/12/2010 10:47:33 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE REDO
+OBJECT MODULE PLACED IN ReDo.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE ReDo.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <stdio.h>
+   2          #include <reg52.h>
+   3          #include <intrins.h>
+   4          #define U8 unsigned char
+   5          #define U16 unsigned int
+   6          sbit scl=P1^1;
+   7          sbit sclk=P1^2;
+   8          sbit sda=P1^4;
+   9          
+  10          void hc595_write(U8 dat)
+  11          {
+  12   1              U8 i,save_P1=P1;
+  13   1              for(i=0;i<8;i++)
+  14   1              {
+  15   2                      dat<<=1;
+  16   2                      sda=CY;
+  17   2                      scl=0;
+  18   2                      scl=1;
+  19   2              }
+  20   1              sclk=0;
+  21   1              sclk=1;
+  22   1              P1=save_P1;
+  23   1      }
+  24          
+  25          void leds(U16 dat)
+  26          {
+  27   1              U8 temp=0;
+  28   1              temp|=(dat&(0xf<<9))>>5;
+  29   1              temp|=(U8)(bit)(dat&(1<<0))<<1;
+  30   1              temp|=(U8)(bit)(dat&(1<<1))<<0;
+  31   1              temp|=(U8)(bit)(dat&(1<<2))<<3;
+  32   1              temp|=(U8)(bit)(dat&(1<<3))<<2;
+  33   1              hc595_write(temp);
+  34   1              P1=(dat&(0x1f<<4))>>4;
+  35   1      }
+  36          
+  37          void delay_1ms(U16 z)
+  38          {
+  39   1              U8 i;
+  40   1              while(z--)
+  41   1                      for(i=0;i<110;i++);
+  42   1      }
+  43          
+  44          void main()
+  45          {
+  46   1              U8 i;
+  47   1              U16 temp=~1;
+  48   1              while(1)
+  49   1              {
+  50   2                      for(i=0;i<13;i++)
+  51   2                      {
+  52   3                              leds(temp);
+  53   3                              temp=_irol_(temp,1);
+  54   3                              delay_1ms(500);
+  55   3                      }
+C51 COMPILER V8.09   REDO                                                                  10/12/2010 10:47:33 PAGE 2   
+
+  56   2                      temp=~2;
+  57   2                      for(i=0;i<7;i++)
+  58   2                      {
+  59   3                              leds(temp);
+  60   3                              temp=_irol_(temp,2);
+  61   3                              delay_1ms(500);
+  62   3                      }
+  63   2              }
+  64   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    221    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

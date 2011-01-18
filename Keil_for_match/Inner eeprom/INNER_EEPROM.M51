@@ -1,0 +1,330 @@
+BL51 BANKED LINKER/LOCATER V6.05                                                        11/20/2010  21:03:05  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V6.05, INVOKED BY:
+C:\KEIL\C51\BIN\BL51.EXE STARTUP.obj, main.obj TO INNER_EEPROM RAMSIZE (256)
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  STARTUP.obj (?C_STARTUP)
+  main.obj (MAIN)
+  C:\KEIL\C51\LIB\C51S.LIB (PRINTF)
+  C:\KEIL\C51\LIB\C51S.LIB (PUTS)
+  C:\KEIL\C51\LIB\C51S.LIB (?C?CLDPTR)
+  C:\KEIL\C51\LIB\C51S.LIB (?C?CLDOPTR)
+  C:\KEIL\C51\LIB\C51S.LIB (?C?CSTPTR)
+  C:\KEIL\C51\LIB\C51S.LIB (?C?PLDIIDATA)
+  C:\KEIL\C51\LIB\C51S.LIB (?C?CCASE)
+  C:\KEIL\C51\LIB\C51S.LIB (PUTCHAR)
+
+
+LINK MAP OF MODULE:  INNER_EEPROM (?C_STARTUP)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            DATA    0008H     0017H     UNIT         _DATA_GROUP_
+                    001FH     0001H                  *** GAP ***
+            BIT     0020H.0   0001H.1   UNIT         _BIT_GROUP_
+                    0021H.1   0000H.7                *** GAP ***
+            IDATA   0022H     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+            CODE    0003H     035CH     UNIT         ?PR?PRINTF?PRINTF
+            CODE    035FH     008EH     UNIT         ?C?LIB_CODE
+            CODE    03EDH     003AH     UNIT         ?PR?MAIN?MAIN
+            CODE    0427H     002AH     UNIT         ?PR?_PUTS?PUTS
+            CODE    0451H     0027H     UNIT         ?PR?PUTCHAR?PUTCHAR
+            CODE    0478H     0019H     UNIT         ?PR?UART_INIT?MAIN
+            CODE    0491H     0017H     UNIT         ?PR?_ISP_READ?MAIN
+            CODE    04A8H     0016H     UNIT         ?PR?_ISP_WRITE?MAIN
+            CODE    04BEH     0016H     UNIT         ?PR?_DELAY?MAIN
+            CODE    04D4H     0014H     UNIT         ?PR?_ISP_SECTORERASE?MAIN
+            CODE    04E8H     000CH     UNIT         ?C_C51STARTUP
+            CODE    04F4H     000CH     UNIT         ?PR?ISP_ENABLE?MAIN
+            CODE    0500H     000BH     UNIT         ?PR?ISP_GO?MAIN
+            CODE    050BH     0009H     UNIT         ?PR?ISP_DISABLE?MAIN
+            CODE    0514H     0009H     UNIT         ?CO?MAIN
+
+
+
+OVERLAY MAP OF MODULE:   INNER_EEPROM (?C_STARTUP)
+
+
+SEGMENT                              BIT_GROUP          DATA_GROUP 
+BL51 BANKED LINKER/LOCATER V6.05                                                      11/20/2010  21:03:05  PAGE 2
+
+
+  +--> CALLED SEGMENT             START    LENGTH     START    LENGTH
+---------------------------------------------------------------------
+?C_C51STARTUP                     -----    -----      -----    -----
+  +--> ?PR?MAIN?MAIN
+
+?PR?MAIN?MAIN                     -----    -----      0008H    0003H
+  +--> ?PR?UART_INIT?MAIN
+  +--> ?CO?MAIN
+  +--> ?PR?_PUTS?PUTS
+  +--> ?PR?_DELAY?MAIN
+  +--> ?PR?_ISP_READ?MAIN
+  +--> ?PR?PRINTF?PRINTF
+
+?PR?_PUTS?PUTS                    -----    -----      -----    -----
+  +--> ?PR?PUTCHAR?PUTCHAR
+
+?PR?_ISP_READ?MAIN                -----    -----      -----    -----
+  +--> ?PR?ISP_GO?MAIN
+  +--> ?PR?ISP_DISABLE?MAIN
+
+?PR?ISP_GO?MAIN                   -----    -----      -----    -----
+  +--> ?PR?ISP_ENABLE?MAIN
+
+?PR?PRINTF?PRINTF                 0020H.0  0001H.1    000BH    0014H
+  +--> ?PR?PUTCHAR?PUTCHAR
+
+
+
+SYMBOL TABLE OF MODULE:  INNER_EEPROM (?C_STARTUP)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        ?C_STARTUP
+  C:04E8H         SEGMENT       ?C_C51STARTUP
+  I:0022H         SEGMENT       ?STACK
+  C:0000H         PUBLIC        ?C_STARTUP
+  D:00E0H         SYMBOL        ACC
+  D:00F0H         SYMBOL        B
+  D:0083H         SYMBOL        DPH
+  D:0082H         SYMBOL        DPL
+  N:0000H         SYMBOL        IBPSTACK
+  N:0100H         SYMBOL        IBPSTACKTOP
+  N:0080H         SYMBOL        IDATALEN
+  C:04EBH         SYMBOL        IDATALOOP
+  N:0000H         SYMBOL        PBPSTACK
+  N:0100H         SYMBOL        PBPSTACKTOP
+  N:0000H         SYMBOL        PDATALEN
+  N:0000H         SYMBOL        PDATASTART
+  N:0000H         SYMBOL        PPAGE
+  N:0000H         SYMBOL        PPAGEENABLE
+  D:00A0H         SYMBOL        PPAGE_SFR
+  D:0081H         SYMBOL        SP
+  C:04E8H         SYMBOL        STARTUP1
+  N:0000H         SYMBOL        XBPSTACK
+  N:0000H         SYMBOL        XBPSTACKTOP
+  N:0000H         SYMBOL        XDATALEN
+BL51 BANKED LINKER/LOCATER V6.05                                                      11/20/2010  21:03:05  PAGE 3
+
+
+  N:0000H         SYMBOL        XDATASTART
+  C:0000H         LINE#         126
+  C:04E8H         LINE#         133
+  C:04EAH         LINE#         134
+  C:04EBH         LINE#         135
+  C:04ECH         LINE#         136
+  C:04EEH         LINE#         185
+  C:04F1H         LINE#         196
+  -------         ENDMOD        ?C_STARTUP
+
+  -------         MODULE        MAIN
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:0090H         PUBLIC        P1
+  D:00B0H         PUBLIC        P3
+  D:00C6H         PUBLIC        ISP_TRIG
+  B:00A8H.7       PUBLIC        EA
+  D:00A8H         PUBLIC        IE
+  C:04BEH         PUBLIC        _delay
+  C:0478H         PUBLIC        Uart_Init
+  B:00A8H.4       PUBLIC        ES
+  D:00B8H         PUBLIC        IP
+  D:00C7H         PUBLIC        ISP_CONTER
+  D:00C5H         PUBLIC        ISP_CMD
+  C:0500H         PUBLIC        ISP_go
+  C:050BH         PUBLIC        ISP_disable
+  C:03EDH         PUBLIC        main
+  D:00C3H         PUBLIC        ISP_ADDRH
+  D:0098H         PUBLIC        SCON
+  D:0089H         PUBLIC        TMOD
+  D:0088H         PUBLIC        TCON
+  D:00C4H         PUBLIC        ISP_ADDRL
+  C:04F4H         PUBLIC        ISP_enable
+  D:008DH         PUBLIC        TH1
+  B:0098H.7       PUBLIC        SM0
+  B:0098H.6       PUBLIC        SM1
+  D:008BH         PUBLIC        TL1
+  B:0088H.6       PUBLIC        TR1
+  B:0098H.4       PUBLIC        REN
+  D:00C8H         PUBLIC        T2CON
+  D:00C2H         PUBLIC        ISP_DATA
+  C:0491H         PUBLIC        _ISP_read
+  C:04D4H         PUBLIC        _ISP_sectorerase
+  D:00D0H         PUBLIC        PSW
+  C:04A8H         PUBLIC        _ISP_write
+  -------         PROC          UART_INIT
+  C:0478H         LINE#         3
+  C:0478H         LINE#         4
+  C:0478H         LINE#         5
+  C:047AH         LINE#         6
+  C:047DH         LINE#         7
+  C:0480H         LINE#         8
+  C:0483H         LINE#         9
+  C:0486H         LINE#         10
+  C:0488H         LINE#         11
+  C:048AH         LINE#         12
+  C:048CH         LINE#         13
+  C:048EH         LINE#         14
+BL51 BANKED LINKER/LOCATER V6.05                                                      11/20/2010  21:03:05  PAGE 4
+
+
+  C:0490H         LINE#         15
+  -------         ENDPROC       UART_INIT
+  -------         PROC          ISP_ENABLE
+  C:04F4H         LINE#         16
+  C:04F4H         LINE#         17
+  C:04F4H         LINE#         18
+  C:04F6H         LINE#         19
+  C:04F9H         LINE#         20
+  C:04FCH         LINE#         21
+  C:04FFH         LINE#         22
+  -------         ENDPROC       ISP_ENABLE
+  -------         PROC          ISP_DISABLE
+  C:050BH         LINE#         23
+  C:050BH         LINE#         24
+  C:050BH         LINE#         25
+  C:050EH         LINE#         26
+  C:0511H         LINE#         27
+  C:0513H         LINE#         28
+  -------         ENDPROC       ISP_DISABLE
+  -------         PROC          ISP_GO
+  C:0500H         LINE#         29
+  C:0500H         LINE#         30
+  C:0500H         LINE#         31
+  C:0503H         LINE#         32
+  C:0506H         LINE#         33
+  C:0509H         LINE#         34
+  C:050AH         LINE#         35
+  -------         ENDPROC       ISP_GO
+  -------         PROC          _ISP_READ
+  D:0004H         SYMBOL        add
+  C:0491H         LINE#         36
+  C:0495H         LINE#         37
+  C:0495H         LINE#         38
+  C:0497H         LINE#         39
+  C:0499H         LINE#         40
+  C:049CH         LINE#         41
+  C:049FH         LINE#         42
+  C:04A2H         LINE#         43
+  C:04A5H         LINE#         44
+  C:04A7H         LINE#         45
+  -------         ENDPROC       _ISP_READ
+  -------         PROC          _ISP_SECTORERASE
+  D:0006H         SYMBOL        sectoradd
+  C:04D4H         LINE#         46
+  C:04D4H         LINE#         47
+  C:04D4H         LINE#         48
+  C:04D9H         LINE#         49
+  C:04DCH         LINE#         50
+  C:04DFH         LINE#         51
+  C:04E2H         LINE#         52
+  C:04E5H         LINE#         53
+  -------         ENDPROC       _ISP_SECTORERASE
+  -------         PROC          _ISP_WRITE
+  D:0002H         SYMBOL        add
+  D:0005H         SYMBOL        dat
+  C:04A8H         LINE#         55
+  C:04ACH         LINE#         56
+BL51 BANKED LINKER/LOCATER V6.05                                                      11/20/2010  21:03:05  PAGE 5
+
+
+  C:04ACH         LINE#         57
+  C:04AEH         LINE#         58
+  C:04B0H         LINE#         59
+  C:04B3H         LINE#         60
+  C:04B6H         LINE#         61
+  C:04B8H         LINE#         62
+  C:04BBH         LINE#         63
+  -------         ENDPROC       _ISP_WRITE
+  -------         PROC          _DELAY
+  D:0006H         SYMBOL        z
+  -------         DO            
+  D:0005H         SYMBOL        i
+  -------         ENDDO         
+  C:04BEH         LINE#         65
+  C:04BEH         LINE#         66
+  C:04BEH         LINE#         68
+  C:04C8H         LINE#         69
+  C:04D3H         LINE#         70
+  -------         ENDPROC       _DELAY
+  -------         PROC          MAIN
+  -------         DO            
+  D:0008H         SYMBOL        i
+  D:0009H         SYMBOL        j
+  -------         ENDDO         
+  C:03EDH         LINE#         71
+  C:03EDH         LINE#         72
+  C:03EDH         LINE#         74
+  C:03F2H         LINE#         75
+  C:03F5H         LINE#         76
+  C:03FEH         LINE#         77
+  C:0405H         LINE#         81
+  C:0408H         LINE#         82
+  C:0425H         LINE#         83
+  -------         ENDPROC       MAIN
+  -------         ENDMOD        MAIN
+
+  -------         MODULE        PRINTF
+  D:000BH         PUBLIC        ?_PRINTF517?BYTE
+  D:000BH         PUBLIC        ?_PRINTF?BYTE
+  D:000BH         PUBLIC        ?_SPRINTF517?BYTE
+  D:000BH         PUBLIC        ?_SPRINTF?BYTE
+  C:0065H         PUBLIC        _PRINTF
+  C:0065H         PUBLIC        _PRINTF517
+  C:005FH         PUBLIC        _SPRINTF
+  C:005FH         PUBLIC        _SPRINTF517
+  -------         ENDMOD        PRINTF
+
+  -------         MODULE        PUTS
+  C:0427H         PUBLIC        _PUTS
+  -------         ENDMOD        PUTS
+
+  -------         MODULE        ?C?CLDPTR
+  C:035FH         PUBLIC        ?C?CLDPTR
+  -------         ENDMOD        ?C?CLDPTR
+
+  -------         MODULE        ?C?CLDOPTR
+  C:0378H         PUBLIC        ?C?CLDOPTR
+BL51 BANKED LINKER/LOCATER V6.05                                                      11/20/2010  21:03:05  PAGE 6
+
+
+  -------         ENDMOD        ?C?CLDOPTR
+
+  -------         MODULE        ?C?CSTPTR
+  C:03A5H         PUBLIC        ?C?CSTPTR
+  -------         ENDMOD        ?C?CSTPTR
+
+  -------         MODULE        ?C?PLDIIDATA
+  C:03B7H         PUBLIC        ?C?PLDIIDATA
+  -------         ENDMOD        ?C?PLDIIDATA
+
+  -------         MODULE        ?C?CCASE
+  C:03C7H         PUBLIC        ?C?CCASE
+  -------         ENDMOD        ?C?CCASE
+
+  -------         MODULE        PUTCHAR
+  C:0451H         PUBLIC        _PUTCHAR
+  -------         ENDMOD        PUTCHAR
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_ISP_SECTORERASE?MAIN
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_ISP_WRITE?MAIN
+
+Program Size: data=33.1 xdata=0 code=1309
+LINK/LOCATE RUN COMPLETE.  2 WARNING(S),  0 ERROR(S)

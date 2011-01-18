@@ -1,0 +1,105 @@
+C51 COMPILER V6.12  DS1302_DRIVER                                                          04/04/2010 21:23:34 PAGE 1   
+
+
+C51 COMPILER V6.12, COMPILATION OF MODULE DS1302_DRIVER
+OBJECT MODULE PLACED IN .\ds1302_driver.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE .\ds1302_driver.c DEBUG OBJECTEXTEND
+
+stmt level    source
+
+   1          #include <reg52.h>
+   2          #include "declare.h"
+   3          sbit  DS1302_CLK = P1^1;              //实时时钟时钟线引脚 
+   4          sbit  DS1302_IO  = P1^2;              //实时时钟数据线引脚 
+   5          sbit  DS1302_RST = P1^0;              //实时时钟复位线引脚
+   6          sbit  ACC0 = ACC^0;
+   7          sbit  ACC7 = ACC^7;
+   8          void delay(int);
+   9          unsigned char bcdconvert(unsigned char bcd)
+  10          {
+  11   1      	unsigned char target;
+  12   1      	target=bcd>>4;
+  13   1      	target=target*10+(bcd&=0x0f);
+  14   1      	return(target);
+  15   1      }
+  16          unsigned char convertbcd(unsigned char ten)
+  17          {
+  18   1      	unsigned char bcd,a,b;
+  19   1      	a=ten/10;
+  20   1      	b=ten%10;
+  21   1      	a=a<<4;
+  22   1      	bcd=(a&=0xf0)+(b&=0x0f);
+  23   1      	return(bcd);
+  24   1      }
+  25          void DS1302InputByte(unsigned char d) 	//实时时钟写入一字节(内部函数)
+  26          { 
+  27   1          unsigned char i;
+  28   1          ACC = d;
+  29   1          for(i=8; i>0; i--)
+  30   1          {
+  31   2              DS1302_IO = ACC0;           	//相当于汇编中的 RRC
+  32   2              DS1302_CLK = 1;
+  33   2              DS1302_CLK = 0;
+  34   2              ACC = ACC >> 1; 
+  35   2          } 
+  36   1      }
+  37          unsigned char DS1302OutputByte(void) 	//实时时钟读取一字节(内部函数)
+  38          { 
+  39   1          unsigned char i;
+  40   1          for(i=8; i>0; i--)
+  41   1          {
+  42   2              ACC = ACC >>1;         			//相当于汇编中的 RRC 
+  43   2              ACC7 = DS1302_IO;
+  44   2              DS1302_CLK = 1;
+  45   2              DS1302_CLK = 0;
+  46   2          } 
+  47   1          return(ACC); 
+  48   1      }
+  49          void write_clock(unsigned char ucAddr, unsigned char ucDa)	//ucAddr: DS1302地址, ucData: 要写的数据
+  50          {
+  51   1          DS1302_RST = 0;
+  52   1          DS1302_CLK = 0;
+  53   1          DS1302_RST = 1;
+  54   1          DS1302InputByte(ucAddr);       	// 地址，命令 
+  55   1          DS1302InputByte(convertbcd(ucDa));       	// 写1Byte数据
+C51 COMPILER V6.12  DS1302_DRIVER                                                          04/04/2010 21:23:34 PAGE 2   
+
+  56   1          DS1302_CLK = 1;
+  57   1          DS1302_RST = 0;
+  58   1      } 
+  59          unsigned char read_clock(unsigned char ucAddr)	//读取DS1302某地址的数据
+  60          {
+  61   1          unsigned char ucData;
+  62   1          DS1302_RST = 0;
+  63   1          DS1302_CLK = 0;
+  64   1          DS1302_RST = 1;
+  65   1          DS1302InputByte(ucAddr|0x01);        // 地址，命令 
+  66   1          ucData = DS1302OutputByte();         // 读1Byte数据
+  67   1          DS1302_CLK = 1;
+  68   1          DS1302_RST = 0;
+  69   1          return(bcdconvert(ucData));
+  70   1      	delay(5);
+  71   1      }
+  72          /*void init_ds1302()
+  73          {
+  74          	year=10; writeyear;
+  75          	month=3; writemonth;
+  76          	day=15; writeday;
+  77          	hour=17; writehour;
+  78          	minute=41; writeminute;
+  79          	second=14; writesecond;
+  80          }   */
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    127    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

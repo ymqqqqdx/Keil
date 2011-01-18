@@ -1,0 +1,4 @@
+"STARTUP.obj",
+"ReDo.obj" 
+TO "DS1302" 
+RAMSIZE(256) 

@@ -1,0 +1,138 @@
+C51 COMPILER V8.09   REDO                                                                  10/11/2010 15:24:35 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE REDO
+OBJECT MODULE PLACED IN ReDo.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE ReDo.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #include <stdio.h>
+   3          #include <intrins.h>
+   4          #include <math.h>
+   5          #define U8 unsigned char
+   6          #define U16 unsigned int
+   7          sbit hd_cs=P0^4;
+   8          sbit hd_clk=P0^5;
+   9          sbit hd_dat=P0^6;
+  10          sbit hd_key=P0^7;
+  11          
+  12          void hd_longdelay()
+  13          {
+  14   1              U8 i;
+  15   1              for(i=0;i<50;i++);
+  16   1      }
+  17          
+  18          void hd_shortdelay()
+  19          {
+  20   1              U8 i;
+  21   1              for(i=0;i<8;i++);
+  22   1      }
+  23          
+  24          void delay_1ms(U16 z)
+  25          {
+  26   1              U8 i;
+  27   1              while(z--)
+  28   1                      for(i=0;i<110;i++);
+  29   1      }
+  30          
+  31          void hd_writeonechar(U8 dat)
+  32          {
+  33   1              U8 i;
+  34   1              hd_cs=0;
+  35   1              hd_dat=0;
+  36   1              hd_longdelay();
+  37   1              for(i=0;i<8;i++)
+  38   1              {
+  39   2                      dat<<=1;
+  40   2                      hd_dat=CY;
+  41   2                      hd_clk=1; hd_shortdelay();
+  42   2                      hd_clk=0; hd_shortdelay();
+  43   2              }
+  44   1              hd_dat=0;
+  45   1      }
+  46          U8 hd_keyconvert(U8 dat)
+  47          {
+  48   1              switch(dat)
+  49   1              {
+  50   2                      case 6 : dat=1; break;
+  51   2                      case 5 : dat=2; break;
+  52   2                      case 4 : dat=3; break;
+  53   2                      case 3 : dat=4; break;
+  54   2                      case 14 : dat=5; break;
+  55   2                      case 13 : dat=6; break;
+C51 COMPILER V8.09   REDO                                                                  10/11/2010 15:24:35 PAGE 2   
+
+  56   2                      case 12 : dat=7; break;
+  57   2                      case 11 : dat=8; break;
+  58   2                      case 22 : dat=9; break;
+  59   2                      case 21 : dat=10; break;
+  60   2                      case 20 : dat=11; break;
+  61   2                      case 19 : dat=12; break;
+  62   2                      case 30 : dat=13; break;
+  63   2                      case 29 : dat=14; break;
+  64   2                      case 28 : dat=15; break;
+  65   2                      case 27 : dat=16; break;
+  66   2              }
+  67   1              return dat;
+  68   1      }
+  69          U8 hd_readonechar()
+  70          {
+  71   1              U8 i,temp=0;
+  72   1              hd_dat=1;
+  73   1              hd_longdelay();
+  74   1              for(i=0;i<8;i++)
+  75   1              {
+  76   2                      hd_clk=1; hd_shortdelay();
+  77   2                      temp|=((U8)hd_dat)<<(7-i);
+  78   2                      hd_clk=0; hd_shortdelay();
+  79   2              }
+  80   1              hd_cs=0;
+  81   1              return temp;
+  82   1      }
+  83          
+  84          void hd_writecd(U8 cmd,U8 dat)
+  85          {
+  86   1              hd_writeonechar(cmd);
+  87   1              hd_writeonechar(dat);
+  88   1      }
+  89          
+  90          U8 hd_readcd(U8 cmd)
+  91          {
+  92   1              hd_writeonechar(cmd);
+  93   1              return(hd_readonechar());
+  94   1      }
+  95          
+  96          void main()
+  97          {
+  98   1              U8 temp=0;
+  99   1              hd_writeonechar(0xa4);
+ 100   1              hd_writecd(0x80,1);
+ 101   1              while(1)
+ 102   1              {
+ 103   2                      if(hd_key==0)
+ 104   2                      {
+ 105   3                              temp=hd_keyconvert(hd_readcd(0x15));
+ 106   3                              hd_writecd(0x81,temp/10);
+ 107   3                              hd_writecd(0x80,temp%10);
+ 108   3                      }
+ 109   2                      delay_1ms(5);
+ 110   2              }
+ 111   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    315    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+C51 COMPILER V8.09   REDO                                                                  10/11/2010 15:24:35 PAGE 3   
+
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

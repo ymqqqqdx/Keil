@@ -1,0 +1,82 @@
+C51 COMPILER V8.09   74HC595                                                               04/25/2010 17:39:29 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE 74HC595
+NO OBJECT MODULE REQUESTED
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE 74hc595.c DEBUG OBJECTEXTEND
+
+line level    source
+
+*** WARNING C500 IN LINE 1 OF 74HC595.C: INCORRECT LICENSE ID CODE (LIC) IN 'TOOLS.INI'
+   1          #include <reg52.h>
+   2          sbit si=P1^0;
+   3          sbit sclk=P1^1;
+   4          sbit OE=P1^2;
+   5          extern unsigned char k;
+   6          writetwochar(unsigned char temp5,unsigned char temp4,unsigned char temp3,unsigned char temp2,unsigned char
+             - temp1)
+   7          {
+   8   1          int i,t;
+   9   1          sclk=0;
+  10   1               OE=1;
+  11   1              
+  12   1          for(i=0;i<k;i++)
+  13   1          {
+  14   2                      t=0x80;
+  15   2                      t=t>>k;
+  16   2                      if(temp5&t)
+  17   2                      si=1;
+  18   2                      else
+  19   2                      si=0;
+  20   2                      sclk=1;
+  21   2                      sclk=0;
+  22   2                      temp5=temp5>>1;
+  23   2          }
+  24   1          for(i=0;i<8;i++)
+  25   1          {
+  26   2              si=temp4&0x01;
+  27   2              sclk=1;
+  28   2              sclk=0;
+  29   2              temp4=temp4>>1;
+  30   2          }
+  31   1          for(i=0;i<8;i++)
+  32   1          {
+  33   2              si=temp3&0x01;
+  34   2              sclk=1;
+  35   2              sclk=0;
+  36   2              temp3=temp3>>1;
+  37   2          }
+  38   1          for(i=0;i<8;i++)
+  39   1          {
+  40   2              si=temp2&0x01;
+  41   2              sclk=1;
+  42   2              sclk=0;
+  43   2              temp2=temp2>>1;
+  44   2          }
+  45   1          for(i=24;i<32-k;i++)
+  46   1          {
+  47   2              si=temp1&0x01;
+  48   2              sclk=1;
+  49   2              sclk=0;
+  50   2              temp1=temp1>>1;
+  51   2          }
+  52   1              sclk=1;
+  53   1              OE=0;
+C51 COMPILER V8.09   74HC595                                                               04/25/2010 17:39:29 PAGE 2   
+
+  54   1      }
+  55          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    211    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       5
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)

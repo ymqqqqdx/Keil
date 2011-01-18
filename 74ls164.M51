@@ -1,0 +1,185 @@
+BL51 BANKED LINKER/LOCATER V4.13                                                        03/22/2010  21:16:32  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V4.13, INVOKED BY:
+C:\KEIL\C51\BIN\BL51.EXE 74ls164.obj TO 74ls164 RAMSIZE (256)
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  74ls164.obj (74LS164)
+  C:\KEIL\C51\LIB\C51S.LIB (?C_STARTUP)
+
+
+LINK MAP OF MODULE:  74ls164 (74LS164)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            DATA    0008H     0002H     UNIT         _DATA_GROUP_
+            IDATA   000AH     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+            CODE    0003H     0032H     UNIT         ?PR?MAIN?74LS164
+            CODE    0035H     0021H     UNIT         ?PR?_WRITE_ONECHAR?74LS164
+            CODE    0056H     0020H     UNIT         ?PR?_DELAY?74LS164
+            CODE    0076H     0010H     UNIT         ?CO?74LS164
+            CODE    0086H     000CH     UNIT         ?C_C51STARTUP
+
+
+
+OVERLAY MAP OF MODULE:   74ls164 (74LS164)
+
+
+SEGMENT                              DATA_GROUP 
+  +--> CALLED SEGMENT              START    LENGTH
+--------------------------------------------------
+?C_C51STARTUP                      -----    -----
+  +--> ?PR?MAIN?74LS164
+
+?PR?MAIN?74LS164                   0008H    0002H
+  +--> ?PR?_DELAY?74LS164
+  +--> ?CO?74LS164
+  +--> ?PR?_WRITE_ONECHAR?74LS164
+
+?PR?_WRITE_ONECHAR?74LS164         -----    -----
+  +--> ?PR?_DELAY?74LS164
+
+
+
+SYMBOL TABLE OF MODULE:  74ls164 (74LS164)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        74LS164
+BL51 BANKED LINKER/LOCATER V4.13                                                      03/22/2010  21:16:32  PAGE 2
+
+
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:0090H         PUBLIC        P1
+  D:00B0H         PUBLIC        P3
+  B:00B0H.4       PUBLIC        T0
+  B:00D0H.6       PUBLIC        AC
+  B:00B0H.5       PUBLIC        T1
+  B:0090H.0       PUBLIC        T2
+  B:00A8H.7       PUBLIC        EA
+  C:0076H         PUBLIC        table
+  D:00A8H         PUBLIC        IE
+  B:00B0H.1       PUBLIC        clock
+  B:00C8H.6       PUBLIC        EXF2
+  B:00B0H.7       PUBLIC        RD
+  B:00A8H.4       PUBLIC        ES
+  D:00B8H         PUBLIC        IP
+  B:0098H.0       PUBLIC        RI
+  B:00B0H.2       PUBLIC        INT0
+  B:00D0H.7       PUBLIC        CY
+  B:0098H.1       PUBLIC        TI
+  B:00B0H.3       PUBLIC        INT1
+  B:00B8H.4       PUBLIC        PS
+  B:0090H.1       PUBLIC        T2EX
+  B:00D0H.2       PUBLIC        OV
+  C:0003H         PUBLIC        main
+  B:00C8H.1       PUBLIC        C_T2
+  B:00B0H.6       PUBLIC        WR
+  B:00C8H.5       PUBLIC        RCLK
+  B:00C8H.4       PUBLIC        TCLK
+  D:0098H         PUBLIC        SCON
+  D:0088H         PUBLIC        TCON
+  B:00B0H.0       PUBLIC        dat
+  B:0088H.1       PUBLIC        IE0
+  B:0088H.3       PUBLIC        IE1
+  B:00C8H.0       PUBLIC        CP_RL2
+  B:00A8H.1       PUBLIC        ET0
+  B:00A8H.3       PUBLIC        ET1
+  B:0088H.5       PUBLIC        TF0
+  B:00A8H.5       PUBLIC        ET2
+  B:0088H.7       PUBLIC        TF1
+  B:00C8H.7       PUBLIC        TF2
+  B:0098H.2       PUBLIC        RB8
+  B:00A8H.0       PUBLIC        EX0
+  B:0088H.0       PUBLIC        IT0
+  B:0098H.3       PUBLIC        TB8
+  B:00A8H.2       PUBLIC        EX1
+  B:0088H.2       PUBLIC        IT1
+  B:00D0H.0       PUBLIC        P
+  B:0098H.7       PUBLIC        SM0
+  B:0098H.6       PUBLIC        SM1
+  B:0098H.5       PUBLIC        SM2
+  C:0035H         PUBLIC        _write_onechar
+  B:00B8H.1       PUBLIC        PT0
+  B:00B8H.3       PUBLIC        PT1
+  B:00D0H.3       PUBLIC        RS0
+  B:00B8H.5       PUBLIC        PT2
+  B:0088H.4       PUBLIC        TR0
+  B:00D0H.4       PUBLIC        RS1
+BL51 BANKED LINKER/LOCATER V4.13                                                      03/22/2010  21:16:32  PAGE 3
+
+
+  B:0088H.6       PUBLIC        TR1
+  B:00C8H.2       PUBLIC        TR2
+  B:00B8H.0       PUBLIC        PX0
+  B:00B8H.2       PUBLIC        PX1
+  B:00C8H.3       PUBLIC        EXEN2
+  B:0098H.4       PUBLIC        REN
+  D:00C8H         PUBLIC        T2CON
+  B:00B0H.0       PUBLIC        RXD
+  B:00B0H.1       PUBLIC        TXD
+  C:0056H         PUBLIC        _delay
+  B:00D0H.5       PUBLIC        F0
+  D:00D0H         PUBLIC        PSW
+  -------         PROC          _DELAY
+  D:0006H         SYMBOL        z
+  -------         DO            z
+  D:0006H         SYMBOL        i
+  D:0004H         SYMBOL        j
+  -------         ENDDO         j
+  C:0056H         LINE#         8
+  C:0056H         LINE#         9
+  C:0056H         LINE#         11
+  C:0061H         LINE#         12
+  C:0075H         LINE#         13
+  -------         ENDPROC       _DELAY
+  -------         PROC          _WRITE_ONECHAR
+  D:0007H         SYMBOL        temp
+  -------         DO            temp
+  D:0002H         SYMBOL        i
+  -------         ENDDO         i
+  C:0035H         LINE#         14
+  C:0035H         LINE#         15
+  C:0035H         LINE#         17
+  C:0038H         LINE#         18
+  C:0038H         LINE#         19
+  C:003CH         LINE#         20
+  C:003EH         LINE#         21
+  C:0042H         LINE#         22
+  C:0044H         LINE#         23
+  C:004FH         LINE#         25
+  -------         ENDPROC       _WRITE_ONECHAR
+  -------         PROC          MAIN
+  -------         DO            MAIN
+  D:0008H         SYMBOL        i
+  -------         ENDDO         i
+  C:0003H         LINE#         27
+  C:0003H         LINE#         28
+  C:0003H         LINE#         30
+  C:000AH         LINE#         31
+  C:000AH         LINE#         32
+  C:000AH         LINE#         33
+  C:000FH         LINE#         34
+  C:000FH         LINE#         35
+  C:0019H         LINE#         36
+  C:0020H         LINE#         37
+  -------         ENDPROC       MAIN
+  -------         ENDMOD        74LS164
+
+BL51 BANKED LINKER/LOCATER V4.13                                                      03/22/2010  21:16:32  PAGE 4
+
+
+LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)

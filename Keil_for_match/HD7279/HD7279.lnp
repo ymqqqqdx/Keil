@@ -1,0 +1,4 @@
+"STARTUP.obj",
+"Re2.obj" 
+TO "HD7279" 
+RAMSIZE(256) 

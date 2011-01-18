@@ -1,0 +1,148 @@
+C51 COMPILER V6.12  SHIZHONG                                                               01/03/2010 00:00:17 PAGE 1   
+
+
+C51 COMPILER V6.12, COMPILATION OF MODULE SHIZHONG
+OBJECT MODULE PLACED IN .\shizhong.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE .\shizhong.c DEBUG OBJECTEXTEND
+
+stmt level    source
+
+   1          //2010/1/2 18:38
+   2          #include<reg52.h>
+   3          #include<intrins.h>
+   4          #define uint unsigned int
+   5          #define uchar unsigned char
+   6          #include "24c02.h"
+   7          sbit ln=P2^1;
+   8          sbit ls=P2^0;
+   9          sbit k1=P1^0;
+  10          sbit k2=P1^1;
+  11          sbit k3=P1^2;
+  12          sbit k4=P1^3;
+  13          sbit mode=P1^4;
+  14          uchar code table[]="0123456789";
+  15          uchar code table1[]=":.-";
+  16          uchar code table2[]="Number";
+  17          uchar code table3[]="MONTUEWEDTHUFRISATSUN";
+  18          uchar t=0,i,aa=0,bb=0,flag=0,month,day,week,hour,min,sec,min2=0,sec2=0,secp=0,num=0,max,flag2=0;
+  19          uchar mins[20]=0,secs[20]=0,secps[20]=0;
+  20          int year;
+  21          #include "1602.h"
+  22          #include "display.h"
+  23          #include "init.h"
+  24          #include "keyscan.h"   
+  25          void main()
+  26          {
+  27   1      	init();
+  28   1      	init_24c02();
+  29   1      	ET0=1; //计时器0开启
+  30   1      	TR0=1; //计时器打开
+  31   1      	while(1)
+  32   1      	{
+  33   2      		keyscan();
+  34   2      		if(flag==1)
+  35   2      		{
+  36   3      			display2();
+  37   3      		}
+  38   2      	}
+  39   1      }
+  40          void timer0() interrupt 1
+  41          {
+  42   1      	TH0=(65536-5000)/256;
+  43   1         TL0=(65536-5000)%256;
+  44   1      	aa++;
+  45   1      	if(aa==200)
+  46   1      	{   
+  47   2      		aa=0;
+  48   2      		sec++;
+  49   2      		if(sec==60)
+  50   2      		{
+  51   3      			min++;
+  52   3      			sec=0;
+  53   3      			if(min==60)
+  54   3      			{
+  55   4      				hour++;
+C51 COMPILER V6.12  SHIZHONG                                                               01/03/2010 00:00:17 PAGE 2   
+
+  56   4      				min=0;
+  57   4      				if(hour==24)
+  58   4      				{
+  59   5      					day++;
+  60   5      					week++;
+  61   5      					if(week==8)
+  62   5      					week=1;
+  63   5      					write_add(7,week);
+  64   5      					if(flag!=1)
+  65   5      					displayweek(week);
+  66   5      					hour=0;
+  67   5      					if(day==32)
+  68   5      					{
+  69   6      						month++;
+  70   6      						day=1;
+  71   6      						if(month==13)
+  72   6      						{
+  73   7      						year++;
+  74   7      						write_add(4,year-2010);
+  75   7      						if(flag!=1)
+  76   7      						displayyear(year);
+  77   7      						month=1;
+  78   7      						}
+  79   6      						write_add(5,month);
+  80   6      						if(flag!=1)
+  81   6      						displaydate(6,month);
+  82   6      					}
+  83   5      					write_add(6,day);
+  84   5      					if(flag!=1)
+  85   5      					displaydate(9,day);
+  86   5      				}
+  87   4      				write_add(1,hour);
+  88   4      				if(flag!=1)
+  89   4      				displaytime(4,hour);
+  90   4      			}
+  91   3      			write_add(2,min);
+  92   3      			if(flag!=1)
+  93   3      			displaytime(7,min);
+  94   3      		}
+  95   2      		write_add(3,sec);
+  96   2      		if(flag!=1)
+  97   2      		displaytime(10,sec);
+  98   2      	}
+  99   1      }
+ 100          void timer1() interrupt 3
+ 101          {
+ 102   1      	TH1=(65536-10000)/256;
+ 103   1         TL1=(65536-10000)%256;
+ 104   1      	bb++;
+ 105   1      	if(bb==1)
+ 106   1      	{   
+ 107   2      		bb=0;
+ 108   2      		secp++;
+ 109   2      		if(secp==100)
+ 110   2      		{
+ 111   3      			sec2++;
+ 112   3      			secp=0;
+ 113   3      			if(sec2==60)
+ 114   3      			{
+ 115   4      				min2++;
+ 116   4      				sec2=0;
+ 117   4      			}
+C51 COMPILER V6.12  SHIZHONG                                                               01/03/2010 00:00:17 PAGE 3   
+
+ 118   3      		}
+ 119   2      	}		
+ 120   1      }
+ 121          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   2150    ----
+   CONSTANT SIZE    =     44    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     79       4
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      1    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

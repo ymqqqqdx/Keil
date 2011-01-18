@@ -1,0 +1,128 @@
+C51 COMPILER V8.09   RE2                                                                   11/24/2010 00:09:23 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE RE2
+OBJECT MODULE PLACED IN Re2.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Re2.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #include <stdio.h>
+   3          
+   4          sbit DQ=P1^0;
+   5          sbit clk=P3^6;
+   6          sbit OE=P2^4;
+   7          
+   8          U8 code table[]={0xc0,0xf9,0xa4,0xb0,0x99,0x92,0x82,0xf8,0x80,0x90};
+   9          
+  10          void delayus(U16 z)
+  11          {
+  12   1              while(z--);
+  13   1      }
+  14          
+  15          void delay_1ms(U16 z)
+  16          {
+  17   1              U8 i;
+  18   1              while(z--)
+  19   1                      for(i=0;i<110;i++);
+  20   1      }
+  21          
+  22          void temp_init()
+  23          {
+  24   1              bit s;
+  25   1              DQ=1;
+  26   1              delayus(8);
+  27   1              DQ=0;
+  28   1              delayus(80);
+  29   1              DQ=1;
+  30   1              delayus(14);
+  31   1              s=DQ;
+  32   1              delayus(20);
+  33   1      }
+  34          
+  35          void temp_writeonechar(U8 dat)
+  36          {
+  37   1              U8 i;
+  38   1              for(i=0;i<8;i++)
+  39   1              {
+  40   2                      dat>>=1;
+  41   2                      DQ=0;
+  42   2                      DQ=CY;
+  43   2                      delayus(5);
+  44   2                      DQ=1;
+  45   2              }
+  46   1              delayus(4);
+  47   1      }
+  48          
+  49          U8 temp_readonechar()
+  50          {
+  51   1              U8 i,temp=0;
+  52   1              for(i=0;i<8;i++)
+  53   1              {
+  54   2                      DQ=0;
+  55   2                      DQ=1;
+C51 COMPILER V8.09   RE2                                                                   11/24/2010 00:09:23 PAGE 2   
+
+  56   2                      temp|=((U8)DQ)<<i;
+  57   2                      delayus(4);
+  58   2              }
+  59   1              return temp;
+  60   1      }
+  61          
+  62          U16 temp_read()
+  63          {
+  64   1              U8 low,high;
+  65   1              U16 t;
+  66   1              float tt;
+  67   1              temp_init();
+  68   1              temp_writeonechar(0xcc);
+  69   1              temp_writeonechar(0x44);
+  70   1              temp_init();
+  71   1              temp_writeonechar(0xcc);
+  72   1              temp_writeonechar(0xbe);
+  73   1              low=temp_readonechar();
+  74   1              high=temp_readonechar();
+  75   1              t=high;
+  76   1              t<<=8;
+  77   1              t|=low;
+  78   1              tt=t*0.0625;
+  79   1              t=tt*10+0.5;
+  80   1              return t;
+  81   1      }
+  82          
+  83          void digit(U8 add,U8 dat)
+  84          {
+  85   1              P2=~(1<<(add-1));
+  86   1              OE=0;
+  87   1              P0=dat;
+  88   1              clk=0;
+  89   1              clk=1;
+  90   1              delay_1ms(5);
+  91   1      }
+  92          
+  93          void main()
+  94          {
+  95   1              U16 temp;
+  96   1              while(1)
+  97   1              {
+  98   2                      temp=temp_read();
+  99   2                      digit(2,table[temp/100]);
+ 100   2                      digit(3,table[temp%100/10]&0x7f);
+ 101   2                      digit(4,table[temp%10]);
+ 102   2              }
+ 103   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    374    ----
+   CONSTANT SIZE    =     10    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       6
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----       1
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,81 @@
+C51 COMPILER V6.12  555                                                                    04/20/2010 21:33:12 PAGE 1   
+
+
+C51 COMPILER V6.12, COMPILATION OF MODULE 555
+OBJECT MODULE PLACED IN .\555.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE .\555.c DEBUG OBJECTEXTEND
+
+stmt level    source
+
+   1          #include <reg52.h>
+   2          #include "declare.h"
+   3          unsigned char flag;
+   4          unsigned int count;
+   5          unsigned char code table3[]="555 振荡器频率 Hz";
+   6          void displayfrequency(unsigned int);
+   7          void write_com(unsigned char);
+   8          void write_data(unsigned char);
+   9          void keyscan();
+  10          /*****************读取频率********************/
+  11          void timer555()
+  12          {
+  13   1      	TMOD=0x15;
+  14   1      	TH1=(65536-50000)/256;
+  15   1      	TL1=(65536-50000)%256;
+  16   1      	TH0=0;
+  17   1      	TL0=0;
+  18   1      	EA=1;
+  19   1      	ET1=1;
+  20   1      	TR1=1;
+  21   1      	TR0=1;
+  22   1      	count=0;
+  23   1      	write_com(0x01);
+  24   1      	write_com(0x80);
+  25   1      	for(i=0;i<14;i++)
+  26   1      	{
+  27   2      		write_data(table3[i]);
+  28   2      	}
+  29   1      	write_com(0x94);
+  30   1      	write_data(table3[15]);
+  31   1      	write_data(table3[16]);	
+  32   1      	displayfrequency(val);
+  33   1         while(mode==3)
+  34   1         {
+  35   2      		keyscan();
+  36   2      	}
+  37   1      	TR1=0;
+  38   1      }
+  39          /***************用定时器1定时一秒钟，读取TH0和TL0的值****************/
+  40          void timer1() interrupt 3
+  41          {
+  42   1      		TR1=0;
+  43   1      		TH1=(65536-50000)/256;
+  44   1      	   TL1=(65536-50000)%256;
+  45   1      		count++;
+  46   1      		if(count==20)
+  47   1      		{
+  48   2      			TR0=0;	
+  49   2      			count=0;
+  50   2      			val=TH0*256+TL0;
+  51   2      			displayfrequency(val);
+  52   2      			TH0=TL0=0;
+  53   2      			TR1=TR0=1;
+  54   2      		}
+  55   1      		else TR1=1;
+C51 COMPILER V6.12  555                                                                    04/20/2010 21:33:12 PAGE 2   
+
+  56   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    236    ----
+   CONSTANT SIZE    =     18    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      3    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

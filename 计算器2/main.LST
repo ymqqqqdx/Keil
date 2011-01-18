@@ -1,0 +1,42 @@
+C51 COMPILER V8.09   MAIN                                                                  05/22/2010 19:01:00 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE main.c DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #include "declare.h"
+   3          void init_1602();
+   4          void display(unsigned char *);
+   5          void keyscan();
+   6          unsigned char i,buff=0,sign=0,point=0,symbol=0;
+   7          char first[16],second[16];
+   8          char len;
+   9          float aa,bb,mm;
+  10          void main()
+  11          {
+  12   1              init_1602();
+  13   1              display("0.");
+  14   1              while(1)
+  15   1              {
+  16   2                      keyscan();
+  17   2              }
+  18   1      }
+  19          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     17    ----
+   CONSTANT SIZE    =      3    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     50    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

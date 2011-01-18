@@ -1,0 +1,215 @@
+C51 COMPILER V6.12  NIN1                                                                   03/26/2010 19:26:38 PAGE 1   
+
+
+C51 COMPILER V6.12, COMPILATION OF MODULE NIN1
+OBJECT MODULE PLACED IN .\Nin1.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE .\Nin1.c DEBUG OBJECTEXTEND
+
+stmt level    source
+
+   1          #include <stdio.h>
+   2          #include <series.h>
+   3          #include <string.h>
+   4          #include <intrins.h>
+   5          sbit led1=P2^0;
+   6          sbit led2=P2^1;
+   7          sbit led3=P2^2;
+   8          sbit led4=P2^3;
+   9          sbit led5=P2^4;
+  10          sbit led6=P2^5;
+  11          sbit led7=P2^6;
+  12          sbit led8=P2^7;
+  13          bit write=0;
+  14          sbit sda=P1^2;
+  15          sbit scl=P1^1;
+  16          sbit wp=P1^0;
+  17          unsigned int aa;
+  18          unsigned char comm,stop;
+  19          unsigned char code table[]={0x3f,0x06,0x5b,0x4f,
+  20          0x66,0x6d,0x7d,0x07,
+  21          0x7f,0x6f,0x77,0x7c,
+  22          0x39,0x5e,0x79,0x71};
+  23          void delay(int z)
+  24          {
+  25   1      	int i,j;
+  26   1              for(i=z;i>0;i--)
+  27   1               for(j=110;j>0;j--);
+  28   1      }
+  29          int ssscanf()
+  30          {
+  31   1      	unsigned char buf[7],i,t=0;
+  32   1      	int s;
+  33   1      	while(i!='%')
+  34   1      	{
+  35   2      		i=_getkey();
+  36   2      		buf[t++]=i;
+  37   2      	}
+  38   1      	buf[strlen(buf)-1]='\0';
+  39   1      	sscanf(buf,"%d",&s);
+  40   1      	for(i=0;i<7;i++)
+  41   1      	{
+  42   2      		buf[i]='\0';
+  43   2      	}
+  44   1      	return(s);
+  45   1      }
+  46          void flow(int t,unsigned char way)
+  47          {
+  48   1      	unsigned char temp,i;
+  49   1      	if(way==1)
+  50   1      	{
+  51   2      		temp=0xfe;
+  52   2      		for(i=0;i<8;i++)
+  53   2      		{
+  54   3      			P2=temp;
+  55   3      			temp=_crol_(temp,1);
+C51 COMPILER V6.12  NIN1                                                                   03/26/2010 19:26:38 PAGE 2   
+
+  56   3      			delay(t);
+  57   3      		}
+  58   2      	}
+  59   1      	if(way==2)
+  60   1      	{
+  61   2      		temp=0x7f;
+  62   2      		for(i=0;i<8;i++)
+  63   2      		{
+  64   3      			P2=temp;
+  65   3      			temp=_cror_(temp,1);
+  66   3      			delay(t);
+  67   3      		}
+  68   2      	}
+  69   1      }
+  70          void led()
+  71          {
+  72   1      	unsigned char i;
+  73   1      	int s;
+  74   1      	while(i!='!')
+  75   1      	{
+  76   2      		i=_getkey();
+  77   2      		if(i=='d')
+  78   2      		{
+  79   3      			P2=0xff;
+  80   3      			while(i!='^')
+  81   3      			{
+  82   4      				i=_getkey();
+  83   4      				switch(i)
+  84   4      				{
+  85   5      					case '1' : led1=~led1; break;
+  86   5      					case '2' : led2=~led2; break;
+  87   5      					case '3' : led3=~led3; break;
+  88   5      					case '4' : led4=~led4; break;
+  89   5      					case '5' : led5=~led5; break;
+  90   5      					case '6' : led6=~led6; break;
+  91   5      					case '7' : led7=~led7; break;
+  92   5      					case '8' : led8=~led8; break;
+  93   5      					default : break;
+  94   5      				}
+  95   4      			}
+  96   3      		}
+  97   2      		if(i=='f')
+  98   2      		{
+  99   3      			P2=0xff;
+ 100   3      			while(i!='#')
+ 101   3      			{
+ 102   4      				i=_getkey();
+ 103   4      				if(i!='#')
+ 104   4      				{
+ 105   5      					s=ssscanf();
+ 106   5      				}
+ 107   4      				if(i=='u')
+ 108   4      				{
+ 109   5      					flow(s,1);
+ 110   5      				}
+ 111   4      				if(i=='b')
+ 112   4      				{
+ 113   5      					flow(s,2);
+ 114   5      				}
+ 115   4      			}
+ 116   3      		}
+ 117   2      	}
+C51 COMPILER V6.12  NIN1                                                                   03/26/2010 19:26:38 PAGE 3   
+
+ 118   1      }
+ 119          void shumaguan()
+ 120          {
+ 121   1      	unsigned char a,b,c,d,buff;
+ 122   1      	while(buff!='#')
+ 123   1      	{
+ 124   2      		buff=_getkey();
+ 125   2      		a=_getkey();
+ 126   2      		b=_getkey();
+ 127   2      		c=_getkey();
+ 128   2      		d=_getkey();
+ 129   2      		stop=0;
+ 130   2      		if(stop!='!')
+ 131   2      		{
+ 132   3      			ES=1;
+ 133   3      			while(stop!='!')
+ 134   3      			{
+ 135   4      				P2=0xf8;
+ 136   4      				if(a>=48&&a<=58) P0=table[a-48];
+ 137   4      				else if(a>=65) P0=table[a-55];
+ 138   4      				delay(1);
+ 139   4      				P2=0xf4;
+ 140   4      				if(b>=48&&b<=58) P0=table[b-48];
+ 141   4      				else if(b>=65) P0=table[b-55];
+ 142   4      				delay(1);
+ 143   4      				P2=0xf2;
+ 144   4      				if(c>=48&&c<=58) P0=table[c-48];
+ 145   4      				else if(c>=65) P0=table[c-55];
+ 146   4      				delay(1);
+ 147   4      				P2=0xf1;
+ 148   4      				if(d>=48&&d<=58) P0=table[d-48];
+ 149   4      				else if(d>=65) P0=table[d-55];
+ 150   4      				delay(1);
+ 151   4      			}
+ 152   3      			ES=0;
+ 153   3      		}
+ 154   2      	}
+ 155   1      }
+ 156          void i2c()
+ 157          {
+ 158   1      	
+ 159   1      }
+ 160          void commscan()
+ 161          {
+ 162   1      	while(comm!='*')
+ 163   1      	{
+ 164   2      		comm=_getkey();
+ 165   2      		switch(comm)
+ 166   2      		{
+ 167   3      			case '1' : P2=0xff; led(); break;
+ 168   3      			case '2' : shumaguan();  break;
+ 169   3      			case '3' : led3=0; break;
+ 170   3      			case '6' : i2c(); break;
+ 171   3      		}
+ 172   2      	}
+ 173   1      }
+ 174          void main()
+ 175          {
+ 176   1      	comm_init();
+ 177   1      	while(1)
+ 178   1      	{
+ 179   2      		commscan();
+C51 COMPILER V6.12  NIN1                                                                   03/26/2010 19:26:38 PAGE 4   
+
+ 180   2      	}
+ 181   1      }
+ 182          void ser() interrupt 4
+ 183          {
+ 184   1      	stop=SBUF;
+ 185   1      	RI=0;
+ 186   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    692    ----
+   CONSTANT SIZE    =     19    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      4      20
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      1    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

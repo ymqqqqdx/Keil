@@ -1,0 +1,10 @@
+"7219.obj",
+"main.obj",
+"display.obj",
+"ds1302_driver.obj",
+"declare.obj",
+"delay.obj",
+"keyscan.obj",
+"ds18b20.obj" 
+TO "Design" 
+RAMSIZE(256) 

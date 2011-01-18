@@ -1,0 +1,218 @@
+C51 COMPILER V8.09   MAIN                                                                  09/25/2010 19:02:10 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE main.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #include <stdio.h>
+   3          #define SETTED
+   4          #define U8 unsigned char
+   5          #define U16 unsigned int
+   6          #define CMD 0
+   7          #define DATA 1
+   8          sbit RTC_CLK=P1^6;
+   9          sbit RTC_IO=P1^7;
+  10          sbit RTC_RST=P3^0;
+  11          
+  12          sbit LCD_CS=P0^3;
+  13          sbit LCD_SCLK=P1^2;
+  14          sbit LCD_SID=P0^2;
+  15          struct RTC
+  16          {
+  17                  U8 Second;
+  18                  U8 Minute;
+  19                  U8 Hour;
+  20                  U8 Day;
+  21                  U8 Month;
+  22                  U8 Week;
+  23                  U8 Year;
+  24          }       Time={0,48,15,11,9,6,10};
+  25          U8 code Table[]={"年月日时分秒"};
+  26          void Display_Two(U8 Add,U8 Dat);
+  27          void Delay_1ms(U16 z)
+  28          {
+  29   1              U8 i;
+  30   1              while(z--)
+  31   1                      for(i=0;i<110;i++);
+  32   1      }
+  33          void Uart_Init()
+  34          {
+  35   1              REN=1;
+  36   1              SCON=0x52;
+  37   1              TMOD=0X20;
+  38   1              TH1=0XFD;
+  39   1              TL1=0XFD;
+  40   1              TR1=1;
+  41   1              ES=1;
+  42   1              SM0=0;
+  43   1              SM1=1;
+  44   1              EA=1;
+  45   1      }
+  46          void RTC_Input_Char(U8 dat)
+  47          {
+  48   1              U8 i;
+  49   1              for(i=0;i<8;i++)
+  50   1              {
+  51   2                      dat>>=1;
+  52   2                      RTC_IO=CY;
+  53   2                      RTC_CLK=1;
+  54   2                      RTC_CLK=0;
+  55   2              }
+C51 COMPILER V8.09   MAIN                                                                  09/25/2010 19:02:10 PAGE 2   
+
+  56   1      }
+  57          U8 RTC_Output_Char()
+  58          {
+  59   1              U8 i,temp=0;
+  60   1              for(i=0;i<8;i++)
+  61   1              {
+  62   2                      temp|=((char)RTC_IO)<<i;
+  63   2                      RTC_CLK=1;
+  64   2                      RTC_CLK=0;
+  65   2              }
+  66   1              return (temp>>4)*10+(temp%16);
+  67   1      }
+  68          void Write_RTC(U8 Add,U8 Dat)
+  69          {
+  70   1          RTC_RST = 0;
+  71   1          RTC_CLK = 0;
+  72   1          RTC_RST = 1;
+  73   1              RTC_Input_Char(Add);
+  74   1              RTC_Input_Char((Dat/10<<4)|(Dat%10));
+  75   1          RTC_CLK = 1;
+  76   1          RTC_RST = 0;        
+  77   1      }
+  78          U8 Read_RTC(U8 Add)
+  79          {
+  80   1              U8 temp;
+  81   1          RTC_RST = 0;
+  82   1          RTC_CLK = 0;
+  83   1          RTC_RST = 1;
+  84   1              RTC_Input_Char(Add|1);
+  85   1              temp=RTC_Output_Char();
+  86   1          RTC_CLK = 1;
+  87   1          RTC_RST = 0;
+  88   1              return temp;
+  89   1      }
+  90          void LCD_Send_Byte(U8 dat)
+  91          {
+  92   1              U8 i;
+  93   1              for(i=0;i<8;i++)
+  94   1              {
+  95   2                      dat<<=1;
+  96   2                      LCD_SID=CY;
+  97   2                      LCD_SCLK=0;
+  98   2                      LCD_SCLK=1;
+  99   2              }
+ 100   1      }
+ 101          void LCD_Send_CD(bit CD,U8 dat)
+ 102          {
+ 103   1              U8 temp;
+ 104   1              if(!CD) temp=0xf8;
+ 105   1                      else temp=0xfa;
+ 106   1              LCD_CS=1;
+ 107   1              LCD_SCLK=0;
+ 108   1              LCD_Send_Byte(temp);
+ 109   1              temp=dat;
+ 110   1              temp&=0xf0;
+ 111   1              LCD_Send_Byte(temp);
+ 112   1              temp=dat;
+ 113   1              temp<<=4;
+ 114   1              LCD_Send_Byte(temp);
+ 115   1              LCD_CS=0;
+ 116   1              Delay_1ms(5);
+ 117   1      }
+C51 COMPILER V8.09   MAIN                                                                  09/25/2010 19:02:10 PAGE 3   
+
+ 118          void LCD_Init()
+ 119          {
+ 120   1              LCD_Send_CD(CMD,0x30);
+ 121   1              LCD_Send_CD(CMD,0x02);
+ 122   1              LCD_Send_CD(CMD,0x06);
+ 123   1              LCD_Send_CD(CMD,0x0c);
+ 124   1              LCD_Send_CD(CMD,0x01);
+ 125   1              LCD_Send_CD(CMD,0x80);
+ 126   1      }
+ 127          void Get_Time()
+ 128          {
+ 129   1              U8 i,*Pt=&Time.Second;
+ 130   1              for(i=0;i<7;i++)
+ 131   1                      *Pt++=Read_RTC(0x80+2*i);
+ 132   1              Display_Two(1,Time.Year);
+ 133   1              Display_Two(3,Time.Month);
+ 134   1              Display_Two(5,Time.Day);
+ 135   1              Display_Two(11,Time.Hour);
+ 136   1              Display_Two(13,Time.Minute);
+ 137   1              Display_Two(15,Time.Second);
+ 138   1      }
+ 139          void Display_Two(U8 Add,U8 Dat)
+ 140          {
+ 141   1              if(Add<10)
+ 142   1              LCD_Send_CD(CMD,0x80+Add);
+ 143   1              else
+ 144   1              LCD_Send_CD(CMD,0x90+Add-10);
+ 145   1              LCD_Send_CD(DATA,Dat/10+'0');
+ 146   1              LCD_Send_CD(DATA,Dat%10+'0');
+ 147   1      }
+ 148          void RTC_Init()
+ 149          {
+ 150   1              U8 i,*Pt=&Time.Second;
+ 151   1              for(i=0;i<7;i++)
+ 152   1                      Write_RTC(0x80+2*i,*Pt++);
+ 153   1      }
+ 154          void Display_Init()
+ 155          {
+ 156   1              U8 i;
+ 157   1              for(i=0;i<3;i++){
+ 158   2                      LCD_Send_CD(CMD,0x80+2*i+2);
+ 159   2                      LCD_Send_CD(DATA,Table[i*2]);
+ 160   2                      LCD_Send_CD(DATA,Table[i*2+1]);
+ 161   2              }
+ 162   1              for(i=0;i<3;i++){
+ 163   2                      LCD_Send_CD(CMD,0x90+2*i+2);
+ 164   2                      LCD_Send_CD(DATA,Table[i*2+6]);
+ 165   2                      LCD_Send_CD(DATA,Table[i*2+7]);
+ 166   2              }
+ 167   1      }
+ 168          void main()
+ 169          {
+ 170   1              U8 Second_Old;
+ 171   1      #ifndef SETTED
+                      RTC_Init();
+              #endif
+ 174   1              Uart_Init();
+ 175   1              LCD_Init();
+ 176   1              Display_Init();
+ 177   1              Get_Time();
+ 178   1              while(1)
+ 179   1              {
+C51 COMPILER V8.09   MAIN                                                                  09/25/2010 19:02:10 PAGE 4   
+
+ 180   2                      Time.Second=Read_RTC(0x80);
+ 181   2                      if(Second_Old!=Time.Second)
+ 182   2                      {
+ 183   3                              Display_Two(15,Time.Second);
+ 184   3                              if(Time.Second==0)
+ 185   3                                      Get_Time();
+ 186   3                              Second_Old=Time.Second;
+ 187   3                      }
+ 188   2              }
+ 189   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    604    ----
+   CONSTANT SIZE    =     13    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      7       8
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----       1
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

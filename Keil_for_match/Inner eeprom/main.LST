@@ -1,0 +1,109 @@
+C51 COMPILER V8.09   MAIN                                                                  11/20/2010 21:03:05 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE main.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #include <stdio.h>
+   3          void Uart_Init()
+   4          {
+   5   1              REN=1;
+   6   1              SCON=0x52;
+   7   1              TMOD=0X20;
+   8   1              TH1=0XFA;
+   9   1              TL1=0XFA;
+  10   1              TR1=1;
+  11   1              ES=1;
+  12   1              SM0=0;
+  13   1              SM1=1;
+  14   1              EA=1;
+  15   1      }
+  16          void ISP_enable()
+  17          {
+  18   1              EA=0;
+  19   1              ISP_CONTER&=0x18;
+  20   1              ISP_CONTER|=WaitTime;
+  21   1              ISP_CONTER|=0x80;
+  22   1      }
+  23          void ISP_disable()
+  24          {
+  25   1              ISP_CONTER&=0x17;
+  26   1              ISP_TRIG=0x00;
+  27   1              EA=1;
+  28   1      }
+  29          void ISP_go()
+  30          {
+  31   1              ISP_enable();
+  32   1              ISP_TRIG=0x5A;
+  33   1              ISP_TRIG=0xA5;
+  34   1              _nop_();
+  35   1      }
+  36          U8 ISP_read(U16 add)
+  37          {
+  38   1              ISP_ADDRH=(U8)(add>>8);
+  39   1              ISP_ADDRL=(U8)add;
+  40   1              ISP_CMD&=0xf8;
+  41   1              ISP_CMD|=ReadCommand;
+  42   1              ISP_go();
+  43   1              ISP_disable();
+  44   1              return(ISP_DATA);
+  45   1      }
+  46          void ISP_sectorerase(U16 sectoradd)
+  47          {
+  48   1              ISP_ADDRH=(U8)((sectoradd&0xfe00)>>8);
+  49   1              ISP_ADDRL=0;
+  50   1              ISP_CMD&=0xf8;
+  51   1              ISP_CMD|=EraseCommand;
+  52   1              ISP_go();
+  53   1              ISP_disable();
+  54   1      }
+  55          void ISP_write(U16 add,U8 dat)
+C51 COMPILER V8.09   MAIN                                                                  11/20/2010 21:03:05 PAGE 2   
+
+  56          {
+  57   1              ISP_ADDRH=(U8)(add>>8);
+  58   1              ISP_ADDRL=(U8)add;
+  59   1              ISP_CMD&=0xf8;
+  60   1              ISP_CMD|=ProgCommand;
+  61   1              ISP_DATA=dat;
+  62   1              ISP_go();
+  63   1              ISP_disable();
+  64   1      }
+  65          void delay(U16 z)
+  66          {
+  67   1              U8 i;
+  68   1              while(z--)
+  69   1                      for(i=0;i<200;i++);
+  70   1      }
+  71          void main()
+  72          {
+  73   1              U8 i;
+  74   1              U16 j=0x0000;
+  75   1              Uart_Init();
+  76   1              puts("OK!");
+  77   1              delay(200);
+  78   1      //      ISP_sectorerase(0x0000);
+  79   1      //      for(i=0;i<255;i++)
+  80   1      //              ISP_write(0x0000+i,i);
+  81   1              for(i=0;i<255;i++)
+  82   1                      printf(" %d ",(int)ISP_read(0x0000+i));
+  83   1              while(1);
+  84   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    202    ----
+   CONSTANT SIZE    =      9    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       3
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

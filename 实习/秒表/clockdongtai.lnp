@@ -1,0 +1,4 @@
+"STARTUP.obj",
+"dongtai.obj" 
+TO "clockdongtai" 
+RAMSIZE(256) 

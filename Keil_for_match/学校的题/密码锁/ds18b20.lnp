@@ -1,0 +1,4 @@
+"STARTUP.obj",
+"ds18b20.obj" 
+TO "ds18b20" 
+RAMSIZE(256) 

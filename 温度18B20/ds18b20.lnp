@@ -1,0 +1,5 @@
+"18b20_driver.obj",
+"74ls164.obj",
+"main.obj" 
+TO "ds18b20" 
+RAMSIZE(256) 

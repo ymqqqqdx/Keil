@@ -1,0 +1,144 @@
+C51 COMPILER V6.12  16X16LATICE                                                            04/14/2010 18:47:08 PAGE 1   
+
+
+C51 COMPILER V6.12, COMPILATION OF MODULE 16X16LATICE
+OBJECT MODULE PLACED IN .\16x16LATICE.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE .\16x16LATICE.C DEBUG OBJECTEXTEND
+
+stmt level    source
+
+   1          #include<reg52.h>
+   2          #define uchar unsigned char
+   3          #define uint unsigned int
+   4          sbit si=P1^0;
+   5          sbit sclk=P1^1;
+   6          sbit OE=P1^2;
+   7          void delay(int z)
+   8          {
+   9   1      	int i;
+  10   1              for(i=z;i>0;i--);
+  11   1               
+  12   1      }
+  13          chuanonebit(uchar temp1,uchar temp2)
+  14          {
+  15   1      	int i;
+  16   1      
+  17   1      	sclk=0;
+  18   1      OE=1;
+  19   1      	for(i=0;i<8;i++)
+  20   1      	{
+  21   2      		si=temp1&0x01;
+  22   2      		sclk=1;
+  23   2      		sclk=0;
+  24   2      		temp1=temp1>>1;
+  25   2      
+  26   2      
+  27   2      	}
+  28   1      
+  29   1      	for(i=0;i<8;i++)
+  30   1      	{
+  31   2      		si=temp2&0x01;
+  32   2      		sclk=1;
+  33   2      		sclk=0;
+  34   2      		temp2=temp2>>1;
+  35   2      
+  36   2      
+  37   2      	}
+  38   1      sclk=1;
+  39   1      OE=0;
+  40   1      
+  41   1      }
+  42          
+  43          
+  44          
+  45          
+  46          
+  47          uchar table1[]={
+  48          0x00,0x00,0x08,0x09,0x09,0x7F,0x25,0x4F,
+  49          0x29,0x1F,0x19,0x2b,0x26,0x04,0x00,0x00
+  50          };
+  51          uchar  table2[]={
+  52          0x00,0x00,0x00,0x40,0x40,0x48,0x50,0x60,
+  53          0x60,0x50,0x48,0x40,0x7c,0x00,0x00,0x00
+  54          };
+  55          uchar table3[]={
+C51 COMPILER V6.12  16X16LATICE                                                            04/14/2010 18:47:08 PAGE 2   
+
+  56          0x00,0x00,0x00,0x00,0x1F,0x11,0x11,0x1F,
+  57          0x11,0x11,0x1F,0x00,0x00,0x01,0x02,0x00
+  58          };
+  59          uchar table4[]={
+  60          
+  61          0x00,0x00,0x7e,0x42,0x42,0x7e,0x42,0x42,
+  62          0x7e,0x42,0x42,0x82,0x82,0x06,0x02,0x00
+  63          };
+  64          uchar table5[]={
+  65          0x00,0x03,0x02,0x02,0x03,0x02,0x02,0x02,
+  66          0x03,0x02,0x02,0x04,0x04,0x08,0x10,0x00
+  67          };
+  68          uchar table6[]={
+  69          0x00,0xF8,0x08,0x08,0xF8,0x08,0x08,0x08,
+  70          0xF8,0x08,0x08,0x08,0x08,0x18,0x08,0x00
+  71          };
+  72          uchar code table[]={0x00,0x01,0x02,0x03,0x04,0x05,0x06,0x07,
+  73          0x08,0x09,0x0a,0x0b,0x0c,0x0d,0x0e,0x0f};
+  74          main()
+  75          {int i,j,temp;
+  76   1      while(1)
+  77   1      {
+  78   2      	for(j=0;j<10;j++)
+  79   2      	{
+  80   3      	
+  81   3      		for(i=0;i<16;i++)
+  82   3      	
+  83   3      		{	P2=table[i];
+  84   4      			
+  85   4      	
+  86   4      			chuanonebit(table2[i],table1[i]);
+  87   4      			delay(50);
+  88   4      	
+  89   4      		
+  90   4      		}
+  91   3      		
+  92   3      	}
+  93   2      	for(j=0;j<16;j++)
+  94   2      	{
+  95   3      			if(table1[j]&0x80) table6[j]=table6[j]|0x01;
+  96   3      			else table6[j]=table6[j]&0xfe;
+  97   3      		table1[j]=table1[j]<<1;
+  98   3      			if(table2[j]&0x80) table1[j]=table1[j]|0x01;
+  99   3      			else table1[j]=table1[j]&0xfe;
+ 100   3      		table2[j]=table2[j]<<1;
+ 101   3      			if(table3[j]&0x80) table2[j]=table2[j]|0x01;
+ 102   3      			else table2[j]=table2[j]&0xfe;
+ 103   3      		table3[j]=table3[j]<<1;
+ 104   3      			if(table4[j]&0x80) table3[j]=table3[j]|0x01;
+ 105   3      			else table3[j]=table3[j]&0xfe;
+ 106   3      		table4[j]=table4[j]<<1;
+ 107   3      	    	if(table5[j]&0x80) table4[j]=table4[j]|0x01;
+ 108   3      			else table4[j]=table4[j]&0xfe;
+ 109   3      		table5[j]=table5[j]<<1;
+ 110   3      			if(table6[j]&0x80) table5[j]=table5[j]|0x01;
+ 111   3      			else table5[j]=table5[j]&0xfe;
+ 112   3      		table6[j]=table6[j]<<1;
+ 113   3      	}
+ 114   2      }
+ 115   1      }
+*** WARNING C280 IN LINE 75 OF .\16X16LATICE.C: 'temp': unreferenced local variable
+ 116          
+C51 COMPILER V6.12  16X16LATICE                                                            04/14/2010 18:47:08 PAGE 3   
+
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    435    ----
+   CONSTANT SIZE    =     16    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     96       6
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)

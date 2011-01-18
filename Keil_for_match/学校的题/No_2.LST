@@ -1,0 +1,174 @@
+C51 COMPILER V8.09   NO_2                                                                  10/14/2010 20:21:46 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE NO_2
+OBJECT MODULE PLACED IN No_2.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE No_2.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          sbit key1=P3^4;
+   3          sbit key2=P3^5;
+   4          sbit key3=P3^2;
+   5          sbit key4=P3^3;
+   6          
+   7          sbit clk=P3^6;
+   8          sbit OE=P2^4;
+   9          sbit beep=P2^7;
+  10          U8 code table[]={0xc0,0xf9,0xa4,0xb0,0x99,0x92,0x82,0xf8,0x80,0x90};
+  11          char minute=0,second=0,counter=0,counter1=0,flag=0;
+  12          bit stat=0;
+  13          
+  14          void delay_1ms(U16 z)
+  15          {
+  16   1              U8 i;
+  17   1              while(z--)
+  18   1                      for(i=0;i<110;i++);
+  19   1      }
+  20          
+  21          void digit(U8 add,U8 dat)
+  22          {
+  23   1              bit bee=beep;
+  24   1              P2=~(1<<(add-1));
+  25   1              OE=0;
+  26   1              P0=dat;
+  27   1              clk=0;
+  28   1              clk=1;
+  29   1              beep=bee;
+  30   1              delay_1ms(5);
+  31   1      }
+  32          
+  33          void keyscan()
+  34          {
+  35   1              if(!key1)
+  36   1              {
+  37   2                      delay_1ms(5);
+  38   2                      if(!key1)
+  39   2                      {
+  40   3                              stat=~stat;
+  41   3                      }
+  42   2              }while(!key1);
+  43   1              if(!key2)
+  44   1              {
+  45   2                      delay_1ms(5);
+  46   2                      if(!key2)
+  47   2                      {
+  48   3                              stat==0?minute++:second++;
+  49   3                              if(minute>99)
+  50   3                                      minute=99;
+  51   3                              if(second>59)
+  52   3                                      second=59;
+  53   3                      }
+  54   2              }while(!key2);
+  55   1              if(!key3)
+C51 COMPILER V8.09   NO_2                                                                  10/14/2010 20:21:46 PAGE 2   
+
+  56   1              {
+  57   2                      delay_1ms(5);
+  58   2                      if(!key3)
+  59   2                      {
+  60   3                              stat==0?minute--:second--;
+  61   3                              if(minute<0)
+  62   3                                      minute=0;
+  63   3                              if(second<0)
+  64   3                                      second=0;
+  65   3                      }
+  66   2              }while(!key3);
+  67   1              if(!key4)
+  68   1              {
+  69   2                      delay_1ms(5);
+  70   2                      if(!key4)
+  71   2                      {
+  72   3                              TR0=1;
+  73   3                      }
+  74   2              }while(!key4);
+  75   1      }
+  76          
+  77          void main()
+  78          {
+  79   1              TMOD=0x11;
+  80   1              TH0=(65536-45678)/256;
+  81   1              TL0=(65536-45678)%256;
+  82   1              TH1=(65536-45678)/256;
+  83   1              TL1=(65536-45678)%256;
+  84   1              ET0=1;
+  85   1              ET1=1;
+  86   1              TR1=0;
+  87   1              TR0=0;
+  88   1              EA=1;
+  89   1              while(1)
+  90   1              {
+  91   2                      digit(1,table[minute/10]);
+  92   2                      digit(2,table[minute%10]&0x7f);
+  93   2                      digit(3,table[second/10]);
+  94   2                      digit(4,table[second%10]);
+  95   2                      keyscan();
+  96   2              }       
+  97   1      }
+  98          
+  99          void timer0() interrupt 1
+ 100          {
+ 101   1              TH0=(65536-45678)/256;
+ 102   1              TL0=(65536-45678)%256;  
+ 103   1              counter++;
+ 104   1              if(counter==20)
+ 105   1              {
+ 106   2                      counter=0;
+ 107   2                      second--;
+ 108   2                      if(second==0)
+ 109   2                      {
+ 110   3                              beep=0;
+ 111   3                              TR1=1;
+ 112   3                      }
+ 113   2                      if(second==-1)
+ 114   2                      {
+ 115   3                              second=59;
+ 116   3                              minute--;
+ 117   3                      }
+C51 COMPILER V8.09   NO_2                                                                  10/14/2010 20:21:46 PAGE 3   
+
+ 118   2              }
+ 119   1      }
+ 120          
+ 121          void timer1() interrupt 3
+ 122          {
+ 123   1              TH0=(65536-45678)/256;
+ 124   1              TL0=(65536-45678)%256;
+ 125   1              counter1++;
+ 126   1              if(counter1==10)
+ 127   1              {
+ 128   2                      counter1=0;
+ 129   2                      if(flag==0)
+ 130   2                              flag=1;
+ 131   2                      else if(flag==1)
+ 132   2                      {
+ 133   3                              flag=2;
+ 134   3                              beep=1;
+ 135   3                      }
+ 136   2                      else if(flag==2)
+ 137   2                      {
+ 138   3                              beep=0;
+ 139   3                              flag=3;
+ 140   3                      }
+ 141   2                      else if(flag==3)
+ 142   2                      {
+ 143   3                              beep=1;
+ 144   3                              TR1=0;
+ 145   3                      }
+ 146   2              }
+ 147   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    452    ----
+   CONSTANT SIZE    =     10    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      5    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      1       1
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

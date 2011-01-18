@@ -1,0 +1,8 @@
+"main.obj",
+"declare.obj",
+"delay.obj",
+"ds1302_driver.obj",
+"display.obj",
+"ds18b20_driver.obj" 
+TO "clock" 
+RAMSIZE(256) 

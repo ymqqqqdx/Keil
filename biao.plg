@@ -1,0 +1,24 @@
+¹¹ÔìÄ¿±ê 'Target 1'
+ÕıÔÚ±àÒï 111.c... 
+.\111.C(14): ´íÎó C247: non-address/-constant initializer
+.\111.C(18): ´íÎó C141: syntax error near ';'
+.\111.C(21): ´íÎó C202: 'com': undefined identifier
+.\111.C(27): ´íÎó C141: syntax error near ';'
+.\111.C(30): ´íÎó C202: 'date': undefined identifier
+.\111.C(49): ´íÎó C213: left side of asn-op not an lvalue
+.\111.C(87): ´íÎó C141: syntax error near 'void'
+.\111.C(88): ´íÎó C141: syntax error near '{'
+.\111.C(96): ´íÎó C267: 'write_com': requires ANSI-style prototype
+.\111.C(101): ´íÎó C141: syntax error near 'void'
+.\111.C(101): ¾¯¸æ C209: '_delay': too few actual parameters
+.\111.C(103): ´íÎó C202: 'j': undefined identifier
+.\111.C(104): ´íÎó C202: 'i': undefined identifier
+.\111.C(105): ´íÎó C202: 'j': undefined identifier
+ÕıÔÚ±àÒï 222.c... 
+.\222.C(16): ´íÎó C247: non-address/-constant initializer
+.\222.C(25): ´íÎó C141: syntax error near ';'
+.\222.C(28): ´íÎó C202: 'com': undefined identifier
+.\222.C(34): ´íÎó C141: syntax error near ';'
+.\222.C(37): ´íÎó C202: 'date': undefined identifier
+ÕıÔÚ±àÒï 333.c... 
+Ä¿±êÃ»²úÉú

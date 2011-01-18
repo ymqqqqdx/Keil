@@ -1,0 +1,45 @@
+C51 COMPILER V8.09   COMM_SCAN                                                             04/29/2010 19:57:04 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE COMM_SCAN
+OBJECT MODULE PLACED IN comm_scan.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE comm_scan.c DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #include <stdio.h>
+   3          #include "declare.h"
+   4          void led();
+   5          void shumaguan();
+   6          void i2c();
+   7          void ds1302();
+   8          void ds18b20();
+   9          void timer();
+  10          void commscan()
+  11          {
+  12   1              comm=_getkey();
+  13   1              switch(comm)
+  14   1              {
+  15   2                      case '1' : P2=0x00; led(); break;
+  16   2                      case '2' : SCON=0x50; shumaguan();  break;
+  17   2                      case '4' : timer(); break;
+  18   2                      case '6' :  P2=0x00; i2c(); break;
+  19   2                      case '7' : ds18b20(); break;
+  20   2                      case '8' : ds1302(); break;
+  21   2              }
+  22   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     57    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

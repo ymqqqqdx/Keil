@@ -1,0 +1,94 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+CMD	declare.h	41;"	d
+DATA	declare.h	42;"	d
+DA_CLK	DA_TLC5619.c	/^sbit DA_CLK=P3^6;$/;"	v
+DA_CS	DA_TLC5619.c	/^sbit DA_CS=P3^7;$/;"	v
+DA_DAT	DA_TLC5619.c	/^sbit DA_DAT=P3^5;$/;"	v
+LED	LED.c	/^void LED(U16 dat)$/;"	f
+LED_process	LED.c	/^void LED_process(U8 dat)$/;"	f
+LS164_CLK	LS164.c	/^sbit LS164_CLK=P0^1;$/;"	v
+LS164_DAT	LS164.c	/^sbit LS164_DAT=P0^0;$/;"	v
+RTC	declare.h	/^} RTC;$/;"	t	typeref:struct:__anon1
+S16	declare.h	7;"	d
+S32	declare.h	9;"	d
+S8	declare.h	6;"	d
+U16	DS1302.c	6;"	d	file:
+U16	declare.h	5;"	d
+U32	declare.h	8;"	d
+U8	DS1302.c	5;"	d	file:
+U8	declare.h	4;"	d
+Write2595	LED.c	/^void Write2595(U8 dat)$/;"	f
+_BEEP_H_	declare.h	91;"	d
+_DA_TLC5619_H_	declare.h	69;"	d
+_DS1302_H_	declare.h	27;"	d
+_HD7279_H_	declare.h	55;"	d
+_KEY_PROCESS_	declare.h	85;"	d
+_LCD_H_	declare.h	40;"	d
+_LED_H_	declare.h	75;"	d
+_LS164_H_	declare.h	80;"	d
+_STRUCT_	declare.h	13;"	d
+_TYPE_DEFINE_	declare.h	3;"	d
+beep	declare.h	/^sbit beep=P2^7;$/;"	v
+clk	LED.c	/^sbit clk=P1^1;$/;"	v
+count	main.c	/^U8 rtc_secondold,stat=0,offset=0,count=0,key_record;$/;"	v
+da_process	DA_TLC5619.c	/^void da_process(U8 dat)$/;"	f
+da_write	DA_TLC5619.c	/^void da_write(U16 dat)$/;"	f
+day	declare.h	/^	U8 day;$/;"	m	struct:__anon1
+hd_clk	declare.h	/^sbit hd_clk=P0^5;$/;"	v
+hd_convert	HD7279.c	/^U8 hd_convert(U8 temp)$/;"	f
+hd_cs	declare.h	/^sbit hd_cs=P0^4;$/;"	v
+hd_dat	declare.h	/^sbit hd_dat=P0^6;$/;"	v
+hd_displaytwo	HD7279.c	/^void hd_displaytwo(U8 add,U8 dat)$/;"	f
+hd_key	declare.h	/^sbit hd_key=P0^7;$/;"	v
+hd_longdelay	HD7279.c	/^void hd_longdelay()$/;"	f
+hd_readbyte	HD7279.c	/^U8 hd_readbyte()$/;"	f
+hd_readcd	HD7279.c	/^U8 hd_readcd(U8 cmd)$/;"	f
+hd_shortdelay	HD7279.c	/^void hd_shortdelay()$/;"	f
+hd_showtime	HD7279.c	/^void hd_showtime()$/;"	f
+hd_writebyte	HD7279.c	/^void hd_writebyte(U8 cmd)$/;"	f
+hd_writecd	HD7279.c	/^void hd_writecd(U8 cmd,U8 dat)$/;"	f
+hour	declare.h	/^	U8 hour;$/;"	m	struct:__anon1
+key_process	Keyprocess.c	/^void key_process(U8 key)$/;"	f
+key_record	main.c	/^U8 rtc_secondold,stat=0,offset=0,count=0,key_record;$/;"	v
+lcd_adjust_init	LCD.c	/^void lcd_adjust_init()$/;"	f
+lcd_clk	LCD.c	/^sbit lcd_clk=P1^2;$/;"	v
+lcd_cs	LCD.c	/^sbit lcd_cs=P0^3;$/;"	v
+lcd_displaytwo	LCD.c	/^void lcd_displaytwo(U8 add,U8 dat)$/;"	f
+lcd_normal	LCD.c	/^void lcd_normal()$/;"	f
+lcd_normal_init	LCD.c	/^void lcd_normal_init()$/;"	f
+lcd_position	LCD.c	/^U8 lcd_position(U8 dat)$/;"	f
+lcd_showtime	LCD.c	/^void lcd_showtime()$/;"	f
+lcd_sid	LCD.c	/^sbit lcd_sid=P0^2;$/;"	v
+lcd_writecd	LCD.c	/^void lcd_writecd(bit cd,U8 dat)$/;"	f
+lcd_writeonechar	LCD.c	/^void lcd_writeonechar(U8 dat)$/;"	f
+lcd_writestring	LCD.c	/^void lcd_writestring(U8 add,U8 *pt)$/;"	f
+ls164_write	LS164.c	/^void ls164_write(U8 temp)$/;"	f
+main	main.c	/^void main()$/;"	f
+minute	declare.h	/^	U8 minute;$/;"	m	struct:__anon1
+month	declare.h	/^	U8 month;$/;"	m	struct:__anon1
+offset	main.c	/^U8 rtc_secondold,stat=0,offset=0,count=0,key_record;$/;"	v
+range	main.c	/^U8 code range[7][2]={{0,59},{0,59},{0,23},{1,31},{1,12},{1,7},{0,99}};$/;"	v
+rtc_clk	DS1302.c	/^sbit rtc_clk=P1^6;$/;"	v
+rtc_gettime	DS1302.c	/^void rtc_gettime()$/;"	f
+rtc_io	DS1302.c	/^sbit rtc_io=P1^7;$/;"	v
+rtc_range	DS1302.c	/^bit rtc_range(U8 off,U8 dat)$/;"	f
+rtc_read	DS1302.c	/^U8 rtc_read(U8 add)$/;"	f
+rtc_readonechar	DS1302.c	/^U8 rtc_readonechar()$/;"	f
+rtc_rst	DS1302.c	/^sbit rtc_rst=P3^0;$/;"	v
+rtc_secondold	main.c	/^U8 rtc_secondold,stat=0,offset=0,count=0,key_record;$/;"	v
+rtc_settime	DS1302.c	/^void rtc_settime(U8 off,U8 dat)$/;"	f
+rtc_write	DS1302.c	/^void rtc_write(U8 add,U8 dat)$/;"	f
+rtc_writeonechar	DS1302.c	/^void rtc_writeonechar(U8 dat)$/;"	f
+rtc_writertc	DS1302.c	/^void rtc_writertc()$/;"	f
+sclk	LED.c	/^sbit sclk=P1^2;$/;"	v
+sda	LED.c	/^sbit sda=P1^4;$/;"	v
+second	declare.h	/^	U8 second;$/;"	m	struct:__anon1
+stat	main.c	/^U8 rtc_secondold,stat=0,offset=0,count=0,key_record;$/;"	v
+time	main.c	/^RTC time;$/;"	v
+week	declare.h	/^	U8 week;$/;"	m	struct:__anon1
+year	declare.h	/^	U8 year;$/;"	m	struct:__anon1

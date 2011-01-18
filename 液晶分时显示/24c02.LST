@@ -1,0 +1,142 @@
+C51 COMPILER V6.12  24C02                                                                  04/20/2010 21:33:12 PAGE 1   
+
+
+C51 COMPILER V6.12, COMPILATION OF MODULE 24C02
+OBJECT MODULE PLACED IN .\24c02.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE .\24c02.c DEBUG OBJECTEXTEND
+
+stmt level    source
+
+   1          #include <reg52.h>
+   2          #include <stdio.h>
+   3          #include <declare.h>
+   4          sbit sda=P1^2;
+   5          sbit scl=P1^1;
+   6          sbit wp=P1^0;
+   7          unsigned char read;
+   8          void delay(int);
+   9          void comm_init();
+  10          void delay0()
+  11          {;;}
+  12          void start()//开始
+  13          {
+  14   1      	sda=1;
+  15   1      	delay0();
+  16   1      	scl=1;
+  17   1      	delay0();
+  18   1      	sda=0;
+  19   1      	delay0();
+  20   1      }
+  21          void stopp()//停止
+  22          {
+  23   1      	sda=0;
+  24   1      	delay0();
+  25   1      	scl=1;
+  26   1      	delay0();
+  27   1      	sda=1;
+  28   1      	delay0();
+  29   1      }
+  30          void respons()//应答
+  31          {
+  32   1      	unsigned char i;
+  33   1      	scl=1;
+  34   1      	delay0();
+  35   1      	while((sda==1)&&(i<250))
+  36   1      		i++;
+  37   1      	scl=0;
+  38   1      	delay0();
+  39   1      }
+  40          void init_24c02()
+  41          {
+  42   1      	sda=1;
+  43   1      	delay0();
+  44   1      	scl=1;
+  45   1      	delay0();
+  46   1      	wp=0;
+  47   1      }
+  48          /************写入时序**********/
+  49          void write_byte(unsigned char date)
+  50          {
+  51   1      	unsigned char i,temp;
+  52   1      	temp=date;
+  53   1      	for(i=0;i<8;i++)
+  54   1      	{
+  55   2      		temp=temp<<1;
+C51 COMPILER V6.12  24C02                                                                  04/20/2010 21:33:12 PAGE 2   
+
+  56   2      		scl=0;
+  57   2      		delay0();
+  58   2      		sda=CY;
+  59   2      		delay0();
+  60   2      		scl=1;
+  61   2      		delay0();
+  62   2      	}
+  63   1      	scl=0;
+  64   1      	delay0();
+  65   1      	sda=1;
+  66   1      	delay0();
+  67   1      }
+  68          /***********读出时序**********/
+  69          char read_byte()
+  70          {
+  71   1      	char i,k;
+  72   1      	scl=0;
+  73   1      	delay0();
+  74   1      	sda=1;
+  75   1      	delay0();
+  76   1      	for(i=0;i<8;i++)
+  77   1      	{
+  78   2      		scl=1;
+  79   2      		delay0();
+  80   2      		k=(k<<1)|sda;
+  81   2      		scl=0;
+  82   2      		delay0();
+  83   2      	}
+  84   1      	return k;
+  85   1      }
+  86          /***********向24C02写一个char型，第一个参数是地址，第二个参数是数据**********/
+  87          void write_add(unsigned char address,char date)
+  88          {
+  89   1      	start();
+  90   1      	write_byte(0xa0);
+  91   1      	respons();
+  92   1      	write_byte(address);
+  93   1      	respons();
+  94   1      	write_byte(date);
+  95   1      	respons();
+  96   1      	stopp();
+  97   1      	delay(1);
+  98   1      }
+  99          /********从24c02读一个char型，参数为地址*************/
+ 100          char read_add(unsigned char address)
+ 101          {
+ 102   1      	unsigned char date;
+ 103   1      	start();
+ 104   1      	write_byte(0xa0);
+ 105   1      	respons();
+ 106   1      	write_byte(address);
+ 107   1      	respons();
+ 108   1      	start();
+ 109   1      	write_byte(0xa1);
+ 110   1      	respons();
+ 111   1      	date=read_byte();
+ 112   1      	stopp();
+ 113   1      	return date;
+ 114   1      	delay(1);
+ 115   1      }
+
+
+C51 COMPILER V6.12  24C02                                                                  04/20/2010 21:33:12 PAGE 3   
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    193    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      1       1
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

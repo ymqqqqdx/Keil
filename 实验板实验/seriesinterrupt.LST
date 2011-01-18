@@ -1,0 +1,33 @@
+C51 COMPILER V8.09   SERIESINTERRUPT                                                       04/29/2010 19:57:04 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE SERIESINTERRUPT
+OBJECT MODULE PLACED IN seriesinterrupt.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE seriesinterrupt.c DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #include "declare.h"
+   3          void ser() interrupt 4
+   4          {
+   5   1              if(comm=='2'||comm=='7')
+   6   1              stop=SBUF;
+   7   1              if(comm=='8')
+   8   1              mode=SBUF;
+   9   1              RI=0;
+  10   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     33    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

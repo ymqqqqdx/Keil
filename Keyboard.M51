@@ -1,0 +1,296 @@
+BL51 BANKED LINKER/LOCATER V4.13                                                        02/07/2010  21:05:57  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V4.13, INVOKED BY:
+C:\KEIL\C51\BIN\BL51.EXE keyboard.obj TO Keyboard RAMSIZE (256)
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  keyboard.obj (KEYBOARD)
+  C:\KEIL\C51\LIB\C51S.LIB (?C_STARTUP)
+
+
+LINK MAP OF MODULE:  Keyboard (KEYBOARD)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            DATA    0008H     0002H     UNIT         ?DT?KEYBOARD
+            IDATA   000AH     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+            CODE    0003H     014CH     UNIT         ?PR?KEYSCAN?KEYBOARD
+            CODE    014FH     002BH     UNIT         ?PR?_DISPLAY?KEYBOARD
+            CODE    017AH     0024H     UNIT         ?PR?_DELAY?KEYBOARD
+            CODE    019EH     0010H     UNIT         ?CO?KEYBOARD
+            CODE    01AEH     000CH     UNIT         ?C_C51STARTUP
+            CODE    01BAH     0005H     UNIT         ?PR?MAIN?KEYBOARD
+
+
+
+OVERLAY MAP OF MODULE:   Keyboard (KEYBOARD)
+
+
+SEGMENT
+  +--> CALLED SEGMENT
+---------------------
+?C_C51STARTUP
+  +--> ?PR?MAIN?KEYBOARD
+
+?PR?MAIN?KEYBOARD
+  +--> ?PR?KEYSCAN?KEYBOARD
+
+?PR?KEYSCAN?KEYBOARD
+  +--> ?PR?_DELAY?KEYBOARD
+  +--> ?CO?KEYBOARD
+
+
+
+SYMBOL TABLE OF MODULE:  Keyboard (KEYBOARD)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        KEYBOARD
+BL51 BANKED LINKER/LOCATER V4.13                                                      02/07/2010  21:05:57  PAGE 2
+
+
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:0080H         PUBLIC        P0
+  D:0090H         PUBLIC        P1
+  D:00A0H         PUBLIC        P2
+  D:00B0H         PUBLIC        P3
+  B:00B0H.4       PUBLIC        T0
+  B:00D0H.6       PUBLIC        AC
+  B:00B0H.5       PUBLIC        T1
+  B:0090H.0       PUBLIC        T2
+  B:00A8H.7       PUBLIC        EA
+  C:019EH         PUBLIC        table
+  D:00A8H         PUBLIC        IE
+  B:00C8H.6       PUBLIC        EXF2
+  B:00B0H.7       PUBLIC        RD
+  B:00A8H.4       PUBLIC        ES
+  D:00B8H         PUBLIC        IP
+  B:0098H.0       PUBLIC        RI
+  B:00B0H.2       PUBLIC        INT0
+  B:00D0H.7       PUBLIC        CY
+  B:0098H.1       PUBLIC        TI
+  B:00B0H.3       PUBLIC        INT1
+  B:00B8H.4       PUBLIC        PS
+  B:0090H.1       PUBLIC        T2EX
+  B:00D0H.2       PUBLIC        OV
+  C:01BAH         PUBLIC        main
+  B:00C8H.1       PUBLIC        C_T2
+  B:00B0H.6       PUBLIC        WR
+  B:00C8H.5       PUBLIC        RCLK
+  B:00C8H.4       PUBLIC        TCLK
+  D:0098H         PUBLIC        SCON
+  D:0088H         PUBLIC        TCON
+  D:0008H         PUBLIC        temp
+  B:0088H.1       PUBLIC        IE0
+  B:0088H.3       PUBLIC        IE1
+  B:00C8H.0       PUBLIC        CP_RL2
+  B:00A8H.1       PUBLIC        ET0
+  B:00A8H.3       PUBLIC        ET1
+  B:0088H.5       PUBLIC        TF0
+  B:00A8H.5       PUBLIC        ET2
+  B:0088H.7       PUBLIC        TF1
+  B:00C8H.7       PUBLIC        TF2
+  B:0098H.2       PUBLIC        RB8
+  B:00A8H.0       PUBLIC        EX0
+  B:0088H.0       PUBLIC        IT0
+  B:0098H.3       PUBLIC        TB8
+  B:00A8H.2       PUBLIC        EX1
+  B:0088H.2       PUBLIC        IT1
+  B:00D0H.0       PUBLIC        P
+  B:0098H.7       PUBLIC        SM0
+  B:0098H.6       PUBLIC        SM1
+  B:0098H.5       PUBLIC        SM2
+  B:00B8H.1       PUBLIC        PT0
+  B:00B8H.3       PUBLIC        PT1
+  B:00D0H.3       PUBLIC        RS0
+  B:00B8H.5       PUBLIC        PT2
+  B:0088H.4       PUBLIC        TR0
+  B:00D0H.4       PUBLIC        RS1
+BL51 BANKED LINKER/LOCATER V4.13                                                      02/07/2010  21:05:57  PAGE 3
+
+
+  B:0088H.6       PUBLIC        TR1
+  B:00C8H.2       PUBLIC        TR2
+  B:00B8H.0       PUBLIC        PX0
+  B:00B8H.2       PUBLIC        PX1
+  C:014FH         PUBLIC        _display
+  B:00C8H.3       PUBLIC        EXEN2
+  B:0098H.4       PUBLIC        REN
+  D:00C8H         PUBLIC        T2CON
+  D:0009H         PUBLIC        k
+  B:00B0H.0       PUBLIC        RXD
+  B:00B0H.1       PUBLIC        TXD
+  C:017EH         PUBLIC        _delay
+  C:0003H         PUBLIC        keyscan
+  B:00D0H.5       PUBLIC        F0
+  D:00D0H         PUBLIC        PSW
+  C:017AH         SYMBOL        L?0052
+  -------         PROC          L?0051
+  -------         ENDPROC       L?0051
+  C:017AH         SYMBOL        L?0052
+  -------         PROC          _DELAY
+  D:0006H         SYMBOL        z
+  -------         DO            z
+  D:0006H         SYMBOL        i
+  D:0004H         SYMBOL        j
+  -------         ENDDO         j
+  C:017EH         LINE#         7
+  C:017EH         LINE#         8
+  C:017EH         LINE#         10
+  C:0189H         LINE#         11
+  C:019DH         LINE#         12
+  -------         ENDPROC       _DELAY
+  -------         PROC          _DISPLAY
+  D:0003H         SYMBOL        dd
+  C:014FH         LINE#         13
+  C:0151H         LINE#         14
+  C:0151H         LINE#         15
+  C:0154H         LINE#         16
+  C:015FH         LINE#         17
+  C:0166H         LINE#         18
+  C:0169H         LINE#         19
+  C:0173H         LINE#         20
+  -------         ENDPROC       _DISPLAY
+  -------         PROC          KEYSCAN
+  C:0003H         LINE#         22
+  C:0003H         LINE#         23
+  C:0003H         LINE#         24
+  C:0006H         LINE#         25
+  C:0009H         LINE#         26
+  C:000CH         LINE#         27
+  C:0012H         LINE#         28
+  C:0012H         LINE#         29
+  C:0015H         LINE#         30
+  C:0018H         LINE#         31
+  C:001BH         LINE#         32
+  C:0021H         LINE#         33
+  C:0021H         LINE#         34
+  C:0033H         LINE#         35
+BL51 BANKED LINKER/LOCATER V4.13                                                      02/07/2010  21:05:57  PAGE 4
+
+
+  C:0033H         LINE#         36
+  C:0036H         LINE#         37
+  C:0038H         LINE#         38
+  C:003BH         LINE#         39
+  C:003DH         LINE#         40
+  C:0040H         LINE#         41
+  C:0042H         LINE#         42
+  C:0045H         LINE#         43
+  C:0045H         LINE#         44
+  C:0045H         LINE#         45
+  C:004DH         LINE#         46
+  C:0050H         LINE#         47
+  C:0053H         LINE#         48
+  C:0055H         LINE#         49
+  C:0055H         LINE#         50
+  C:0058H         LINE#         51
+  C:005BH         LINE#         52
+  C:005EH         LINE#         53
+  C:0064H         LINE#         54
+  C:0064H         LINE#         55
+  C:0067H         LINE#         56
+  C:006AH         LINE#         57
+  C:006DH         LINE#         58
+  C:0073H         LINE#         59
+  C:0073H         LINE#         60
+  C:0085H         LINE#         61
+  C:0085H         LINE#         62
+  C:0088H         LINE#         63
+  C:008AH         LINE#         64
+  C:008DH         LINE#         65
+  C:008FH         LINE#         66
+  C:0092H         LINE#         67
+  C:0094H         LINE#         68
+  C:0097H         LINE#         69
+  C:0097H         LINE#         70
+  C:0097H         LINE#         71
+  C:009FH         LINE#         72
+  C:00A2H         LINE#         73
+  C:00A5H         LINE#         74
+  C:00A7H         LINE#         75
+  C:00A7H         LINE#         76
+  C:00AAH         LINE#         77
+  C:00ADH         LINE#         78
+  C:00B0H         LINE#         79
+  C:00B3H         LINE#         80
+  C:00B9H         LINE#         81
+  C:00B9H         LINE#         82
+  C:00BCH         LINE#         83
+  C:00BFH         LINE#         84
+  C:00C2H         LINE#         85
+  C:00C8H         LINE#         86
+  C:00C8H         LINE#         87
+  C:00DAH         LINE#         88
+  C:00DAH         LINE#         89
+  C:00DDH         LINE#         90
+  C:00DFH         LINE#         91
+  C:00E2H         LINE#         92
+BL51 BANKED LINKER/LOCATER V4.13                                                      02/07/2010  21:05:57  PAGE 5
+
+
+  C:00E4H         LINE#         93
+  C:00E7H         LINE#         94
+  C:00E9H         LINE#         96
+  C:00ECH         LINE#         97
+  C:00ECH         LINE#         98
+  C:00ECH         LINE#         100
+  C:00F4H         LINE#         102
+  C:00F7H         LINE#         103
+  C:00FAH         LINE#         104
+  C:00FCH         LINE#         105
+  C:00FCH         LINE#         106
+  C:00FFH         LINE#         107
+  C:0102H         LINE#         108
+  C:0105H         LINE#         109
+  C:010BH         LINE#         110
+  C:010BH         LINE#         111
+  C:010EH         LINE#         112
+  C:0111H         LINE#         113
+  C:0114H         LINE#         114
+  C:011AH         LINE#         115
+  C:011AH         LINE#         116
+  C:012CH         LINE#         117
+  C:012CH         LINE#         118
+  C:012FH         LINE#         119
+  C:0131H         LINE#         120
+  C:0134H         LINE#         121
+  C:0136H         LINE#         122
+  C:0139H         LINE#         123
+  C:013BH         LINE#         125
+  C:013EH         LINE#         126
+  C:013EH         LINE#         128
+  C:013EH         LINE#         131
+  C:0146H         LINE#         133
+  C:0149H         LINE#         134
+  C:014CH         LINE#         135
+  C:014EH         LINE#         136
+  C:014EH         LINE#         137
+  -------         ENDPROC       KEYSCAN
+  -------         PROC          MAIN
+  C:01BAH         LINE#         138
+  C:01BAH         LINE#         139
+  C:01BAH         LINE#         140
+  C:01BAH         LINE#         141
+  C:01BAH         LINE#         142
+  C:01BDH         LINE#         144
+  -------         ENDPROC       MAIN
+  -------         ENDMOD        KEYBOARD
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DISPLAY?KEYBOARD
+
+LINK/LOCATE RUN COMPLETE.  1 WARNING(S),  0 ERROR(S)

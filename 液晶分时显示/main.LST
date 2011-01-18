@@ -1,0 +1,90 @@
+C51 COMPILER V6.12  MAIN                                                                   04/20/2010 21:33:11 PAGE 1   
+
+
+C51 COMPILER V6.12, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\main.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE .\main.c DEBUG OBJECTEXTEND
+
+stmt level    source
+
+   1          #include <reg52.h>
+   2          #include "declare.h"
+   3          unsigned char code table6[]="温度与时间间隔五秒轮流显示";
+   4          char year,week,month,day,hour,minute,second,i,mode,buff,week;
+   5          char alarmhour,alarmminute;
+   6          unsigned int val;
+   7          void display1302();
+   8          void display18b20();
+   9          void init_ds1302();
+  10          void init_12232();
+  11          void displaytwo(unsigned char,unsigned char);
+  12          void delay(int);
+  13          void displaytemp(int);
+  14          void init_24c02();
+  15          int readtemp();
+  16          void write_com(unsigned char);
+  17          void write_data(unsigned char);
+  18          void adjust1302();
+  19          void keyscan();
+  20          void timer555();
+  21          void alarmsetting();
+  22          /*******主函数，初始化，分屏显示********/
+  23          void main()
+  24          {
+  25   1      	init_24c02();
+  26   1      	init_ds1302();
+  27   1      	init_12232();
+  28   1      	mode=1;
+  29   1      	write_com(0x80);
+  30   1      	for(i=0;i<14;i++)
+  31   1      	{
+  32   2      			write_data(table6[i]);
+  33   2      	}
+  34   1      	write_com(0x90);
+  35   1      	for(i=0;i<12;i++)
+  36   1      	{
+  37   2      			write_data(table6[i+14]);
+  38   2      	}
+  39   1      	delay(1000);
+  40   1      	readtemp();
+  41   1      	while(1)
+  42   1      	{
+  43   2      		keyscan();
+  44   2      		if(mode==1)
+  45   2      		{
+  46   3      			display1302();
+  47   3      		}
+  48   2      		if(mode==2)
+  49   2      		{
+  50   3      			display18b20();
+  51   3      		}
+  52   2      		if(mode==4)
+  53   2      		{
+  54   3      			adjust1302();
+  55   3      		}
+C51 COMPILER V6.12  MAIN                                                                   04/20/2010 21:33:11 PAGE 2   
+
+  56   2      		if(mode==3)
+  57   2      		{
+  58   3      			timer555();
+  59   3      		}
+  60   2      		if(mode==5)
+  61   2      		{
+  62   3      			alarmsetting();
+  63   3      		}
+  64   2      	}
+  65   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    151    ----
+   CONSTANT SIZE    =     27    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     14    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

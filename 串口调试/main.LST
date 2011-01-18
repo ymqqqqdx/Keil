@@ -1,0 +1,52 @@
+C51 COMPILER V8.09   MAIN                                                                  05/08/2010 10:21:54 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE main.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #include <stdio.h>
+   3          void comm_init();
+   4          void delay(int);
+   5          void main()
+   6          {
+   7   1              unsigned char i;
+   8   1              unsigned char buffer[32];
+   9   1              unsigned int forpr;
+  10   1              comm_init();
+  11   1              while(1)
+  12   1              {
+  13   2      /*              for(i=0;i<32;i++)
+  14   2                      {
+  15   2                              buffer[i]=_getkey();
+  16   2                      }
+  17   2                      for(i=0;i<32;i++)
+  18   2                      {
+  19   2                              forpr=buffer[i];
+  20   2                              printf("%d",forpr);     
+  21   2                              delay(10);
+  22   2                      }*/
+  23   2                      printf("%s","123456");
+  24   2                      delay(1000);
+  25   2              }
+  26   1      }
+*** WARNING C280 IN LINE 7 OF MAIN.C: 'i': unreferenced local variable
+*** WARNING C280 IN LINE 8 OF MAIN.C: 'buffer': unreferenced local variable
+*** WARNING C280 IN LINE 9 OF MAIN.C: 'forpr': unreferenced local variable
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     30    ----
+   CONSTANT SIZE    =     10    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----      35
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  3 WARNING(S),  0 ERROR(S)

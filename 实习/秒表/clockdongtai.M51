@@ -1,0 +1,201 @@
+BL51 BANKED LINKER/LOCATER V6.05                                                        06/29/2010  09:06:12  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V6.05, INVOKED BY:
+C:\KEIL\C51\BIN\BL51.EXE STARTUP.obj, dongtai.obj TO clockdongtai RAMSIZE (256)
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  STARTUP.obj (?C_STARTUP)
+  dongtai.obj (DONGTAI)
+  C:\KEIL\C51\LIB\C51S.LIB (?C_INIT)
+
+
+LINK MAP OF MODULE:  clockdongtai (?C_STARTUP)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            DATA    0008H     0004H     UNIT         ?DT?DONGTAI
+            IDATA   000CH     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+            CODE    0003H     0007H     UNIT         ?C_INITSEG
+                    000AH     0001H                  *** GAP ***
+            CODE    000BH     0003H     ABSOLUTE     
+            CODE    000EH     008CH     UNIT         ?C_C51STARTUP
+            CODE    009AH     0031H     UNIT         ?PR?INT0?DONGTAI
+            CODE    00CBH     0030H     UNIT         ?PR?MAIN?DONGTAI
+            CODE    00FBH     002DH     UNIT         ?PR?_DELAY?DONGTAI
+            CODE    0128H     0010H     UNIT         ?PR?INIT?DONGTAI
+            CODE    0138H     0010H     UNIT         ?CO?DONGTAI
+
+
+
+OVERLAY MAP OF MODULE:   clockdongtai (?C_STARTUP)
+
+
+SEGMENT
+  +--> CALLED SEGMENT
+---------------------
+?C_C51STARTUP
+  +--> ?PR?MAIN?DONGTAI
+  +--> ?C_INITSEG
+
+?PR?MAIN?DONGTAI
+  +--> ?PR?INIT?DONGTAI
+  +--> ?CO?DONGTAI
+  +--> ?PR?_DELAY?DONGTAI
+
+
+
+SYMBOL TABLE OF MODULE:  clockdongtai (?C_STARTUP)
+
+  VALUE           TYPE          NAME
+BL51 BANKED LINKER/LOCATER V6.05                                                      06/29/2010  09:06:12  PAGE 2
+
+
+  ----------------------------------
+
+  -------         MODULE        ?C_STARTUP
+  C:000EH         SEGMENT       ?C_C51STARTUP
+  I:000CH         SEGMENT       ?STACK
+  C:0000H         PUBLIC        ?C_STARTUP
+  D:00E0H         SYMBOL        ACC
+  D:00F0H         SYMBOL        B
+  D:0083H         SYMBOL        DPH
+  D:0082H         SYMBOL        DPL
+  N:0000H         SYMBOL        IBPSTACK
+  N:0100H         SYMBOL        IBPSTACKTOP
+  N:0080H         SYMBOL        IDATALEN
+  C:0011H         SYMBOL        IDATALOOP
+  N:0000H         SYMBOL        PBPSTACK
+  N:0100H         SYMBOL        PBPSTACKTOP
+  N:0000H         SYMBOL        PDATALEN
+  N:0000H         SYMBOL        PDATASTART
+  N:0000H         SYMBOL        PPAGE
+  N:0000H         SYMBOL        PPAGEENABLE
+  D:00A0H         SYMBOL        PPAGE_SFR
+  D:0081H         SYMBOL        SP
+  C:000EH         SYMBOL        STARTUP1
+  N:0000H         SYMBOL        XBPSTACK
+  N:0000H         SYMBOL        XBPSTACKTOP
+  N:0000H         SYMBOL        XDATALEN
+  N:0000H         SYMBOL        XDATASTART
+  C:0000H         LINE#         126
+  C:000EH         LINE#         133
+  C:0010H         LINE#         134
+  C:0011H         LINE#         135
+  C:0012H         LINE#         136
+  C:0014H         LINE#         185
+  C:0017H         LINE#         196
+  -------         ENDMOD        ?C_STARTUP
+
+  -------         MODULE        DONGTAI
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:0080H         PUBLIC        P0
+  D:0090H         PUBLIC        P1
+  D:00A0H         PUBLIC        P2
+  D:00B0H         PUBLIC        P3
+  B:00A8H.7       PUBLIC        EA
+  C:0138H         PUBLIC        table
+  D:00A8H         PUBLIC        IE
+  C:0108H         PUBLIC        _delay
+  D:00B8H         PUBLIC        IP
+  C:00CBH         PUBLIC        main
+  D:0008H         PUBLIC        miao
+  D:0009H         PUBLIC        count
+  D:0098H         PUBLIC        SCON
+  D:0089H         PUBLIC        TMOD
+  D:0088H         PUBLIC        TCON
+  C:0128H         PUBLIC        init
+  D:000BH         PUBLIC        fen
+  B:00A8H.1       PUBLIC        ET0
+  D:008CH         PUBLIC        TH0
+BL51 BANKED LINKER/LOCATER V6.05                                                      06/29/2010  09:06:12  PAGE 3
+
+
+  D:008AH         PUBLIC        TL0
+  B:0088H.4       PUBLIC        TR0
+  D:00C8H         PUBLIC        T2CON
+  D:00D0H         PUBLIC        PSW
+  C:009AH         PUBLIC        int0
+  C:0101H         SYMBOL        L?0020
+  -------         PROC          L?0019
+  -------         ENDPROC       L?0019
+  C:0101H         SYMBOL        L?0020
+  -------         PROC          _DELAY
+  D:0006H         SYMBOL        z
+  -------         DO            
+  D:0006H         SYMBOL        i
+  D:0004H         SYMBOL        j
+  -------         ENDDO         
+  C:0108H         LINE#         10
+  C:0108H         LINE#         11
+  C:0108H         LINE#         13
+  C:0113H         LINE#         14
+  C:0127H         LINE#         15
+  -------         ENDPROC       _DELAY
+  -------         PROC          INIT
+  C:0128H         LINE#         16
+  C:0128H         LINE#         17
+  C:0128H         LINE#         18
+  C:012AH         LINE#         19
+  C:012DH         LINE#         20
+  C:0130H         LINE#         21
+  C:0133H         LINE#         22
+  C:0135H         LINE#         23
+  C:0137H         LINE#         24
+  -------         ENDPROC       INIT
+  -------         PROC          MAIN
+  C:00CBH         LINE#         25
+  C:00CBH         LINE#         26
+  C:00CBH         LINE#         27
+  C:00CEH         LINE#         28
+  C:00CEH         LINE#         29
+  C:00CEH         LINE#         30
+  C:00D1H         LINE#         31
+  C:00DAH         LINE#         32
+  C:00DDH         LINE#         34
+  C:00E0H         LINE#         35
+  C:00E2H         LINE#         36
+  C:00E5H         LINE#         38
+  C:00E8H         LINE#         39
+  C:00EEH         LINE#         40
+  C:00F1H         LINE#         42
+  C:00F4H         LINE#         43
+  C:00F6H         LINE#         44
+  C:00F9H         LINE#         45
+  -------         ENDPROC       MAIN
+  -------         PROC          INT0
+  C:009AH         LINE#         47
+  C:009EH         LINE#         49
+  C:00A1H         LINE#         50
+  C:00A4H         LINE#         51
+BL51 BANKED LINKER/LOCATER V6.05                                                      06/29/2010  09:06:12  PAGE 4
+
+
+  C:00ACH         LINE#         52
+  C:00B2H         LINE#         53
+  C:00B2H         LINE#         54
+  C:00B4H         LINE#         55
+  C:00B9H         LINE#         56
+  C:00B9H         LINE#         57
+  C:00BCH         LINE#         58
+  C:00BEH         LINE#         59
+  C:00C3H         LINE#         60
+  C:00C6H         LINE#         61
+  C:00C6H         LINE#         62
+  C:00C6H         LINE#         63
+  -------         ENDPROC       INT0
+  -------         ENDMOD        DONGTAI
+
+Program Size: data=13.0 xdata=0 code=327
+LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)

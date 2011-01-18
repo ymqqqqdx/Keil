@@ -1,0 +1,141 @@
+C51 COMPILER V8.09   24C02                                                                 05/06/2010 20:25:56 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE 24C02
+OBJECT MODULE PLACED IN 24c02.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE 24c02.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #include <stdio.h>
+   3          sbit sda=P1^7;
+   4          sbit scl=P1^6;
+   5          sbit wp=P1^0;
+   6          unsigned char read;
+   7          void delay(int);
+   8          void comm_init();
+   9          void delay0()
+  10          {;;}
+  11          void start()//开始
+  12          {
+  13   1              sda=1;
+  14   1              delay0();
+  15   1              scl=1;
+  16   1              delay0();
+  17   1              sda=0;
+  18   1              delay0();
+  19   1      }
+  20          void stopp()//停止
+  21          {
+  22   1              sda=0;
+  23   1              delay0();
+  24   1              scl=1;
+  25   1              delay0();
+  26   1              sda=1;
+  27   1              delay0();
+  28   1      }
+  29          void respons()//应答
+  30          {
+  31   1              unsigned char i;
+  32   1              scl=1;
+  33   1              delay0();
+  34   1              while((sda==1)&&(i<250))
+  35   1                      i++;
+  36   1              scl=0;
+  37   1              delay0();
+  38   1      }
+  39          void init_24c02()
+  40          {
+  41   1              sda=1;
+  42   1              delay0();
+  43   1              scl=1;
+  44   1              delay0();
+  45   1              wp=0;
+  46   1      }
+  47          /************写入时序**********/
+  48          void write_byte(unsigned char date)
+  49          {
+  50   1              unsigned char i,temp;
+  51   1              temp=date;
+  52   1              for(i=0;i<8;i++)
+  53   1              {
+  54   2                      temp=temp<<1;
+  55   2                      scl=0;
+C51 COMPILER V8.09   24C02                                                                 05/06/2010 20:25:56 PAGE 2   
+
+  56   2                      delay0();
+  57   2                      sda=CY;
+  58   2                      delay0();
+  59   2                      scl=1;
+  60   2                      delay0();
+  61   2              }
+  62   1              scl=0;
+  63   1              delay0();
+  64   1              sda=1;
+  65   1              delay0();
+  66   1      }
+  67          /***********读出时序**********/
+  68          char read_byte()
+  69          {
+  70   1              char i,k;
+  71   1              scl=0;
+  72   1              delay0();
+  73   1              sda=1;
+  74   1              delay0();
+  75   1              for(i=0;i<8;i++)
+  76   1              {
+  77   2                      scl=1;
+  78   2                      delay0();
+  79   2                      k=(k<<1)|sda;
+  80   2                      scl=0;
+  81   2                      delay0();
+  82   2              }
+  83   1              return k;
+  84   1      }
+  85          /***********向24C02写一个char型，第一个参数是地址，第二个参数是数据**********/
+  86          void write_add(unsigned char address,char date)
+  87          {
+  88   1              start();
+  89   1              write_byte(0xa2);
+  90   1              respons();
+  91   1              write_byte(address);
+  92   1              respons();
+  93   1              write_byte(date);
+  94   1              respons();
+  95   1              stopp();
+  96   1              delay(1);
+  97   1      }
+  98          /********从24c02读一个char型，参数为地址*************/
+  99          char read_add(unsigned char address)
+ 100          {
+ 101   1              unsigned char date;
+ 102   1              start();
+ 103   1              write_byte(0xa2);
+ 104   1              respons();
+ 105   1              write_byte(address);
+ 106   1              respons();
+ 107   1              start();
+ 108   1              write_byte(0xa3);
+ 109   1              respons();
+ 110   1              date=read_byte();
+ 111   1              stopp();
+ 112   1              return date;
+ 113   1              delay(1);
+ 114   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+C51 COMPILER V8.09   24C02                                                                 05/06/2010 20:25:56 PAGE 3   
+
+   CODE SIZE        =    193    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      1       1
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

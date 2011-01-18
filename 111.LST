@@ -1,0 +1,146 @@
+C51 COMPILER V6.12  111                                                                    01/01/2010 16:22:28 PAGE 1   
+
+
+C51 COMPILER V6.12, COMPILATION OF MODULE 111
+OBJECT MODULE PLACED IN .\111.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE .\111.c DEBUG OBJECTEXTEND
+
+stmt level    source
+
+   1          #include<reg52.h>
+   2          #include<intrins.h>
+   3          #define uint unsigned int;
+   4          #define uchar unsigned char;
+   5          #define ulong	unsigned long int;
+   6          sbit k1=P1^0;
+   7          sbit k2=P1^1;
+   8          sbit k3=P1^2;
+   9          sbit k4=P1^3;
+  10          sbit ln=P2^0;
+  11          sbit ls=P2^1;
+  12          ulong  add,dat[20]=0;
+  13          uchar t,aa,max,min1,min0,sec1,sec0,one;
+  14          uchar code table[]="Number ";
+*** ERROR C247 IN LINE 14 OF .\111.C: non-address/-constant initializer
+  15          uchar code table1[]="0123456789";
+  16          uchar code table2[]=":.";
+  17          void delay(int);
+  18          void write_com(uchar com)
+*** ERROR C141 IN LINE 18 OF .\111.C: syntax error near ';'
+  19          {
+  20   1      	ls=0;
+  21   1         P0=com;
+*** ERROR C202 IN LINE 21 OF .\111.C: 'com': undefined identifier
+  22   1         delay(5);
+  23   1         ln=1;
+  24   1         delay(5);
+  25   1         ln=0;
+  26   1      }
+  27          void write_data(uchar date)
+*** ERROR C141 IN LINE 27 OF .\111.C: syntax error near ';'
+  28          {
+  29   1      	ls=1;
+  30   1         P0=date;
+*** ERROR C202 IN LINE 30 OF .\111.C: 'date': undefined identifier
+  31   1         delay(5);
+  32   1         ln=1;
+  33   1         delay(5);
+  34   1         ln=0;
+  35   1      }
+  36          void init();
+  37          void main()
+  38          {
+  39   1      	init();
+  40   1      	while(1)
+  41   1      	{
+  42   2      	if(k1==0)
+  43   2      	{
+  44   3      		delay(5);
+  45   3      		if(k1==0)
+  46   3      		{
+  47   4      			TR0=~TR0;
+  48   4      			if(TR0==1)
+  49   4      			dat[t++]=add;
+*** ERROR C213 IN LINE 49 OF .\111.C: left side of asn-op not an lvalue
+C51 COMPILER V6.12  111                                                                    01/01/2010 16:22:28 PAGE 2   
+
+  50   4      		}
+  51   3      	}
+  52   2      	if(k2==0)
+  53   2      	{
+  54   3      		delay(5);
+  55   3      		if(k2==0)
+  56   3      		{
+  57   4      			TR0=0;
+  58   4      			ET0=0;
+  59   4      			max=t;
+  60   4      			if(k2==0)
+  61   4      			delay(5);
+  62   4      				if(k2==0)
+  63   4      				add=0;	
+  64   4      		}
+  65   3      	}
+  66   2      	if(k3==0)
+  67   2      	{
+  68   3      		delay(5);
+  69   3      		if(k3==0)
+  70   3      		{
+  71   4      			if(ET0==0)
+  72   4      				if(t>0)
+  73   4      				t--;
+  74   4      		}
+  75   3      	}
+  76   2      	if(k4==0)
+  77   2      	{
+  78   3      		delay(5);
+  79   3      		if(k4==0)
+  80   3      		{
+  81   4      			if(ET0==0)
+  82   4      				if(t<max)
+  83   4      				t++;
+  84   4      		}
+  85   3      	}
+  86   2      }
+  87   1      void init()        
+*** ERROR C141 IN LINE 87 OF .\111.C: syntax error near 'void'
+  88   1      {
+*** ERROR C141 IN LINE 88 OF .\111.C: syntax error near '{'
+  89   2      	TMOD=0x01;
+  90   2      	TH0=(65536-10000)/256; 
+  91   2      	TL0=(65536-10000)%256;
+  92   2      	EA=1; //开总中断
+  93   2      	ET0=1; //计时器0开启
+  94   2      	TR0=0; //计时器先关闭
+  95   2      	ln=0;
+  96   2         write_com(0x38);
+*** ERROR C267 IN LINE 96 OF .\111.C: 'write_com': requires ANSI-style prototype
+  97   2         write_com(0x0c);
+  98   2         write_com(0x06);
+  99   2      	write_com(0x01);
+ 100   2      }
+ 101   1      void delay(int z)
+*** ERROR C141 IN LINE 101 OF .\111.C: syntax error near 'void'
+*** WARNING C209 IN LINE 101 OF .\111.C: '_delay': too few actual parameters
+ 102   1      {
+ 103   1      	int i,j;
+*** ERROR C202 IN LINE 103 OF .\111.C: 'j': undefined identifier
+ 104   1              for(i=z;i>0;i--)
+*** ERROR C202 IN LINE 104 OF .\111.C: 'i': undefined identifier
+C51 COMPILER V6.12  111                                                                    01/01/2010 16:22:28 PAGE 3   
+
+ 105   1               for(j=110;j>0;j--);
+*** ERROR C202 IN LINE 105 OF .\111.C: 'j': undefined identifier
+ 106   1      }
+ 107          void timer0() interrupt 1
+ 108          {
+ 109   1      		TH0=(65536-10000)/256;
+ 110   1      	   TL0=(65536-10000)%256;
+ 111   1      		aa++;
+ 112   1      		if(aa==1)
+ 113   1      		{   
+ 114   2      			aa=0;
+ 115   2      			add++;
+ 116   2      		}
+ 117   1      }
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  13 ERROR(S)

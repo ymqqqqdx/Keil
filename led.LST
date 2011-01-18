@@ -1,0 +1,235 @@
+C51 COMPILER V6.12  LED                                                                    12/22/2009 21:04:25 PAGE 1   
+
+
+C51 COMPILER V6.12, COMPILATION OF MODULE LED
+OBJECT MODULE PLACED IN .\led.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE .\led.c DEBUG OBJECTEXTEND
+
+stmt level    source
+
+   1          #include <reg52.h>
+   2          #include <intrins.h>
+   3          #define uchar unsigned char
+   4          sbit k1=P2^0;
+   5          sbit k2=P2^1;
+   6          sbit k3=P2^2;
+   7          sbit k4=P2^3;
+   8          uchar temp,i,a;
+   9          void plan1();
+  10          void plan2();
+  11          void plan3();
+  12          void keyscan();
+  13          void delay1(int z)
+  14          {
+  15   1      	int i,j;
+  16   1              for(i=z;i>0;i--)
+  17   1               for(j=110;j>0;j--);
+  18   1      }
+  19          void delay(int z)
+  20          {
+  21   1      	int i,j;
+  22   1              for(i=z;i>0;i--)
+  23   1      		  {
+  24   2      		  	keyscan();
+  25   2               for(j=110;j>0;j--);
+  26   2      		  }
+  27   1      }
+  28          void keyscan()
+  29          {
+  30   1      	if(k1==0)
+  31   1      	{
+  32   2      		delay1(5);
+  33   2      		if(k1==0)
+  34   2      		plan1();
+  35   2      	}
+  36   1      	if(k2==0)
+  37   1      	{
+  38   2      		delay1(5);
+  39   2      		if(k2==0)
+  40   2      		plan2();
+  41   2      	}
+  42   1      	if(k3==0)
+  43   1      	{
+  44   2      		delay1(5);
+  45   2      		if(k3==0)
+  46   2      		plan3();
+  47   2      	}
+  48   1      	if(k4==0)
+  49   1      	{
+  50   2      		delay1(5);
+  51   2      		if(k4==0)
+  52   2      		{
+  53   3      		plan1();
+  54   3      		plan2();
+  55   3      		plan3();
+C51 COMPILER V6.12  LED                                                                    12/22/2009 21:04:25 PAGE 2   
+
+  56   3      		}
+  57   2      	}
+  58   1      }
+  59          void main()
+  60          {
+  61   1      	P1=0xff;
+  62   1      	while(1)
+  63   1      	{
+  64   2      		keyscan();
+  65   2      	}
+  66   1      }
+  67          void plan1()
+  68          {
+  69   1      			temp=0xfe;
+  70   1      			P1=temp;
+  71   1      			delay1(200);
+  72   1      			for(a=0;a<2;a++)
+  73   1      			{
+  74   2      				for(i=0;i<7;i++)
+  75   2      				{
+  76   3      					temp=_crol_(temp,1);
+  77   3      					delay(200);
+  78   3      					P1=temp;
+  79   3      				}
+  80   2      				temp=0x7f;
+  81   2      				for(i=0;i<7;i++)
+  82   2      				{
+  83   3      					temp=_cror_(temp,1);
+  84   3      					delay(200);
+  85   3      					P1=temp;
+  86   3      				}
+  87   2      			}
+  88   1      			delay(200);
+  89   1      			P1=0xff;
+  90   1      			delay(200);
+  91   1      			for(a=0;a<5;a++)
+  92   1      			{
+  93   2      				P1=0x00;
+  94   2      				delay(200);
+  95   2      				P1=0xff;
+  96   2      				delay(200);
+  97   2      			}
+  98   1      }
+  99          void plan3()
+ 100          {
+ 101   1      	for(a=0;a<3;a++)
+ 102   1      	{
+ 103   2      		P1=0xaa;
+ 104   2      		delay(200);
+ 105   2      		P1=0x55;
+ 106   2      		delay(200);
+ 107   2      	}
+ 108   1      	for(a=0;a<3;a++)
+ 109   1      	{
+ 110   2      				temp=0xfe;
+ 111   2      				for(i=0;i<7;i++)
+ 112   2      				{
+ 113   3      					temp=_crol_(temp,1);
+ 114   3      					delay(1);
+ 115   3      					P1=temp;
+ 116   3      				}
+ 117   2      				temp=0x7f;
+C51 COMPILER V6.12  LED                                                                    12/22/2009 21:04:25 PAGE 3   
+
+ 118   2      				for(i=0;i<7;i++)
+ 119   2      				{
+ 120   3      					temp=_cror_(temp,1);
+ 121   3      					delay(1);
+ 122   3      					P1=temp;
+ 123   3      				}
+ 124   2      	}
+ 125   1      	for(a=0;a<3;a++)
+ 126   1      	{
+ 127   2      		P1=0x3c;
+ 128   2      		delay(200);
+ 129   2      		P1=0x99;
+ 130   2      		delay(200);
+ 131   2      		P1=0xc3;
+ 132   2      		delay(200);
+ 133   2      		P1=0xe7;
+ 134   2      		delay(200);
+ 135   2      	}
+ 136   1      	for(a=0;a<3;a++)
+ 137   1      	{
+ 138   2      		P1=0xe7;
+ 139   2      		delay(200);
+ 140   2      		P1=0xc3;
+ 141   2      		delay(200);
+ 142   2      		P1=0x99;
+ 143   2      		delay(200);
+ 144   2      		P1=0x3c;
+ 145   2      		delay(200);
+ 146   2      	}
+ 147   1      	for(a=0;a<3;a++)
+ 148   1      	{
+ 149   2      		P1=0x00;
+ 150   2      		delay(200);
+ 151   2      		P1=0xff;
+ 152   2      		delay(200);
+ 153   2      	}
+ 154   1      }
+ 155          void plan2()
+ 156          {
+ 157   1      		for(a=0;a<8;a++)
+ 158   1      		{
+ 159   2      		switch(a)
+ 160   2      			{
+ 161   3      			case 0 :	P1=0xfe;	temp=0xfe;	delay(200);	break;
+ 162   3      			case 1 : P1=0xfc;	temp=0xfc;  delay(200);	break;
+ 163   3      			case 2 : P1=0xf8;	temp=0xf8;  delay(200);	break;
+ 164   3      			case 3 : P1=0xf0;	temp=0xf0;  delay(200);	break;
+ 165   3      			case 4 : P1=0xe0;	temp=0xe0;  delay(200);	break;
+ 166   3      			case 5 : P1=0xc0;	temp=0xc0;  delay(200);	break;
+ 167   3      			case 6 : P1=0x80;	temp=0x80;  delay(200);	break;
+ 168   3      			case 7 : P1=0x00;	temp=0x00;  delay(200);	break;
+ 169   3      			}	
+ 170   2      			for(i=0;i<8-a;i++)
+ 171   2      				{
+ 172   3      					temp=_crol_(temp,1);
+ 173   3      					delay(200);
+ 174   3      					P1=temp;
+ 175   3      				}
+ 176   2      			}
+ 177   1      		for(a=0;a<8;a++)
+ 178   1      		{
+ 179   2      		switch(a)
+C51 COMPILER V6.12  LED                                                                    12/22/2009 21:04:25 PAGE 4   
+
+ 180   2      			{
+ 181   3      			case 0 :	P1=0x80;	temp=0x80;	delay(200);	break;
+ 182   3      			case 1 : P1=0xc0;	temp=0xc0;  delay(200);	break;
+ 183   3      			case 2 : P1=0xe0;	temp=0xe0;  delay(200);	break;
+ 184   3      			case 3 : P1=0xf0;	temp=0xf0;  delay(200);	break;
+ 185   3      			case 4 : P1=0xf8;	temp=0xf8;  delay(200);	break;
+ 186   3      			case 5 : P1=0xfc;	temp=0xfc;  delay(200);	break;
+ 187   3      			case 6 : P1=0xfe;	temp=0xfe;  delay(200);	break;
+ 188   3      			case 7 : P1=0xff;	temp=0xff;  delay(200);	break;
+ 189   3      			}	
+ 190   2      			for(i=0;i<8-a;i++)
+ 191   2      				{
+ 192   3      					temp=_cror_(temp,1);
+ 193   3      					delay(200);
+ 194   3      					P1=temp;
+ 195   3      				}
+ 196   2      			}
+ 197   1      		for(a=0;a<3;a++)
+ 198   1      		{
+ 199   2      			P1=0xff;
+ 200   2      			delay(500);
+ 201   2      			P1=0x00;
+ 202   2      			delay(500);
+ 203   2      		}
+ 204   1      		P1=0xff;
+ 205   1      		while(1) delay(1);
+ 206   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    880    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      3       2
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

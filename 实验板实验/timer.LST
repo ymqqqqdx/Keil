@@ -1,0 +1,113 @@
+C51 COMPILER V8.09   TIMER                                                                 04/29/2010 19:57:05 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE TIMER
+OBJECT MODULE PLACED IN timer.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE timer.c DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #include "declare.h"
+   3          #include <intrins.h>
+   4          #include <stdio.h>
+   5          sbit clock=P3^1;
+   6          sbit dat=P3^0;
+   7          int count,max,buff,tt;
+   8          unsigned char way;
+   9          int ssscanf();
+  10          void timer()
+  11          {
+  12   1              TH0=(65536-1000)/256; 
+  13   1              TL0=(65536-1000)%256;
+  14   1              while(way!='@')
+  15   1              {
+  16   2                      do 
+  17   2                      {
+  18   3                              way=_getkey();
+  19   3                      } while(way=='#');
+  20   2                      if(way=='@') break;
+  21   2                      if(way=='1')
+  22   2                      {
+  23   3                              P2=0xff;
+  24   3                              clock=0;
+  25   3                              for(i=0;i<32;i++)
+  26   3                              {
+  27   4                                      clock=~clock;
+  28   4                                      clock=~clock;
+  29   4                                      dat=1;
+  30   4                              }
+  31   3                      }
+  32   2                      if(way=='2')
+  33   2                      {
+  34   3                              temp=0xfe;
+  35   3                              P2=temp;
+  36   3                      }
+  37   2                      max=ssscanf();
+  38   2                      ET0=1;
+  39   2                      TR0=1;
+  40   2                      while(stop!='#')
+  41   2                      {
+  42   3                              stop=_getkey();
+  43   3                      }
+  44   2                      stop=0;         TR0=0; ET0=0; way=0;
+  45   2              }
+  46   1      }
+  47          void timer0() interrupt 1
+  48          {
+  49   1              TH0=(65536-1000)/256; 
+  50   1              TL0=(65536-1000)%256;
+  51   1              count++;
+  52   1              if(count==max)
+  53   1              {
+  54   2                      count=0;
+  55   2                      if(way=='1')
+C51 COMPILER V8.09   TIMER                                                                 04/29/2010 19:57:05 PAGE 2   
+
+  56   2                      {
+  57   3                              if(buff==0)
+  58   3                              {
+  59   4                                      tt++;
+  60   4                                      clock=~clock;
+  61   4                                      clock=~clock;
+  62   4                                      dat=0;
+  63   4                                      if(tt==32)
+  64   4                                      {
+  65   5                                              buff=1;
+  66   5                                              tt=0;
+  67   5                                      }
+  68   4                              }
+  69   3                              else if(buff==1)
+  70   3                              {
+  71   4                                      tt++;
+  72   4                                      clock=~clock;
+  73   4                                      clock=~clock;
+  74   4                                      dat=1;
+  75   4                                      if(tt==32)
+  76   4                                      {
+  77   5                                              buff=0;
+  78   5                                              tt=0;
+  79   5                                      }
+  80   4                              }
+  81   3                      }
+  82   2                      if(way=='2')
+  83   2                      {
+  84   3                              temp=_crol_(temp,1);
+  85   3                              P2=temp;
+  86   3                      }
+  87   2              }
+  88   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    245    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      9    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

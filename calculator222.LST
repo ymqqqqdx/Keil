@@ -1,0 +1,326 @@
+C51 COMPILER V6.12  CALCULATOR222                                                          04/09/2010 18:36:53 PAGE 1   
+
+
+C51 COMPILER V6.12, COMPILATION OF MODULE CALCULATOR222
+OBJECT MODULE PLACED IN .\calculator222.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE .\calculator222.c DEBUG OBJECTEXTEND
+
+stmt level    source
+
+   1          #include <reg52.h>
+   2          #include <stdio.h>
+   3          #include <string.h>
+   4          #include <math.h>
+   5          #define uchar unsigned char
+   6          #define uint unsigned int
+   7          #define r1 0xfe
+   8          #define r2 0xfd
+   9          #define r3 0xfb
+  10          #define r4 0xf7
+  11          #define r5 0xef
+  12          sbit ln=P2^1;
+  13          sbit ls=P2^0;
+  14          unsigned char i,key,buff=0,sign=0,point=0,symbol=0,cai=0;
+  15          char first[16],second[16];
+  16          char len;
+  17          float mm,a,b;
+  18          void delay(int z)
+  19          {
+  20   1      	int i,j;
+  21   1              for(i=z;i>0;i--)
+  22   1               for(j=110;j>0;j--);
+  23   1      }
+  24          void write_com(unsigned char com)
+  25          {
+  26   1      	ls=0;
+  27   1          P0=com;
+  28   1          delay(5);
+  29   1          ln=1;
+  30   1          delay(5);
+  31   1          ln=0;
+  32   1      }
+  33          void write_data(unsigned char date)
+  34          {
+  35   1      	ls=1;
+  36   1          P0=date;
+  37   1          delay(5);
+  38   1          ln=1;
+  39   1          delay(5);
+  40   1          ln=0;
+  41   1      }
+  42          void init_1602()
+  43          {
+  44   1         write_com(0x38);
+  45   1         write_com(0x0c);
+  46   1         write_com(0x06);
+  47   1         write_com(0x01);
+  48   1      }
+  49          void moveto(unsigned char row,unsigned char line)
+  50          {
+  51   1      	if(row==1)
+  52   1      		write_com(0x80+line);
+  53   1      	if(row==2)
+  54   1      		write_com(0x80+0x40+line);
+  55   1      }
+C51 COMPILER V6.12  CALCULATOR222                                                          04/09/2010 18:36:53 PAGE 2   
+
+  56          void clear(unsigned char t)
+  57          {
+  58   1      	if(t==1)
+  59   1      	{
+  60   2      		write_com(0x80);
+  61   2      	}
+  62   1      	if(t==2)
+  63   1      	{
+  64   2      		write_com(0x80+0x40);
+  65   2      	}
+  66   1      	for(i=0;i<15;i++)
+  67   1      	{
+  68   2      		write_data(' ');
+  69   2      	}
+  70   1      }
+  71          cleardata(unsigned char t)
+  72          {
+  73   1      	if(t==1)
+  74   1      	{
+  75   2      		for(i=0;i<15;i++)
+  76   2      		first[i]='\0';
+  77   2      	}
+  78   1      	if(t==2)
+  79   1      	{
+  80   2      		for(i=0;i<15;i++)
+  81   2      		second[i]='\0';
+  82   2      	}
+  83   1      }
+  84          void display(unsigned char *temp)
+  85          {
+  86   1      	char n;
+  87   1      //	sprintf(buf,"%.3f\0",date);
+  88   1      	n=strlen(temp);
+  89   1      	if(n<=0)
+  90   1      	{
+  91   2      		clear(2);
+  92   2      		write_com(0x01);
+  93   2      		write_com(0x80+0x40+14);
+  94   2      		write_data('0');
+  95   2      		write_data('.');
+  96   2      	}
+  97   1      	else
+  98   1      	{
+  99   2      	if(n>16) n=16;
+ 100   2      	clear(2);
+ 101   2      	write_com(0x80+0x40+16-n);
+ 102   2      	for(i=0;i<16;i++)
+ 103   2      	write_data(temp[i]);
+ 104   2      	}
+ 105   1      }
+ 106          void reset()
+ 107          {
+ 108   1      	len=0; sign=0; point=0; write_com(0x01); display("0.");
+ 109   1      }
+ 110          unsigned char keyscan()
+ 111          {
+ 112   1      	unsigned char temp;
+ 113   1      	P1=r1;
+ 114   1      	temp=P3; temp&=0xff;
+ 115   1      	if(P3!=0xff)
+ 116   1      	{
+ 117   2      		temp=P3;
+C51 COMPILER V6.12  CALCULATOR222                                                          04/09/2010 18:36:53 PAGE 3   
+
+ 118   2      		switch(temp)
+ 119   2      		{
+ 120   3      			case r1 : key=31; break;//MC
+ 121   3      			case r2 : key=32; break;//MR
+ 122   3      			case r3 : key=33; break;//MS
+ 123   3      			case r4 : key=34; break;//M+
+ 124   3      			case r5 : key=35; break;//M-
+ 125   3      		}
+ 126   2      		while(P3!=0xff)
+ 127   2      		{
+ 128   3      			temp=P3;
+ 129   3      			temp&=0xff;
+ 130   3      		}
+ 131   2      	}
+ 132   1      	P1=r2;
+ 133   1      	temp=P3; temp&=0xff;
+ 134   1      	if(P3!=0xff)
+ 135   1      	{
+ 136   2      		temp=P3;
+ 137   2      		switch(temp)
+ 138   2      		{
+ 139   3      			case r1 : key='B'; break;//backspace
+ 140   3      			case r2 : key='C'; break;//clear
+ 141   3      			case r3 : key='R'; break;//reset
+ 142   3      			case r4 : key='F'; break;//plus or minus
+ 143   3      			case r5 : key='S'; break;//sqrt
+ 144   3      		}
+ 145   2      	}
+ 146   1      		while(P3!=0xff)
+ 147   1      		{
+ 148   2      			temp=P3;
+ 149   2      			temp&=0xff;
+ 150   2      		}
+ 151   1      	P1=r3;
+ 152   1      	temp=P3; temp&=0xff;
+ 153   1      	if(P3!=0xff)
+ 154   1      	{
+ 155   2      		temp=P3;
+ 156   2      		switch(temp)
+ 157   2      		{
+ 158   3      			case r1 : key='7'; break;//7
+ 159   3      			case r2 : key='8'; break;//8
+ 160   3      			case r3 : key='9'; break;//9
+ 161   3      			case r4 : key='/'; break;//divide
+ 162   3      			case r5 : key='%'; break;//%
+ 163   3      		}
+ 164   2      		while(P3!=0xff)
+ 165   2      		{
+ 166   3      			temp=P3;
+ 167   3      			temp&=0xff;
+ 168   3      		}
+ 169   2      	}
+ 170   1      	P1=r4;
+ 171   1      	temp=P3; temp&=0xff;
+ 172   1      	if(P3!=0xff)
+ 173   1      	{
+ 174   2      		temp=P3;
+ 175   2      		switch(temp)
+ 176   2      		{
+ 177   3      			case r1 : key='4'; break;//4
+ 178   3      			case r2 : key='5'; break;//5
+ 179   3      			case r3 : key='6'; break;//6
+C51 COMPILER V6.12  CALCULATOR222                                                          04/09/2010 18:36:53 PAGE 4   
+
+ 180   3      			case r4 : key='*'; break;//multiply
+ 181   3      			case r5 : key='D'; break;//1/x
+ 182   3      		}
+ 183   2      		while(P3!=0xff)
+ 184   2      		{
+ 185   3      			temp=P3;
+ 186   3      			temp&=0xff;
+ 187   3      		}
+ 188   2      	}
+ 189   1      	P1=r5;
+ 190   1      	temp=P3; temp&=0xff;
+ 191   1      	if(P3!=0xff)
+ 192   1      	{
+ 193   2      		temp=P3;
+ 194   2      		switch(temp)
+ 195   2      		{
+ 196   3      			case r1 : key='1'; break;//1
+ 197   3      			case r2 : key='2'; break;//2
+ 198   3      			case r3 : key='3'; break;//3
+ 199   3      			case r4 : key='-'; break;//minus
+ 200   3      			case r5 : key='='; break;//equal
+ 201   3      		}
+ 202   2      		while(P3!=0xff)
+ 203   2      		{
+ 204   3      			temp=P3;
+ 205   3      			temp&=0xff;
+ 206   3      		}
+ 207   2      	}
+ 208   1      	P1=0xdf;
+ 209   1      	temp=P3; temp&=0xff;
+ 210   1      	if(P3!=0xff)
+ 211   1      	{
+ 212   2      		temp=P3;
+ 213   2      		switch(temp)
+ 214   2      		{
+ 215   3      			case r1 : key='0'; break;//0
+ 216   3      			case r2 : key='.'; break;//.
+ 217   3      			case r3 : key='U'; break;//empty
+ 218   3      			case r4 : key='+'; break;//add
+ 219   3      			case r5 : key='='; break;//equal
+ 220   3      		}
+ 221   2      		while(P3!=0xff)
+ 222   2      		{
+ 223   3      			temp=P3;
+ 224   3      			temp&=0xff;
+ 225   3      		}
+ 226   2      	}
+ 227   1      	P1=0xff;
+ 228   1      	P3=0xff;
+ 229   1      	return(key);
+ 230   1      }
+ 231          void keypress()
+ 232          {
+ 233   1      	key=keyscan();
+ 234   1      	if(key>='0'&&key<='9')
+ 235   1      	{
+ 236   2      		second[len++]=key;
+ 237   2      	}
+ 238   1      	if(key=='.'&&point==0)
+ 239   1      	{
+ 240   2      		second[len++]=key;
+ 241   2      		point=1;
+C51 COMPILER V6.12  CALCULATOR222                                                          04/09/2010 18:36:53 PAGE 5   
+
+ 242   2      	}
+ 243   1      	if(key=='B')
+ 244   1      	{
+ 245   2      		first[--len]='\0'; if(len<0) len=0;
+ 246   2      	}
+ 247   1      	if(key=='+'||key=='-'||key=='*'||key=='/')
+ 248   1      	{
+ 249   2      		if(buff==0)
+ 250   2      		{
+ 251   3      			for(i=0;i<15;i++)
+ 252   3      			{
+ 253   4      				first[i]=second[i];
+ 254   4      				second[i]='\0';
+ 255   4      			}
+ 256   3      			reset();
+ 257   3      			buff=1;
+ 258   3      		}
+ 259   2      		else if(buff==1)
+ 260   2      		{
+ 261   3      //			sscanf(first,"%f",&a);
+ 262   3      			sscanf(second,"%f",&b);
+ 263   3      			if(key=='+')
+ 264   3      			{
+ 265   4      				a=a+b;
+ 266   4      			}
+ 267   3      			if(key=='-')
+ 268   3      			{
+ 269   4      				a=a-b;
+ 270   4      			}
+ 271   3      			if(key=='*')
+ 272   3      			{
+ 273   4      				a=a*b;
+ 274   4      			}
+ 275   3      			if(key=='/')
+ 276   3      			{
+ 277   4      				a=a/b;
+ 278   4      			}
+ 279   3      		/*	if(a<0.000001||a>1000000)
+ 280   3      			{
+ 281   3      				sprintf(first,"%e",a);
+ 282   3      			}
+ 283   3      			else
+ 284   3      			{
+ 285   3      				sprintf(first,"%f",a);
+ 286   3      			}*/
+ 287   3      		}
+ 288   2      	}
+ 289   1      	if(key=='=')
+ 290   1      	{
+ 291   2      //		sprintf(first,"%f",a);
+ 292   2      	}
+ 293   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1032    ----
+   CONSTANT SIZE    =      6    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     52       4
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+C51 COMPILER V6.12  CALCULATOR222                                                          04/09/2010 18:36:53 PAGE 6   
+
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,54 @@
+C51 COMPILER V8.09   BLUE                                                                  04/29/2010 20:59:39 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE BLUE
+OBJECT MODULE PLACED IN blue.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE blue.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <stdio.h>
+   2          #include <reg52.h>
+   3          void comm_init()
+   4          {
+   5   1              REN=1; //串行允许
+   6   1              SCON=0x52;
+   7   1              TMOD=0X21;//设置定时器1工作方式
+   8   1              TH1=0XFF;//装初值
+   9   1              TL1=0XFF;//装初值
+  10   1              TR1=1;//打开定时器1
+  11   1              SM0=0; //设置方式1
+  12   1              SM1=1;
+  13   1              EA=1;
+  14   1      }
+  15          void delay(int z)
+  16          {
+  17   1              int i,j;
+  18   1              for(i=z;i>0;i--)
+  19   1               for(j=110;j>0;j--);
+  20   1      }
+  21          void main()
+  22          {
+  23   1              unsigned char i;
+  24   1              i='x';
+  25   1              comm_init();
+  26   1              while(1)
+  27   1              {
+  28   2                      puts("23332");
+  29   2                      delay(1000);
+  30   2              }
+  31   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     79    ----
+   CONSTANT SIZE    =      6    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       1
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

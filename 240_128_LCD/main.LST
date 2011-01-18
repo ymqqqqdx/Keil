@@ -1,0 +1,175 @@
+C51 COMPILER V8.09   MAIN                                                                  06/09/2010 21:45:55 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE main.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #include <codesnake.h>
+   3          #define uchar unsigned char
+   4          #define uint unsigned int
+   5          #define heng 1
+   6          #define shu 2
+   7          #define fill 1
+   8          #define clear 2
+   9          sbit key1=P1^0;
+  10          sbit key2=P1^1;
+  11          sbit key3=P1^2;
+  12          sbit key4=P1^3;
+  13          uchar headhang,headlie,endhang,endlie;
+  14          uchar foodx,foody;
+  15          uchar snakelength=6;
+  16          uchar counter=0;
+  17          uchar direct=4;
+  18          bit addflag;
+  19          uchar position[30][2]={{3,4},{3,5},{3,6},{3,7},{3,8},{3,9}};
+  20          void LCD_Init();
+  21          void clearlcd();
+  22          void delay(int);
+  23          void drawline(uchar,uchar,uchar,uchar,uchar);
+  24          void writeddc(uchar,uchar,uchar);
+  25          void writecommand(uchar);
+  26          void drawsnake(uchar,uchar);
+  27          void drawonedot(uchar,uchar);
+  28          void clearonedot(uchar,uchar);
+  29          void move(uchar);
+  30          void food();
+  31          void writedata(uchar);
+  32          void init()
+  33          {
+  34   1              EA=1;
+  35   1              TMOD=0x01;
+  36   1              TH0=(65536-5000)/256;
+  37   1              TL0=(65536-5000)%256;
+  38   1              ET0=1;
+  39   1              TR0=1;
+  40   1      }
+  41          void keyscan()
+  42          {
+  43   1              if(key1==0&&direct!=2)
+  44   1              {
+  45   2                      move(1); direct=1; while(key1==0);
+  46   2              }
+  47   1              else if(key2==0&&direct!=1)
+  48   1              {
+  49   2                      move(2); direct=2; while(key2==0);
+  50   2              }
+  51   1              else if(key3==0&&direct!=4)
+  52   1              {
+  53   2                      move(3); direct=3; while(key3==0);
+  54   2              }
+  55   1              else if(key4==0&&direct!=3)
+C51 COMPILER V8.09   MAIN                                                                  06/09/2010 21:45:55 PAGE 2   
+
+  56   1              {
+  57   2                      move(4); direct=4; while(key4==0);
+  58   2              }
+  59   1      }
+  60          void refreshscreen()
+  61          {
+  62   1              uchar i;
+  63   1              for(i=0;i<64;i++)
+  64   1              {
+  65   2                      drawline(i,0,240,heng,fill);
+  66   2                      drawline(127-i,0,240,heng,fill);
+  67   2                      delay(10);
+  68   2              }
+  69   1              for(i=0;i<64;i++)
+  70   1              {
+  71   2                      drawline(64-i,0,239,heng,clear);
+  72   2                      drawline(63+i,0,239,heng,clear);
+  73   2                      delay(10);
+  74   2              }
+  75   1      }
+  76          void main()
+  77          {
+  78   1              
+  79   1              LCD_Init();
+  80   1              clearlcd();
+  81   1              drawline(0,0,200,heng,fill);
+  82   1              drawline(2,2,196,heng,fill);
+  83   1              drawline(127,0,200,heng,fill);
+  84   1              drawline(125,2,196,heng,fill);
+  85   1              drawline(0,0,128,shu,fill);
+  86   1              drawline(2,2,124,shu,fill);
+  87   1              drawline(0,199,128,shu,fill);
+  88   1              drawline(2,197,124,shu,fill);
+  89   1              drawsnake(3,4);
+  90   1              endhang=3; endlie=4; headhang=3; headlie=9;
+  91   1              food();
+  92   1              init();
+  93   1              while(1)
+  94   1              {
+  95   2                      keyscan();
+  96   2                      delay(4);
+  97   2              }
+  98   1      }
+  99          void gameover()
+ 100          {
+ 101   1              uchar i,j;
+ 102   1              if(headhang==31||headhang==0||headlie==0||headlie==49)
+ 103   1              {
+ 104   2                      for(j=0;j<2;j++)
+ 105   2                      {
+ 106   3                              for(i=0;i<snakelength-1;i++)
+ 107   3                                      clearonedot(position[i][0],position[i][1]);
+ 108   3                              delay(500);
+ 109   3                              for(i=0;i<snakelength-1;i++)
+ 110   3                                      drawonedot(position[i][0],position[i][1]);
+ 111   3                              delay(500);
+ 112   3                              TR0=0;                          
+ 113   3                      }
+ 114   2              }
+ 115   1              clearlcd();
+ 116   1              writeddc(0x00,0x00,0x24);
+ 117   1              writecommand(0xb0);
+C51 COMPILER V8.09   MAIN                                                                  06/09/2010 21:45:55 PAGE 3   
+
+ 118   1              for(i=0;i<128;i++)
+ 119   1              {
+ 120   2                      for(j=0;j<30;j++)
+ 121   2                      {
+ 122   3                              writedata(over[i*30+j]);
+ 123   3                      }
+ 124   2              }
+ 125   1              writecommand(0xb2);
+ 126   1      //      refreshscreen();
+ 127   1      }
+ 128          void timer0() interrupt 1
+ 129          {
+ 130   1              TH0=(65536-5000)/256;
+ 131   1              TL0=(65536-5000)%256;
+ 132   1              counter++;
+ 133   1      
+ 134   1              if(counter==20)
+ 135   1              {
+ 136   2                      counter=0;
+ 137   2                              move(direct);
+ 138   2                                      addflag=0;
+ 139   2                      if(foodx==headhang&&foody==headlie)
+ 140   2                      {
+ 141   3                              snakelength++;
+ 142   3                              addflag=1;
+ 143   3                              food();
+ 144   3                      }
+ 145   2                      if(headhang==31||headhang==0||headlie==0||headlie==49)
+ 146   2                              gameover();
+ 147   2              }
+ 148   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    690    ----
+   CONSTANT SIZE    =   3840    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     69       3
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      1    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

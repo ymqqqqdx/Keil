@@ -1,0 +1,7 @@
+"12232.obj",
+"delay.obj",
+"main.obj",
+"ds1302_driver.obj",
+"declare.obj" 
+TO "ds1302" 
+RAMSIZE(256) 

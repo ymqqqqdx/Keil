@@ -1,0 +1,5 @@
+"7219.obj",
+"main.obj",
+"delay.obj" 
+TO "7219" 
+RAMSIZE(256) 

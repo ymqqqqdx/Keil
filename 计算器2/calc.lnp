@@ -1,0 +1,7 @@
+"delay.obj",
+"1602.obj",
+"keyscan.obj",
+"main.obj",
+"declare.obj" 
+TO "calc" 
+RAMSIZE(256) 

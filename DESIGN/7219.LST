@@ -1,0 +1,95 @@
+C51 COMPILER V6.12  7219                                                                   04/07/2010 20:23:29 PAGE 1   
+
+
+C51 COMPILER V6.12, COMPILATION OF MODULE 7219
+OBJECT MODULE PLACED IN .\7219.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE .\7219.c DEBUG OBJECTEXTEND
+
+stmt level    source
+
+   1          #include <reg52.h>
+   2          #define decode_mode 0X09 //解码模式，0xff全部解码，0x0f解前四个
+   3          #define intensity 0x0a
+   4          #define scan_limit 0x0b//扫描限度，0x00-0x07
+   5          #define shut_down 0x0c//关闭模式，0x00为关机,0x01为正常
+   6          #define display_test 0x0f//显示模式
+   7          
+   8          sbit load=P2^1;//第一片
+   9          sbit din=P2^0;//data in
+  10          sbit clk=P2^2;//clock
+  11          
+  12          sbit load1=P2^4;//第二片
+  13          sbit din1=P2^3;
+  14          sbit clk1=P2^5;
+  15          
+  16          void write7219onechar0(unsigned char temp)
+  17          {
+  18   1      	unsigned char i;
+  19   1      	for(i=0;i<8;i++)
+  20   1      	{
+  21   2      		clk=0;
+  22   2      		din=(bit)(temp&0x80);
+  23   2      		temp<<=1;
+  24   2      		clk=1;
+  25   2      	}
+  26   1      }
+  27          
+  28          void write7219onechar1(unsigned char temp)
+  29          {
+  30   1      	unsigned char i;
+  31   1      	for(i=0;i<8;i++)
+  32   1      	{
+  33   2      		clk1=0;
+  34   2      		din1=(bit)(temp&0x80);
+  35   2      		temp<<=1;
+  36   2      		clk1=1;
+  37   2      	}
+  38   1      }
+  39          
+  40          
+  41          void write7219one(unsigned char address,unsigned char dat)
+  42          {
+  43   1      	load=0;
+  44   1      	write7219onechar0(address);
+  45   1      	write7219onechar0(dat);
+  46   1      	load=1;
+  47   1      }
+  48          
+  49          void write7219two(unsigned char address,unsigned char dat)
+  50          {
+  51   1      	load1=0;
+  52   1      	write7219onechar1(address);
+  53   1      	write7219onechar1(dat);
+  54   1      	load1=1;
+  55   1      }
+C51 COMPILER V6.12  7219                                                                   04/07/2010 20:23:29 PAGE 2   
+
+  56          
+  57          void init7219()
+  58          {
+  59   1      	write7219one(shut_down,0x01);
+  60   1      	write7219one(display_test,0x00);
+  61   1      	write7219one(decode_mode,0xff);
+  62   1      	write7219one(scan_limit,0x07);
+  63   1      	write7219one(intensity,0x04);
+  64   1      
+  65   1      	write7219two(shut_down,0x01);
+  66   1      	write7219two(display_test,0x00);
+  67   1      	write7219two(decode_mode,0xff);
+  68   1      	write7219two(scan_limit,0x07);
+  69   1      	write7219two(intensity,0x04);
+  70   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    134    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

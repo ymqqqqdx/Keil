@@ -1,0 +1,122 @@
+C51 COMPILER V8.09   GRAPHIC                                                               06/06/2010 18:40:13 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE GRAPHIC
+OBJECT MODULE PLACED IN Graphic.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Graphic.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #include <math.h>
+   3          #define uchar unsigned char
+   4          #define uint unsigned int
+   5          extern uint address;
+   6          extern uchar data1,data2,cmd;
+   7          void writecommand(uchar);
+   8          void writedata(uchar);
+   9          void writedc(uchar,uchar);
+  10          void writeddc(uchar,uchar,uchar);
+  11          void DrawLine(uchar hori,uchar veri,uchar length,uchar width,uchar way)
+  12          {
+  13   1              uchar i,j,l,m,n=0;
+  14   1              uint addbak;
+  15   1              writecommand(0xb2);
+  16   1              hori-=1;veri-=1;
+  17   1              address=hori*30+veri/8;
+  18   1              addbak=address;
+  19   1              data1=address;
+  20   1              data2=address>>8;
+  21   1              writeddc(data1,data2,0x24);
+  22   1              if(way==1)
+  23   1              {
+  24   2                      for(j=0;j<width;j++)
+  25   2                      {
+  26   3                              n=0;
+  27   3                              writecommand(0xb0);
+  28   3                              for(i=0;i<length/8+1;i++)
+  29   3                              {
+  30   4                                      l=0;
+  31   4                                      if(i==0&&veri%8!=0)
+  32   4                                      {
+  33   5                                              for(m=0;m<veri%8;m++)
+  34   5                                              {
+  35   6                                                      n+=pow(2,7-m);
+  36   6                                              }
+  37   5                                              writedata(255-n);
+  38   5                                      }
+  39   4                                      else if(i==length/8)
+  40   4                                      {
+  41   5                                              for(m=0;m<length%8;m++)
+  42   5                                              {
+  43   6                                                      l+=pow(2,7-m);
+  44   6                                              }
+  45   5                                              veri%8!=0?writedata(l|n>>(length%8)):
+  46   5                                              writedata(l);
+  47   5                                      }
+  48   4                                      else writedata(0xff);
+  49   4                              }
+  50   3                              m=0;    
+  51   3                              if(veri%8>=(9-length%8))
+  52   3                              {
+  53   4                                      for(i=0;i<(length%8+veri%8)%8;i++)
+  54   4                                      {
+  55   5                                              m+=pow(2,7-i);
+C51 COMPILER V8.09   GRAPHIC                                                               06/06/2010 18:40:13 PAGE 2   
+
+  56   5                                      }
+  57   4                                      writedata(m);
+  58   4                              }
+  59   3                              writecommand(0xb2);
+  60   3                              address+=30;
+  61   3                              data1=address;
+  62   3                              data2=address>>8;
+  63   3                              writeddc(data1,data2,0x24);
+  64   3                      }
+  65   2              }
+  66   1              else if(way==2)
+  67   1              {
+  68   2                      
+  69   2                      for(j=0;j<width/8+1;j++)
+  70   2                      {
+  71   3                              for(i=0;i<length;i++)
+  72   3                              {
+  73   4                                      n=0;
+  74   4                                      if(j==width/8)
+  75   4                                      {
+  76   5                                              for(m=0;m<width%8;m++)
+  77   5                                              {
+  78   6                                                      n+=pow(2,7-m);
+  79   6                                              }
+  80   5                                      }
+  81   4                                      else n=0xff;
+  82   4                                      writecommand(0xb0);
+  83   4                                      writedata(n);
+  84   4                                      writecommand(0xb2);
+  85   4                                      address-=30;
+  86   4                                      data1=address;
+  87   4                                      data2=address>>8;
+  88   4                                      writeddc(data1,data2,0x24);
+  89   4                              }
+  90   3                              addbak+=1;
+  91   3                              address=addbak;
+  92   3                              data1=address;
+  93   3                              data2=address>>8;
+  94   3                              writeddc(data1,data2,0x24);
+  95   3                      }
+  96   2              }
+  97   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    739    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----      12
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

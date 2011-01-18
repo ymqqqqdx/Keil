@@ -1,0 +1,4 @@
+"STARTUP.obj",
+"CG_RAM.obj" 
+TO "CG_RAM" 
+RAMSIZE(256) 

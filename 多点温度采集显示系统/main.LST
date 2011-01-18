@@ -1,0 +1,79 @@
+C51 COMPILER V8.09   MAIN                                                                  06/23/2010 23:54:40 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE main.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #define uchar unsigned char
+   3          #define uint unsigned int
+   4          bit symbol;//负号标志位
+   5          void init7219();
+   6          void write7219(uchar,uchar);
+   7          void init_ds18b20();
+   8          void writeonechar(uchar);
+   9          uchar readonechar();
+  10          uint readtemp(uchar);
+  11          //延时函数
+  12          void delay(int z)
+  13          {
+  14   1              int i,j;
+  15   1              for(i=z;i>0;i--)
+  16   1               for(j=110;j>0;j--);
+  17   1      }
+  18          //显示函数
+  19          void display(uchar num,uint temp)
+  20          {
+  21   1              uchar shi,ge,one;
+  22   1              shi=temp/100;
+  23   1              ge=temp%100/10;
+  24   1              one=temp%10;
+  25   1              write7219(1,0x4e);
+  26   1              write7219(2,num);
+  27   1              write7219(3,0x78);
+  28   1              if(symbol)      //写负号
+  29   1                      write7219(4,10);
+  30   1              else
+  31   1                      write7219(4,15);
+  32   1              if(shi)         //十位为零不显示
+  33   1                      write7219(5,shi);
+  34   1              else
+  35   1                      write7219(5,15);
+  36   1              write7219(6,ge|0x80);
+  37   1              write7219(7,one);
+  38   1              write7219(8,0x63);
+  39   1      }
+  40          void main()
+  41          {
+  42   1              uchar i;
+  43   1              init7219();
+  44   1              for(i=1;i<9;i++)//显示之前读18b20一遍，防止第一次读出错
+  45   1                      readtemp(i);
+  46   1              while(1)
+  47   1              {
+  48   2                      for(i=1;i<9;i++)
+  49   2                      {
+  50   3                              display(i,readtemp(i-1));
+  51   3                              delay(1000);
+  52   3                      }
+  53   2              }
+  54   1      }
+
+C51 COMPILER V8.09   MAIN                                                                  06/23/2010 23:54:40 PAGE 2   
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    220    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       5
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      1    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

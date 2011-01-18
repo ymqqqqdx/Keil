@@ -1,0 +1,128 @@
+C51 COMPILER V8.09   LED                                                                   04/29/2010 19:57:03 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE LED
+OBJECT MODULE PLACED IN led.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE led.c DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <string.h>
+   2          #include <intrins.h>
+   3          #include <stdio.h>
+   4          #include <reg52.h>
+   5          sbit led1=P2^0;
+   6          sbit led2=P2^1;
+   7          sbit led3=P2^2;
+   8          sbit led4=P2^3;
+   9          sbit led5=P2^4;
+  10          sbit led6=P2^5;
+  11          sbit led7=P2^6;
+  12          sbit led8=P2^7;
+  13          void delay(int);
+  14          int ssscanf()
+  15          {
+  16   1              unsigned char buf[7],i,t=0;
+  17   1              int s;
+  18   1              while(i!='%')
+  19   1              {
+  20   2                      i=_getkey();
+  21   2                      buf[t++]=i;
+  22   2              }
+  23   1              buf[strlen(buf)-1]='\0';
+  24   1              sscanf(buf,"%d",&s);
+  25   1              for(i=0;i<7;i++)
+  26   1              {
+  27   2                      buf[i]='\0';
+  28   2              }
+  29   1              return(s);
+  30   1      }
+  31          void flow(int t,unsigned char way)
+  32          {
+  33   1              unsigned char temp,i;
+  34   1              if(way==1)
+  35   1              {
+  36   2                      temp=0xfe;
+  37   2                      for(i=0;i<8;i++)
+  38   2                      {
+  39   3                              P2=temp;
+  40   3                              temp=_crol_(temp,1);
+  41   3                              delay(t);
+  42   3                      }
+  43   2              }
+  44   1              if(way==2)
+  45   1              {
+  46   2                      temp=0x7f;
+  47   2                      for(i=0;i<8;i++)
+  48   2                      {
+  49   3                              P2=temp;
+  50   3                              temp=_cror_(temp,1);
+  51   3                              delay(t);
+  52   3                      }
+  53   2              }
+  54   1      }
+  55          void led()
+C51 COMPILER V8.09   LED                                                                   04/29/2010 19:57:03 PAGE 2   
+
+  56          {
+  57   1              unsigned char i;
+  58   1              int s;
+  59   1              while(i!='!')
+  60   1              {
+  61   2                      i=_getkey();
+  62   2                      if(i=='d')
+  63   2                      {
+  64   3                              P2=0xff;
+  65   3                              while(i!='^')
+  66   3                              {
+  67   4                                      i=_getkey();
+  68   4                                      switch(i)
+  69   4                                      {
+  70   5                                              case '1' : led1=~led1; break;
+  71   5                                              case '2' : led2=~led2; break;
+  72   5                                              case '3' : led3=~led3; break;
+  73   5                                              case '4' : led4=~led4; break;
+  74   5                                              case '5' : led5=~led5; break;
+  75   5                                              case '6' : led6=~led6; break;
+  76   5                                              case '7' : led7=~led7; break;
+  77   5                                              case '8' : led8=~led8; break;
+  78   5                                              default : break;
+  79   5                                      }
+  80   4                              }
+  81   3                      }
+  82   2                      if(i=='f')
+  83   2                      {
+  84   3                              P2=0xff;
+  85   3                              while(i!='#')
+  86   3                              {
+  87   4                                      i=_getkey();
+  88   4                                      if(i!='#')
+  89   4                                      {
+  90   5                                              s=ssscanf();
+  91   5                                      }
+  92   4                                      if(i=='u')
+  93   4                                      {
+  94   5                                              flow(s,1);
+  95   5                                      }
+  96   4                                      if(i=='b')
+  97   4                                      {
+  98   5                                              flow(s,2);
+  99   5                                      }
+ 100   4                              }
+ 101   3                      }
+ 102   2              }
+ 103   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    358    ----
+   CONSTANT SIZE    =      3    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----      19
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

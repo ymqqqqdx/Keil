@@ -1,0 +1,4 @@
+"STARTUP.obj",
+"main.obj" 
+TO "直流电机" 
+RAMSIZE(256) 

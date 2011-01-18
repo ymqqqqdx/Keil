@@ -1,0 +1,141 @@
+C51 COMPILER V8.09   REDO                                                                  10/13/2010 18:59:11 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE REDO
+OBJECT MODULE PLACED IN ReDo.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE ReDo.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #include <stdio.h>
+   3          #include <string.h>
+   4          #define U8 unsigned char
+   5          #define U16 unsigned int
+   6          #define CMD 0
+   7          #define DATA 1
+   8          sbit rtc_clk=P1^6;
+   9          sbit rtc_io=P1^7;
+  10          sbit rtc_rst=P3^0;
+  11          
+  12          sbit lcd_cs=P0^3;
+  13          sbit lcd_clk=P1^2;
+  14          sbit lcd_sid=P0^2;
+  15          
+  16          void delay_1ms(U16 z)
+  17          {
+  18   1              U8 i;
+  19   1              while(z--)
+  20   1                      for(i=0;i<110;i++);
+  21   1      }
+  22          
+  23          void rtc_writeonechar(U8 dat)
+  24          {
+  25   1              U8 i;
+  26   1              for(i=0;i<8;i++)
+  27   1              {
+  28   2                      dat>>=1;
+  29   2                      rtc_clk=0;
+  30   2                      rtc_io=CY;
+  31   2                      rtc_clk=1;
+  32   2              }
+  33   1      }
+  34          
+  35          U8 rtc_readonechar()
+  36          {
+  37   1              U8 i,temp=0;
+  38   1              for(i=0;i<8;i++)
+  39   1              {
+  40   2                      rtc_clk=0;
+  41   2                      temp|=((U8)rtc_io)<<i;
+  42   2                      rtc_clk=1;
+  43   2              }
+  44   1              return temp/16*10+temp%16;
+  45   1      }
+  46          
+  47          void rtc_write(U8 add,U8 dat)
+  48          {       
+  49   1              rtc_rst=0;
+  50   1              rtc_clk=0;
+  51   1              rtc_rst=1;
+  52   1              rtc_writeonechar(add);
+  53   1              rtc_writeonechar((dat/10)<<4|(dat%10));
+  54   1              rtc_rst=0;
+  55   1      }
+C51 COMPILER V8.09   REDO                                                                  10/13/2010 18:59:11 PAGE 2   
+
+  56          
+  57          U8 rtc_read(U8 add)
+  58          {
+  59   1              U8 temp;
+  60   1              rtc_rst=0;
+  61   1              rtc_clk=0;
+  62   1              rtc_rst=1;
+  63   1              rtc_writeonechar(add|1);
+  64   1              temp=rtc_readonechar();
+  65   1              rtc_rst=0;
+  66   1              return temp;
+  67   1      }
+  68          
+  69          void lcd_writeonechar(U8 dat)
+  70          {
+  71   1              U8 i;
+  72   1              for(i=0;i<8;i++)
+  73   1              {
+  74   2                      dat<<=1;
+  75   2                      lcd_sid=CY;
+  76   2                      lcd_clk=0;
+  77   2                      lcd_clk=1;
+  78   2              }
+  79   1      }
+  80          
+  81          void lcd_writecd(bit cd,U8 dat)
+  82          {
+  83   1              lcd_cs=1;
+  84   1              lcd_writeonechar(cd==0?0xf8:0xfa);
+  85   1              lcd_writeonechar(dat&0xf0);
+  86   1              lcd_writeonechar(dat<<4);
+  87   1              lcd_cs=0;
+  88   1      }
+  89          
+  90          void lcd_string(U8 add,U8 *pt)
+  91          {
+  92   1              lcd_writecd(0,add);
+  93   1              while(*pt!='\0')
+  94   1                      lcd_writecd(1,*pt++);
+  95   1      }
+  96          
+  97          void main()
+  98          {
+  99   1              U8 second,second_old;
+ 100   1              lcd_writecd(0,0x0c);
+ 101   1              lcd_string(0x80,"¡æ");
+ 102   1              while(1)
+ 103   1              {
+ 104   2                      second=rtc_read(0x80);
+ 105   2                      if(second!=second_old)
+ 106   2                      {
+ 107   3                              second_old=second;
+ 108   3                              lcd_writecd(0,0x90);
+ 109   3                              lcd_writecd(1,second/10+'0');
+ 110   3                              lcd_writecd(1,second%10+'0');
+ 111   3                      }
+ 112   2                      delay_1ms(5);
+ 113   2              }
+ 114   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+C51 COMPILER V8.09   REDO                                                                  10/13/2010 18:59:11 PAGE 3   
+
+   CODE SIZE        =    310    ----
+   CONSTANT SIZE    =      3    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       5
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----       1
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

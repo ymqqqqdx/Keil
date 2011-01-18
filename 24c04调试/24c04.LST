@@ -1,0 +1,48 @@
+C51 COMPILER V8.09   24C04                                                                 05/06/2010 20:25:57 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE 24C04
+OBJECT MODULE PLACED IN 24c04.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE 24c04.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #define uchar unsigned char
+   3          #define uint unsigned int
+   4          void write_add(unsigned char,unsigned char);
+   5          void init_24c02();
+   6          unsigned char read_add(unsigned char);
+   7          void delay(int);
+   8          void main()
+   9          {
+  10   1              uchar i,temp;
+  11   1              init_24c02();
+  12   1              while(1)
+  13   1              {
+  14   2                      for(i=0;i<=0xfe;i++)
+  15   2                      {
+  16   3                              write_add(i,i);
+  17   3                              delay(10);
+  18   3                      }
+  19   2                      for(i=0;i<=0xfe;i++)
+  20   2                      {
+  21   3                              temp=read_add(i);
+  22   3                      }
+  23   2                      while(1);
+  24   2              }
+  25   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     50    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       2
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

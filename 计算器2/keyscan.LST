@@ -1,0 +1,226 @@
+C51 COMPILER V8.09   KEYSCAN                                                               05/22/2010 19:01:00 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE KEYSCAN
+OBJECT MODULE PLACED IN keyscan.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE keyscan.c DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #include <string.h>
+   3          #include <math.h>
+   4          #include <stdio.h>
+   5          #include "declare.h"
+   6          #define r1 0xfe
+   7          #define r2 0xfd
+   8          #define r3 0xfb
+   9          #define r4 0xf7
+  10          #define r5 0xef
+  11          void display(unsigned char *);
+  12          void clear(unsigned char);
+  13          void moveto(unsigned char,unsigned char);
+  14          void cleardata(unsigned char);
+  15          void write_com(unsigned char);
+  16          void displayup(unsigned char *);
+  17          void write_data(unsigned char);
+  18          void copytofirst()
+  19          {
+  20   1              for(i=0;i<16;i++)
+  21   1              {
+  22   2                      first[i]=second[i];
+  23   2                      second[i]='\0';
+  24   2              }
+  25   1      }
+  26          void convert()
+  27          {
+  28   1              sscanf(second,"%f",&bb);
+  29   1      }
+  30          void keyscan()
+  31          {
+  32   1              unsigned char temp,key=0;
+  33   1              P1=r1;
+  34   1              temp=P3; temp&=0xff;
+  35   1              if(P3!=0xff)
+  36   1              {
+  37   2                      temp=P3;
+  38   2                      switch(temp)
+  39   2                      {
+  40   3                              case r1 : key=1; mm=0; break;//MC
+  41   3                              case r2 : key=2; bb=mm; break;//MR
+  42   3                              case r3 : key=3; mm=bb; break;//MS
+  43   3                              case r4 : key=4; bb+=mm; break;//M+
+  44   3                              case r5 : key=5; bb-=mm; break;//M-
+  45   3                      }
+  46   2                      while(P3!=0xff)
+  47   2                      {
+  48   3                              temp=P3;
+  49   3                              temp&=0xff;
+  50   3                      }
+  51   2              }
+  52   1              P1=r2;
+  53   1              temp=P3; temp&=0xff;
+  54   1              if(P3!=0xff)
+  55   1              {
+C51 COMPILER V8.09   KEYSCAN                                                               05/22/2010 19:01:00 PAGE 2   
+
+  56   2                      temp=P3;
+  57   2                      switch(temp)
+  58   2                      {
+  59   3                              case r1 : key=6; second[--len]='\0'; display(second); if(len<0) len=0; break;//back
+  60   3                              case r2 : key=7; bb=0; for(i=0;i<15;i++) second[i]='\0';display(second); len=0; break;//ce
+  61   3                              case r3 : key=8; for(i=0;i<15;i++){first[i]='\0';second[i]='\0';} buff=0;len=0;sign=0;display(first); b
+             -reak;//reset
+  62   3                              case r4 : key=9; if(len>0)
+  63   3                                                                                      {
+  64   4                                                                                              if(sign==0&&len<15)
+  65   4                                                                                              {
+  66   5                                                                                                      len++;
+  67   5                                                                                                      for(i=len;i>0;i--)
+  68   5                                                                                                      {
+  69   6                                                                                                       second[i]=second[i-1];
+  70   6                                                                                                      }
+  71   5                                                                                                      second[0]='-';
+  72   5                                                                                                      sign=1;                                                                                         
+  73   5                                                                                              }
+  74   4                                                                                              else if(sign==1)
+  75   4                                                                                              {
+  76   5                                                                                                      for(i=0;i<len;i++)
+  77   5                                                                                                      {
+  78   6                                                                                                              second[i]=second[i+1];
+  79   6                                                                                                      }
+  80   5                                                                                                      sign=0;
+  81   5                                                                                                      len--;
+  82   5                                                                                              }
+  83   4                                                                                      }       
+  84   3                                                                              display(second);  break;//正负
+  85   3                      case r5 : key=10; clear(1); moveto(1,0); displayup("sqrt()="); 
+  86   3                      convert();bb=sqrt(bb);sprintf(second,"%g\0",bb); display(second);
+  87   3                      break;//根号
+  88   3              }
+  89   2                      while(P3!=0xff)
+  90   2                      {
+  91   3                              temp=P3;
+  92   3                              temp&=0xff;
+  93   3                      }
+  94   2              }
+  95   1              P1=r3;
+  96   1              temp=P3; temp&=0xff;
+  97   1              if(P3!=0xff)
+  98   1              {
+  99   2                      temp=P3;
+ 100   2                      switch(temp)
+ 101   2                      {
+ 102   3                              case r1 : key='7'; second[len++]=key; display(second);  break;//7
+ 103   3                              case r2 : key='8'; second[len++]=key; display(second);  break;//8
+ 104   3                              case r3 : key='9'; second[len++]=key; display(second);  break;//9
+ 105   3                              case r4 : key='/'; symbol=4; len=0; point=0; clear(1); copytofirst(); moveto(1,0); displayup(first); wr
+             -ite_data('/'); break;//divide
+ 106   3                              case r5 : key=15; break;//%
+ 107   3                      }
+ 108   2                      while(P3!=0xff)
+ 109   2                      {
+ 110   3                              temp=P3;
+ 111   3                              temp&=0xff;
+ 112   3                      }
+ 113   2              }
+ 114   1              P1=r4;
+ 115   1              temp=P3; temp&=0xff;
+C51 COMPILER V8.09   KEYSCAN                                                               05/22/2010 19:01:00 PAGE 3   
+
+ 116   1              if(P3!=0xff)
+ 117   1              {
+ 118   2                      temp=P3;
+ 119   2                      switch(temp)
+ 120   2                      {
+ 121   3                              case r1 : key='4'; second[len++]=key; display(second);  break;//4
+ 122   3                              case r2 : key='5'; second[len++]=key; display(second);  break;//5
+ 123   3                              case r3 : key='6'; second[len++]=key; display(second);  break;//6
+ 124   3                              case r4 : key=19;  symbol=3; len=0; point=0; clear(1); copytofirst(); moveto(1,0); displayup(first); wr
+             -ite_data('*');break;//muiltiply
+ 125   3                              case r5 : key=20; buff=1; break;//1/x
+ 126   3                      }
+ 127   2                      while(P3!=0xff)
+ 128   2                      {
+ 129   3                              temp=P3;
+ 130   3                              temp&=0xff;
+ 131   3                      }
+ 132   2              }
+ 133   1              P1=r5;
+ 134   1              temp=P3; temp&=0xff;
+ 135   1              if(P3!=0xff)
+ 136   1              {
+ 137   2                      temp=P3;
+ 138   2                      switch(temp)
+ 139   2                      {
+ 140   3                              case r1 : key='1'; second[len++]=key; display(second);  break;//1
+ 141   3                              case r2 : key='2'; second[len++]=key; display(second);  break;//2
+ 142   3                              case r3 : key='3'; second[len++]=key; display(second);  break;//3
+ 143   3                              case r4 : key=24; symbol=2; len=0; point=0; clear(1); copytofirst(); moveto(1,0); displayup(first); wri
+             -te_data('-');break;//minus
+ 144   3                              case r5 : key=25; 
+ 145   3                              write_com(0x80+strlen(first)+1);
+ 146   3                              displayup(second);
+ 147   3                              write_data('=');
+ 148   3                              sscanf(first,"%f",&aa);
+ 149   3                                      sscanf(second,"%f",&bb);
+ 150   3                                      switch(symbol)
+ 151   3                                      {
+ 152   4                                              case 1 : bb=aa+bb; break;
+ 153   4                                              case 2 : bb=aa-bb; break;
+ 154   4                                              case 3 : bb=aa*bb; break;
+ 155   4                                              case 4 : bb=aa/bb; break;
+ 156   4                                      }
+ 157   3                                      if(bb>=100000||(bb<=0.000001&&bb>=0.000001)||bb<=-100000)
+ 158   3                                      sprintf(second,"%e\0",bb);
+ 159   3                                      else sprintf(second,"%g\0",bb);//不显示后边的0
+ 160   3                                      display(second);
+ 161   3                         buff=0;sign=0;aa=0;bb=0;len=0;point=0;cleardata(1);cleardata(2);
+ 162   3                              break;//equal
+ 163   3                      }
+ 164   2                      while(P3!=0xff)
+ 165   2                      {
+ 166   3                              temp=P3;
+ 167   3                              temp&=0xff;
+ 168   3                      }
+ 169   2              }
+ 170   1              P1=0xdf;
+ 171   1              temp=P3; temp&=0xff;
+ 172   1              if(P3!=0xff)
+ 173   1              {
+ 174   2                      temp=P3;
+ 175   2                      switch(temp)
+C51 COMPILER V8.09   KEYSCAN                                                               05/22/2010 19:01:00 PAGE 4   
+
+ 176   2                      {
+ 177   3                              case r1 : key='0'; second[len++]=key; display(second);  break;//0
+ 178   3                              case r2 : key='.'; if(point==0) {second[len++]=key; display(second);  point=1;} break;//point
+ 179   3                              case r3 : break;//empty
+ 180   3                              case r4 : key=29; symbol=1; len=0; point=0;clear(1); copytofirst(); moveto(1,0); displayup(first); writ
+             -e_data('+'); break;//add
+ 181   3                              case r5 : key=30; buff=1;
+ 182   3                              break;//equal
+ 183   3                      }
+ 184   2                      while(P3!=0xff)
+ 185   2                      {
+ 186   3                              temp=P3;
+ 187   3                              temp&=0xff;
+ 188   3                      }
+ 189   2              }
+ 190   1              P1=0xff;
+ 191   1              P3=0xff;
+ 192   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1490    ----
+   CONSTANT SIZE    =     19    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       2
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

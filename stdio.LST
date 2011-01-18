@@ -1,0 +1,45 @@
+C51 COMPILER V6.12  STDIO                                                                  03/14/2010 14:37:19 PAGE 1   
+
+
+C51 COMPILER V6.12, COMPILATION OF MODULE STDIO
+OBJECT MODULE PLACED IN .\stdio.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE .\stdio.c DEBUG OBJECTEXTEND
+
+stmt level    source
+
+   1          #include <stdio.h>
+   2          #include <reg52.h>
+   3          void main()
+   4          {
+   5   1      	char way;
+   6   1      	float a,b;
+   7   1      	REN=1; //串行允许
+   8   1      	SCON=0x52;
+   9   1      	TMOD=0X20;//设置定时器1工作方式
+  10   1      	TH1=0XF3;//装初值
+  11   1      	TL1=0XF3;//装初值
+  12   1      	TR1=1;//打开定时器1
+  13   1      	SM0=0; //设置方式1
+  14   1      	SM1=1;
+  15   1      	printf("%s\n","what is your name?");
+  16   1      	while(1)
+  17   1      	{
+  18   2      		scanf("%f#%f#%d",a,b,way);
+  19   2      		if(way==1)
+  20   2      		puts("right");
+  21   2      	}
+  22   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     90    ----
+   CONSTANT SIZE    =     38    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       9
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

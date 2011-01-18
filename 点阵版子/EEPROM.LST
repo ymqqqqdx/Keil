@@ -1,0 +1,76 @@
+C51 COMPILER V8.09   EEPROM                                                                12/12/2010 11:40:53 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE EEPROM
+OBJECT MODULE PLACED IN .\EEPROM.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE .\EEPROM.c LARGE BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          
+   3          void ISP_enable()
+   4          {
+   5   1              EA=0;
+   6   1              ISP_CONTER&=0x18;
+   7   1              ISP_CONTER|=WaitTime;
+   8   1              ISP_CONTER|=0x80;
+   9   1      }
+  10          void ISP_disable()
+  11          {
+  12   1              ISP_CONTER&=0x17;
+  13   1              ISP_TRIG=0x00;
+  14   1              EA=1;
+  15   1      }
+  16          void ISP_go()
+  17          {
+  18   1              ISP_enable();
+  19   1              ISP_TRIG=0x5A;
+  20   1              ISP_TRIG=0xA5;
+  21   1              _nop_();
+  22   1      }
+  23          U8 ISP_read(U16 add)
+  24          {
+  25   1              ISP_ADDRH=(U8)(add>>8);
+  26   1              ISP_ADDRL=(U8)add;
+  27   1              ISP_CMD&=0xf8;
+  28   1              ISP_CMD|=ReadCommand;
+  29   1              ISP_go();
+  30   1              ISP_disable();
+  31   1              return(ISP_DATA);
+  32   1      }
+  33          void ISP_sectorerase(U16 sectoradd)
+  34          {
+  35   1              ISP_ADDRH=(U8)((sectoradd&0xfe00)>>8);
+  36   1              ISP_ADDRL=0;
+  37   1              ISP_CMD&=0xf8;
+  38   1              ISP_CMD|=EraseCommand;
+  39   1              ISP_go();
+  40   1              ISP_disable();
+  41   1      }
+  42          void ISP_write(U16 add,U8 dat)
+  43          {
+  44   1              ISP_ADDRH=(U8)(add>>8);
+  45   1              ISP_ADDRL=(U8)add;
+  46   1              ISP_CMD&=0xf8;
+  47   1              ISP_CMD|=ProgCommand;
+  48   1              ISP_DATA=dat;
+  49   1              ISP_go();
+  50   1              ISP_disable();
+  51   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    105    ----
+C51 COMPILER V8.09   EEPROM                                                                12/12/2010 11:40:53 PAGE 2   
+
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

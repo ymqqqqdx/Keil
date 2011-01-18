@@ -1,0 +1,291 @@
+C51 COMPILER V8.09   MAIN                                                                  05/22/2010 12:55:27 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE main.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <REG2051.H>
+   2          #define k1 P3_4
+   3          #define csbout    P3_5                  //超声波发送
+   4          #define csbint    P3_7                  //超声波接收
+   5          #define bg  P3_3 
+   6          #define LED P1 
+   7          #define LED1 P3_0 //LED控制
+   8          #define LED2 P3_1 //LED控制
+   9          #define LED3 P3_2 //LED控制
+  10          
+  11          unsigned char cl,mqzd,csbs,csbds,buffer[3],xm1,xm2,xm0,jpjs;//显示标识
+  12          unsigned char convert[10]={0xC0,0xF9,0xA4,0xB0,0x99,0x92,0x82,0xF8,0x80,0x90};//0~9段码
+  13          unsigned int s,t,i,xx,j,sj1,sj2,sj3,mqs,sx1;
+  14          int tempreture;
+  15          int csbc;
+  16          int code sonic[][2]={{-30,313},{-20,319},{-10,325},{0,323},{10,338},{20,344},{30,349},{100,386}};
+  17                                          
+  18          void csbcj();
+  19          void delay(j);                                  //延时函数
+  20          void scanLED();                                 //显示函数
+  21          void timeToBuffer();                    //显示转换函数
+  22          void keyscan();
+  23          void k1cl();
+  24          void k2cl();
+  25          void k3cl();
+  26          void k4cl();
+  27          void offmsd();
+  28          int readtemp();
+  29          void main()                                     //主函数
+  30          {
+  31   1              unsigned char i;
+  32   1              EA=1;                                   //开中断
+  33   1              TMOD=0x11;                              //设定时器0为计数，设定时器1定时
+  34   1              ET0=1;                                  //定时器0中断允许 
+  35   1              ET1=1;                                  //定时器1中断允许 
+  36   1              TH0=0x00;
+  37   1              TL0=0x00;
+  38   1              TH1=0x9E;
+  39   1              TL1=0x57;
+  40   1              csbds=0;
+  41   1              csbout=1;
+  42   1              cl=0;
+  43   1              csbs=8;
+  44   1              jpjs=0;
+  45   1              sj1=50;
+  46   1              sj2=200;
+  47   1              sj3=580;
+  48   1              k4cl();
+  49   1              TR1=1;                          //设定时值1为20ms 
+  50   1              while(1)
+  51   1              {
+  52   2                      keyscan();
+  53   2                      if(jpjs<1)
+  54   2                      {
+  55   3                              tempreture=readtemp();
+C51 COMPILER V8.09   MAIN                                                                  05/22/2010 12:55:27 PAGE 2   
+
+  56   3                              for(i=0;i<7;i++)
+  57   3                              {
+  58   4                                      if(tempreture>=sonic[i][0])
+  59   4                                      {
+  60   5                                              if(tempreture<=sonic[i+1][0])
+  61   5                                              {
+  62   6                                                      csbc=sonic[i][1];
+  63   6                                                      csbc/=10000;
+  64   6                                                      break;
+  65   6                                              }
+  66   5                                      }
+  67   4                              }
+  68   3                              csbcj();                //调用超声波测距程序
+  69   3                              if(s>sj3)               //大于时显示“CCC”
+  70   3                              {
+  71   4                                      buffer[2]=0xC6; 
+  72   4                                      buffer[1]=0xC6; 
+  73   4                                      buffer[0]=0xC6; 
+  74   4                              }
+  75   3                              else if(s<sj1)  //小于时显示“- - -”
+  76   3                              {
+  77   4                                      buffer[2]=0xBF; 
+  78   4                                      buffer[1]=0xBF; 
+  79   4                                      buffer[0]=0xBF;
+  80   4                              }
+  81   3                              else timeToBuffer();    
+  82   3                      }
+  83   2                      else timeToBuffer();            //将值转换成LED段码
+  84   2                      offmsd();
+  85   2                      scanLED();                      //显示函数
+  86   2                      if(s<sj2)
+  87   2                      bg=0;
+  88   2                      bg=1;
+  89   2              }
+  90   1      }
+  91          
+  92          void scanLED()                       //显示功能模块
+  93          {
+  94   1              LED=buffer[0];
+  95   1              LED3=0;
+  96   1              delay(200);
+  97   1              LED3=1;
+  98   1      
+  99   1              LED=buffer[1];
+ 100   1              LED2=0;
+ 101   1              delay(200);
+ 102   1              LED2=1;
+ 103   1              
+ 104   1              LED=buffer[2];
+ 105   1              LED1=0;
+ 106   1              delay(200);
+ 107   1              LED1=1;
+ 108   1      }
+ 109          
+ 110          void timeToBuffer()                 //转换段码功能模块
+ 111          {
+ 112   1              xm0=s/100;      
+ 113   1              xm1=(s-100*xm0)/10;
+ 114   1              xm2=s-100*xm0-10*xm1;
+ 115   1              buffer[2]=convert[xm2]; 
+ 116   1              buffer[1]=convert[xm1];
+ 117   1              buffer[0]=convert[xm0];
+C51 COMPILER V8.09   MAIN                                                                  05/22/2010 12:55:27 PAGE 3   
+
+ 118   1      }
+ 119          
+ 120          void delay(i)                                   
+ 121          {
+ 122   1          while(--i);
+ 123   1      }
+ 124          
+ 125          void timer1int (void)  interrupt 3  using 2 
+ 126          {
+ 127   1              TH1=0x9E;
+ 128   1              TL1=0x57;
+ 129   1              csbds++;
+ 130   1              if(csbds>=40)
+ 131   1              {
+ 132   2                      csbds=0;
+ 133   2                      cl=1;
+ 134   2              }               
+ 135   1      }
+ 136          
+ 137          void csbcj()
+ 138          {
+ 139   1              if(cl==1)
+ 140   1              {
+ 141   2                      TR1=0;
+ 142   2                      TH0=0x00;
+ 143   2                      TL0=0x00;
+ 144   2                      i=csbs;
+ 145   2                      while(i--)
+ 146   2                      {
+ 147   3                              csbout=!csbout;
+ 148   3                      }
+ 149   2                      TR0=1;                  
+ 150   2                      i=mqs;                                  //盲区
+ 151   2                      while(i--)
+ 152   2                      {
+ 153   3                      }
+ 154   2                      i=0;
+ 155   2                      while(csbint)
+ 156   2                      {
+ 157   3                              i++;
+ 158   3                              if(i>=4000)                     //上限值
+ 159   3                              csbint=0;
+ 160   3                      }
+ 161   2                      TR0=0;
+ 162   2                      TH1=0x9E;
+ 163   2                      TL1=0x57;
+ 164   2                      t=TH0;
+ 165   2                      t=t*256+TL0;
+ 166   2                      t=t-29;         
+ 167   2                      s=t*csbc/2;
+ 168   2                      TR1=1;
+ 169   2                      cl=0;
+ 170   2                      csbint=1;
+ 171   2                      if(s<sj1)
+ 172   2                      {
+ 173   3                              if(csbs>6)
+ 174   3                              {
+ 175   4                                      csbs=csbs-2;
+ 176   4                                      sj1=40;
+ 177   4                              }
+ 178   3                              sj1=sj1+2;
+ 179   3                              k4cl();
+C51 COMPILER V8.09   MAIN                                                                  05/22/2010 12:55:27 PAGE 4   
+
+ 180   3                      }
+ 181   2                      else if(s>=sj3)
+ 182   2                      {
+ 183   3                              if(csbs<32)
+ 184   3                              {
+ 185   4                                      csbs=csbs+2;
+ 186   4                                      sj1=sj1+10;
+ 187   4                                      k4cl();
+ 188   4                              }
+ 189   3                      }
+ 190   2              }
+ 191   1      }
+ 192          
+ 193          void keyscan()                          //健盘处理函数
+ 194          {
+ 195   1              xx=0;
+ 196   1              if(k1!=1)                                       // 判断开关是否按下
+ 197   1              {
+ 198   2                      delay(100);                             //延时去抖动
+ 199   2                      if(k1!=1)                                       // 判断开关是否按下     
+ 200   2                      {               
+ 201   3                              while(!k1)
+ 202   3                              {
+ 203   4                                      delay(25);      
+ 204   4                                      xx++;
+ 205   4                              }
+ 206   3                              if(xx>1000)             
+ 207   3                              {
+ 208   4                                      jpjs++;
+ 209   4                                      if(jpjs>3)
+ 210   4                                      {
+ 211   5                                              k4cl();
+ 212   5                                              jpjs=0;
+ 213   5                                      }
+ 214   4                              }
+ 215   3                              xx=0;
+ 216   3                              switch(jpjs)
+ 217   3                              {
+ 218   4                                      case 1: k1cl();break;           
+ 219   4                                      case 2: k2cl();break;
+ 220   4                                      case 3: k3cl();break;
+ 221   4                              }
+ 222   3                      }
+ 223   2              }
+ 224   1      }
+ 225          
+ 226          void k1cl()
+ 227          {
+ 228   1              sj1=sj1+1;
+ 229   1              if(sj1>100)
+ 230   1              sj1=50;
+ 231   1              s=sj1;
+ 232   1      }
+ 233          void k2cl()
+ 234          {
+ 235   1              sj2=sj2+5;
+ 236   1              if(sj2>500)
+ 237   1              sj2=40;
+ 238   1              s=sj2;
+ 239   1      }
+ 240          
+ 241          void k3cl()
+C51 COMPILER V8.09   MAIN                                                                  05/22/2010 12:55:27 PAGE 5   
+
+ 242          {
+ 243   1              sj3=sj3+10;
+ 244   1              if(sj3>600)
+ 245   1              sj3=600;
+ 246   1              s=sj3;
+ 247   1      }
+ 248          
+ 249          void k4cl()
+ 250          {
+ 251   1              sx1=sj1-1;
+ 252   1              sx1=sx1/csbc;
+ 253   1              mqs=sx1/4.5;
+ 254   1      }
+ 255          
+ 256          void offmsd()                                                       //小时数十位为0判断模块
+ 257          {
+ 258   1          if (buffer[0] == 0xC0)                              //如果值为零时小数十位不显示
+ 259   1          buffer[0] = 0xFF;
+ 260   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    889    ----
+   CONSTANT SIZE    =     32    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     45    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

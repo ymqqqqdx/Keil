@@ -1,0 +1,206 @@
+BL51 BANKED LINKER/LOCATER V6.05                                                        10/12/2010  13:58:43  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V6.05, INVOKED BY:
+C:\KEIL\C51\BIN\BL51.EXE STARTUP.obj, ReDo.obj TO LCD_12232 RAMSIZE (256)
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  STARTUP.obj (?C_STARTUP)
+  ReDo.obj (REDO)
+  C:\KEIL\C51\LIB\C51S.LIB (?C?CLDPTR)
+
+
+LINK MAP OF MODULE:  LCD_12232 (?C_STARTUP)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            DATA    0008H     0005H     UNIT         _DATA_GROUP_
+                    000DH     0013H                  *** GAP ***
+            BIT     0020H.0   0000H.1   UNIT         _BIT_GROUP_
+                    0020H.1   0000H.7                *** GAP ***
+            IDATA   0021H     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+            CODE    0003H     002FH     UNIT         ?PR?MAIN?REDO
+            CODE    0032H     002EH     UNIT         ?PR?_LCD_STRING?REDO
+            CODE    0060H     0022H     UNIT         ?PR?LCD_WRITECD?REDO
+            CODE    0082H     0019H     UNIT         ?C?LIB_CODE
+            CODE    009BH     0016H     UNIT         ?PR?_DELAY_1MS?REDO
+            CODE    00B1H     0013H     UNIT         ?CO?REDO
+            CODE    00C4H     0011H     UNIT         ?PR?_LCD_WRITEONECHAR?REDO
+            CODE    00D5H     000CH     UNIT         ?C_C51STARTUP
+
+
+
+OVERLAY MAP OF MODULE:   LCD_12232 (?C_STARTUP)
+
+
+SEGMENT                               BIT_GROUP          DATA_GROUP 
+  +--> CALLED SEGMENT              START    LENGTH     START    LENGTH
+----------------------------------------------------------------------
+?C_C51STARTUP                      -----    -----      -----    -----
+  +--> ?PR?MAIN?REDO
+
+?PR?MAIN?REDO                      -----    -----      0008H    0001H
+  +--> ?PR?LCD_WRITECD?REDO
+  +--> ?CO?REDO
+  +--> ?PR?_LCD_STRING?REDO
+  +--> ?PR?_DELAY_1MS?REDO
+
+?PR?LCD_WRITECD?REDO               0020H.0  0000H.1    000CH    0001H
+  +--> ?PR?_LCD_WRITEONECHAR?REDO
+
+BL51 BANKED LINKER/LOCATER V6.05                                                      10/12/2010  13:58:43  PAGE 2
+
+
+?PR?_LCD_STRING?REDO               -----    -----      0009H    0003H
+  +--> ?PR?LCD_WRITECD?REDO
+
+
+
+SYMBOL TABLE OF MODULE:  LCD_12232 (?C_STARTUP)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        ?C_STARTUP
+  C:00D5H         SEGMENT       ?C_C51STARTUP
+  I:0021H         SEGMENT       ?STACK
+  C:0000H         PUBLIC        ?C_STARTUP
+  D:00E0H         SYMBOL        ACC
+  D:00F0H         SYMBOL        B
+  D:0083H         SYMBOL        DPH
+  D:0082H         SYMBOL        DPL
+  N:0000H         SYMBOL        IBPSTACK
+  N:0100H         SYMBOL        IBPSTACKTOP
+  N:0080H         SYMBOL        IDATALEN
+  C:00D8H         SYMBOL        IDATALOOP
+  N:0000H         SYMBOL        PBPSTACK
+  N:0100H         SYMBOL        PBPSTACKTOP
+  N:0000H         SYMBOL        PDATALEN
+  N:0000H         SYMBOL        PDATASTART
+  N:0000H         SYMBOL        PPAGE
+  N:0000H         SYMBOL        PPAGEENABLE
+  D:00A0H         SYMBOL        PPAGE_SFR
+  D:0081H         SYMBOL        SP
+  C:00D5H         SYMBOL        STARTUP1
+  N:0000H         SYMBOL        XBPSTACK
+  N:0000H         SYMBOL        XBPSTACKTOP
+  N:0000H         SYMBOL        XDATALEN
+  N:0000H         SYMBOL        XDATASTART
+  C:0000H         LINE#         126
+  C:00D5H         LINE#         133
+  C:00D7H         LINE#         134
+  C:00D8H         LINE#         135
+  C:00D9H         LINE#         136
+  C:00DBH         LINE#         185
+  C:00DEH         LINE#         196
+  -------         ENDMOD        ?C_STARTUP
+
+  -------         MODULE        REDO
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:0080H         PUBLIC        P0
+  D:0090H         PUBLIC        P1
+  D:00B0H         PUBLIC        P3
+  C:009BH         PUBLIC        _delay_1ms
+  C:0060H         PUBLIC        lcd_writecd
+  D:00A8H         PUBLIC        IE
+  D:00B8H         PUBLIC        IP
+  B:00D0H.7       PUBLIC        CY
+  C:0003H         PUBLIC        main
+  C:00C4H         PUBLIC        _lcd_writeonechar
+  C:0032H         PUBLIC        _lcd_string
+BL51 BANKED LINKER/LOCATER V6.05                                                      10/12/2010  13:58:43  PAGE 3
+
+
+  D:0098H         PUBLIC        SCON
+  D:0088H         PUBLIC        TCON
+  B:0090H.2       PUBLIC        lcd_clk
+  B:0080H.2       PUBLIC        lcd_sid
+  D:00C8H         PUBLIC        T2CON
+  B:0080H.3       PUBLIC        lcd_cs
+  D:00D0H         PUBLIC        PSW
+  -------         PROC          _DELAY_1MS
+  D:0006H         SYMBOL        z
+  -------         DO            
+  D:0005H         SYMBOL        i
+  -------         ENDDO         
+  C:009BH         LINE#         10
+  C:009BH         LINE#         11
+  C:009BH         LINE#         13
+  C:00A5H         LINE#         14
+  C:00B0H         LINE#         15
+  -------         ENDPROC       _DELAY_1MS
+  -------         PROC          _LCD_WRITEONECHAR
+  D:0007H         SYMBOL        dat
+  -------         DO            
+  D:0006H         SYMBOL        i
+  -------         ENDDO         
+  C:00C4H         LINE#         16
+  C:00C4H         LINE#         17
+  C:00C4H         LINE#         19
+  C:00C6H         LINE#         20
+  C:00C6H         LINE#         21
+  C:00CAH         LINE#         22
+  C:00CCH         LINE#         23
+  C:00CEH         LINE#         24
+  C:00D0H         LINE#         25
+  C:00D4H         LINE#         26
+  -------         ENDPROC       _LCD_WRITEONECHAR
+  -------         PROC          LCD_WRITECD
+  B:0020H.0       SYMBOL        cd
+  D:000CH         SYMBOL        dat
+  C:0060H         LINE#         28
+  C:0060H         LINE#         29
+  C:0060H         LINE#         30
+  C:0062H         LINE#         31
+  C:006EH         LINE#         32
+  C:0076H         LINE#         33
+  C:007FH         LINE#         34
+  C:0081H         LINE#         35
+  -------         ENDPROC       LCD_WRITECD
+  -------         PROC          _LCD_STRING
+  D:0007H         SYMBOL        add
+  D:0009H         SYMBOL        pt
+  C:0032H         LINE#         37
+  C:0038H         LINE#         38
+  C:0038H         LINE#         39
+  C:003EH         LINE#         40
+  C:0049H         LINE#         41
+  C:005FH         LINE#         42
+  -------         ENDPROC       _LCD_STRING
+  -------         PROC          MAIN
+BL51 BANKED LINKER/LOCATER V6.05                                                      10/12/2010  13:58:43  PAGE 4
+
+
+  -------         DO            
+  D:0008H         SYMBOL        i
+  -------         ENDDO         
+  C:0003H         LINE#         43
+  C:0003H         LINE#         44
+  C:0003H         LINE#         46
+  C:000BH         LINE#         47
+  C:0016H         LINE#         48
+  C:0021H         LINE#         49
+  C:0021H         LINE#         50
+  C:0021H         LINE#         51
+  C:0029H         LINE#         52
+  C:0030H         LINE#         53
+  -------         ENDPROC       MAIN
+  -------         ENDMOD        REDO
+
+  -------         MODULE        ?C?CLDPTR
+  C:0082H         PUBLIC        ?C?CLDPTR
+  -------         ENDMOD        ?C?CLDPTR
+
+Program Size: data=14.1 xdata=0 code=225
+LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)

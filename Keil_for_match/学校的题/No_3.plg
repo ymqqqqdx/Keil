@@ -1,0 +1,25 @@
+<html>
+<body>
+<pre>
+<h1>礦ision3 Build Log</h1>
+<h2>Project:</h2>
+D:\Keil_for_match\学校的题\No_3.uv2
+Project File Date:  10/13/2010
+
+<h2>Output:</h2>
+Build target 'Target 1'
+compiling No_3.c...
+NO_3.C(23): warning C173: missing return-expression
+linking...
+Program Size: data=15.1 xdata=0 code=1053
+creating hex file from "No_3"...
+"No_3" - 0 Error(s), 1 Warning(s).
+Build target 'Target 1'
+compiling No_3.c...
+linking...
+Program Size: data=15.1 xdata=0 code=1057
+creating hex file from "No_3"...
+"No_3" - 0 Error(s), 0 Warning(s).
+</pre>
+</body>
+</html>

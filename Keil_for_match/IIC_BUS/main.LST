@@ -1,0 +1,167 @@
+C51 COMPILER V8.09   MAIN                                                                  09/28/2010 16:46:54 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE main.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <stdio.h>
+   2          #include <reg52.h>
+   3          #include <intrins.h>
+   4          #define U8 unsigned char
+   5          #define U16 unsigned int
+   6          sbit sda=P2^6;
+   7          sbit scl=P2^5;
+   8          void Uart_Init()
+   9          {
+  10   1              REN=1;
+  11   1              SCON=0x52;
+  12   1              TMOD=0X20;
+  13   1              TH1=0XFD;
+  14   1              TL1=0XFD;
+  15   1              TR1=1;
+  16   1              ES=1;
+  17   1              SM0=0;
+  18   1              SM1=1;
+  19   1              EA=1;
+  20   1      }
+  21          void Start()
+  22          {
+  23   1              sda=1;  _nop_();
+  24   1              scl=1;  _nop_();
+  25   1              sda=0;  _nop_();
+  26   1      }
+  27          void Stop()
+  28          {
+  29   1              sda=0;  _nop_();
+  30   1              scl=1;  _nop_();
+  31   1              sda=1;  _nop_();
+  32   1      }
+  33          void Respons()
+  34          {
+  35   1              U8 i;
+  36   1              scl=1;  _nop_();
+  37   1              while((sda==1)&&(i<250))
+  38   1                      i++;
+  39   1              scl=0;  _nop_();        
+  40   1      }
+  41          void AT24C02_Init()
+  42          {
+  43   1              sda=1;  _nop_();
+  44   1              scl=1;  _nop_();
+  45   1      }
+  46          void Write_Byte(U8 temp)
+  47          {
+  48   1              U8 i;
+  49   1              for(i=0;i<8;i++)
+  50   1              {
+  51   2                      scl=0;  _nop_();
+  52   2                      sda=(bit)(temp&(1<<(7-i)));
+  53   2                      scl=1;  _nop_();
+  54   2              }
+  55   1              scl=0;  _nop_();
+C51 COMPILER V8.09   MAIN                                                                  09/28/2010 16:46:54 PAGE 2   
+
+  56   1              sda=1;  _nop_();
+  57   1      }
+  58          U8 Read_Byte()
+  59          {
+  60   1              U8 i,k;
+  61   1              scl=0;  _nop_();
+  62   1              sda=1;  _nop_();
+  63   1              for(i=0;i<8;i++)
+  64   1              {
+  65   2                      scl=1;          _nop_();
+  66   2                      k=(k<<1)|sda;
+  67   2                      scl=0;          _nop_();
+  68   2              }
+  69   1              return k;
+  70   1      }
+  71          void Write_Add_Data(U8 add,U8 dat)
+  72          {
+  73   1              Start();
+  74   1              Write_Byte(0xa0);
+  75   1              Respons();
+  76   1              Write_Byte(add);
+  77   1              Respons();
+  78   1              Write_Byte(dat);
+  79   1              Respons();
+  80   1              Stop();
+  81   1      }
+  82          U8 Read_Add(U8 add)
+  83          {
+  84   1              U8 date;
+  85   1              Start();
+  86   1              Write_Byte(0xa0);
+  87   1              Respons();
+  88   1              Write_Byte(add);
+  89   1              Respons();
+  90   1              Start();
+  91   1              Write_Byte(0xa1);
+  92   1              Respons();
+  93   1              date=Read_Byte();
+  94   1              Stop();
+  95   1              return date;
+  96   1      }
+  97          void Write()
+  98          {
+  99   1              U8 i;
+ 100   1              puts("########### To Write to AT24c02 ##########");
+ 101   1              for(i=0;i<128;i++)
+ 102   1              {
+ 103   2                      printf(" %4d ",(int)i);
+ 104   2                      if((i+1)%10==0) printf("\n");
+ 105   2                      Write_Add_Data(i,i+1);
+ 106   2              }
+ 107   1              puts("\n################# Write Complete! ##############");
+ 108   1      }
+ 109          void Read()
+ 110          {
+ 111   1              U8 i;
+ 112   1              puts("################# Now Read it! #################");
+ 113   1              for(i=0;i<128;i++)
+ 114   1              {
+ 115   2                      printf(" %4d ",(int)Read_Add(i));
+ 116   2                      if((i+1)%10==0) printf("\n");
+ 117   2              }
+C51 COMPILER V8.09   MAIN                                                                  09/28/2010 16:46:54 PAGE 3   
+
+ 118   1              puts("\n############### Done! #######################");
+ 119   1      }
+ 120          void main()
+ 121          {
+ 122   1              U8 c;
+ 123   1              AT24C02_Init();
+ 124   1              Uart_Init();
+ 125   1      start:
+ 126   1              puts("\n############## IICBUS TEST ###############");
+ 127   1              puts("1. Write 1-127 to AT24c01");
+ 128   1              puts("2. Read from AT24c01");
+ 129   1              c=_getkey();
+ 130   1              switch(c)
+ 131   1              {
+ 132   2                      case '1': Write(); goto start; break;
+ 133   2                      case '2': Read(); goto start; break;
+ 134   2              }
+ 135   1              while(1);
+ 136   1      }
+ 137          void ser() interrupt 4
+ 138          {
+ 139   1              RI=0;
+ 140   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    436    ----
+   CONSTANT SIZE    =    288    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       3
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

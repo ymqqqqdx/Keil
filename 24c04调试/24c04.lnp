@@ -1,0 +1,6 @@
+"STARTUP.obj",
+"24c02.obj",
+"24c04.obj",
+"delay.obj" 
+TO "24c04" 
+RAMSIZE(256) 

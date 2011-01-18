@@ -1,0 +1,142 @@
+C51 COMPILER V6.12  MAIN                                                                   04/12/2010 16:38:38 PAGE 1   
+
+
+C51 COMPILER V6.12, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\main.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE .\main.c DEBUG OBJECTEXTEND
+
+stmt level    source
+
+   1          #include <reg52.h>
+   2          unsigned char code left[]={0x00,0x00,0x8f,0x9f,0xb0,0xe0,0xc0,0xfc};//图形显示左转
+   3          unsigned char code front[]={0x18,0x30,0x60,0xff,0xff,0x60,0x30,0x18};//图形显示前行
+   4          unsigned char code right[]={0xfc,0xc0,0xe0,0xb0,0x9f,0x8f,0x00,0x00};//图形显示右转
+   5          unsigned char code stop[]={0x3C,0x42,0xa5,0x99,0x99,0xa5,0x42,0x3C};//图形显示停止
+   6          unsigned char i,buff,second1=10,second2=2,aa,written=0;
+   7          void write7219one(unsigned char,unsigned char,unsigned char,unsigned char,unsigned char,unsigned char);
+   8          void write7219two(unsigned char,unsigned char,unsigned char,unsigned char,unsigned char,unsigned char);
+   9          void write7219three(unsigned char,unsigned char);
+  10          void init7219();
+  11          void write_onechar(unsigned char);
+  12          void main()
+  13          {
+  14   1      	TMOD=0x01;
+  15   1      	TH0=(65536-50000)/256; 
+  16   1      	TL0=(65536-50000)%256;
+  17   1      	EA=1; //开总中断
+  18   1      	ET0=1; //计时器0开启
+  19   1      	TR0=1; //计时器开始运行
+  20   1      	init7219();
+  21   1      	while(1)
+  22   1      	{
+  23   2      		if(buff==0&&written==0)
+  24   2      		{
+  25   3      			for(i=1;i<9;i++)
+  26   3      			{
+  27   4      				write7219one(i,stop[i-1],i,stop[i-1],i,right[i-1]);
+  28   4      				write7219two(i,left[i-1],i,front[i-1],i,right[i-1]);
+  29   4      			}
+  30   3      			written=1;
+  31   3      		}
+  32   2      		if(buff==2&&written==0)
+  33   2      		{
+  34   3      			for(i=1;i<9;i++)
+  35   3      			{
+  36   4      				write7219one(i,left[i-1],i,front[i-1],i,right[i-1]);
+  37   4      				write7219two(i,left[i-1],i,stop[i-1],i,stop[i-1]);
+  38   4      			}
+  39   3      			written=1;
+  40   3      		}
+  41   2      	}
+  42   1      }
+  43          void timer0() interrupt 1
+  44          {
+  45   1      	TH0=(65536-50000)/256;
+  46   1      	TL0=(65536-50000)%256;
+  47   1      	aa++;
+  48   1      	if(aa==20)
+  49   1      	{
+  50   2      		if(buff==0)
+  51   2      		{
+  52   3      			P0=0x41;
+  53   3      			write7219three(1,second1/10);
+  54   3      			write7219three(2,second1%10);
+  55   3      			write7219three(3,(second1-2)/10);
+C51 COMPILER V6.12  MAIN                                                                   04/12/2010 16:38:38 PAGE 2   
+
+  56   3      			write7219three(4,(second1-2)%10);
+  57   3      			second1--;
+  58   3      			if(second1==2)
+  59   3      			{
+  60   4      				buff=1;
+  61   4      				second1=10;
+  62   4      				written=0;
+  63   4      			}
+  64   3      		}
+  65   2      	
+  66   2      		else if(buff==1)
+  67   2      		{
+  68   3      			P0=0x21;
+  69   3      			write7219three(1,second2/10);
+  70   3      			write7219three(2,second2%10);
+  71   3      			write7219three(3,second2/10);
+  72   3      			write7219three(4,second2%10);
+  73   3      			second2--;
+  74   3      			if(second2==0)
+  75   3      			{
+  76   4      				buff=2;
+  77   4      				second2=2;
+  78   4      				written=0;
+  79   4      			}
+  80   3      		}
+  81   2      
+  82   2      		else if(buff==2)
+  83   2      		{
+  84   3      			P0=0x14;
+  85   3      			write7219three(1,(second1-2)/10);
+  86   3      			write7219three(2,(second1-2)%10);
+  87   3      			write7219three(3,second1/10);
+  88   3      			write7219three(4,second1%10);
+  89   3      			second1--;
+  90   3      			if(second1==2)
+  91   3      			{
+  92   4      				buff=3;
+  93   4      				second1=10;
+  94   4      				written=0;
+  95   4      			}
+  96   3      		}
+  97   2      
+  98   2      		else if(buff==3)
+  99   2      		{
+ 100   3      			P0=0x12;
+ 101   3      			write7219three(1,second2/10);
+ 102   3      			write7219three(2,second2%10);
+ 103   3      			write7219three(3,second2/10);
+ 104   3      			write7219three(4,second2%10);
+ 105   3      			second2--;
+ 106   3      			if(second2==0)
+ 107   3      			{
+ 108   4      				buff=0;
+ 109   4      				second2=2;
+ 110   4      				written=0;
+ 111   4      			}
+ 112   3      		}
+ 113   2      		aa=0;
+ 114   2      	}
+ 115   1      }
+
+
+C51 COMPILER V6.12  MAIN                                                                   04/12/2010 16:38:38 PAGE 3   
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    578    ----
+   CONSTANT SIZE    =     32    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      6    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

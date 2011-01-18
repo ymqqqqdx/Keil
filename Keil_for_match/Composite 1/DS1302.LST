@@ -1,0 +1,112 @@
+C51 COMPILER V8.09   DS1302                                                                10/08/2010 19:08:42 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE DS1302
+OBJECT MODULE PLACED IN DS1302.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE DS1302.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #include <stdio.h>
+   3          #include <string.h>
+   4          #include "declare.h"
+   5          #define U8 unsigned char
+   6          #define U16 unsigned int
+   7          
+   8          sbit rtc_clk=P1^6;
+   9          sbit rtc_io=P1^7;
+  10          sbit rtc_rst=P3^0;
+  11          
+  12          extern RTC time;
+  13          extern U8 stat;
+  14          void rtc_writeonechar(U8 dat)
+  15          {
+  16   1              U8 i;
+  17   1              for(i=0;i<8;i++)
+  18   1              {
+  19   2                      dat>>=1;
+  20   2                      rtc_clk=0;
+  21   2                      rtc_io=CY;
+  22   2                      rtc_clk=1;
+  23   2              }
+  24   1      }
+  25          U8 rtc_readonechar()
+  26          {
+  27   1              U8 i,temp=0;
+  28   1              for(i=0;i<8;i++)
+  29   1              {
+  30   2                      rtc_clk=0;
+  31   2                      temp|=((U8)rtc_io)<<i;
+  32   2                      rtc_clk=1;
+  33   2              }
+  34   1              return (temp>>4)*10+temp%16;
+  35   1      }
+  36          void rtc_write(U8 add,U8 dat)
+  37          {
+  38   1              rtc_rst=0;
+  39   1              rtc_clk=0;
+  40   1              rtc_rst=1;
+  41   1              rtc_writeonechar(add);
+  42   1              rtc_writeonechar((dat/10<<4)|(dat%10));
+  43   1              rtc_rst=0;
+  44   1      }
+  45          U8 rtc_read(U8 add)
+  46          {
+  47   1              U8 temp;
+  48   1              rtc_rst=0;
+  49   1              rtc_clk=0;
+  50   1              rtc_rst=1;
+  51   1              rtc_writeonechar(add|1);
+  52   1              temp=rtc_readonechar();
+  53   1              rtc_rst=0;
+  54   1              return temp;
+  55   1      }
+C51 COMPILER V8.09   DS1302                                                                10/08/2010 19:08:42 PAGE 2   
+
+  56          void rtc_gettime()
+  57          {
+  58   1              U8 *pt=&time.second,i;
+  59   1              for(i=0;i<7;i++)
+  60   1                      *pt++=rtc_read(0x80+2*i);
+  61   1              lcd_showtime();
+  62   1              hd_showtime();
+  63   1      }
+  64          void rtc_settime(U8 off,U8 dat)
+  65          {
+  66   1              U8 *pt=&time.second;
+  67   1              *(pt+off)=dat;
+  68   1      }
+  69          void rtc_writertc()
+  70          {
+  71   1              U8 *pt=&time.second,i;
+  72   1              for(i=0;i<7;i++)
+  73   1                      rtc_write(0x80+2*i,*pt++);
+  74   1              stat=0;
+  75   1      }
+  76          bit rtc_range(U8 off,U8 dat)
+  77          {
+  78   1              U8 i=~0;
+  79   1              if( dat<range[off][0] || dat>range[off][1])
+  80   1              {
+  81   2                      beep=0;
+  82   2                      while(i--);
+  83   2                      beep=1;
+  84   2                      return 1;
+  85   2              }
+  86   1              else return 0;
+  87   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    276    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       6
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

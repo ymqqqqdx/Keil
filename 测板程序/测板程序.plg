@@ -1,0 +1,30 @@
+<html>
+<body>
+<pre>
+<h1>礦ision3 Build Log</h1>
+<h2>Project:</h2>
+D:\keil\测板程序\测板程序.uv2
+Project File Date:  05/30/2010
+
+<h2>Output:</h2>
+创建目标 '目标 1'
+编译 74ls164.c ...
+编译 delay.c ...
+编译 main.c ...
+编译 7219.c ...
+编译 ds1302_driver.c ...
+编译 18b20_driver.c ...
+连接 ...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?LS164?MAIN
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?LED?MAIN
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?TRAFFIC?MAIN
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?SEGSCAN?MAIN
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?TEST7219?MAIN
+Program Size: data=44.0 xdata=0 code=2303
+创建 HEX 文件 "测板程序" ...
+"测板程序" - 0 个错误, 5 个警告。

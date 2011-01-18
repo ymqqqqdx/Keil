@@ -1,0 +1,101 @@
+C51 COMPILER V8.09   NO_3                                                                  10/13/2010 19:54:47 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE NO_3
+OBJECT MODULE PLACED IN No_3.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE No_3.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #define U8 unsigned char
+   3          #define U16 unsigned int
+   4          #define CMD 0
+   5          #define DATA 1
+   6          sbit ad_clk=P3^2;
+   7          sbit ad_dat=P3^3;
+   8          sbit ad_cs=P3^4;
+   9          sbit lcd_cs=P0^3;
+  10          sbit lcd_clk=P1^2;
+  11          sbit lcd_sid=P0^2;
+  12          
+  13          U8 ad_read()
+  14          {
+  15   1              U8 i=0,temp=0;
+  16   1              ad_cs=0;
+  17   1              for(i=0;i<8;i++)
+  18   1              {
+  19   2                      temp|=((U8)ad_dat)<<(7-i);
+  20   2                      ad_clk=1;
+  21   2                      ad_clk=0;
+  22   2              }
+  23   1              ad_cs=1;
+  24   1              return temp;
+  25   1      }
+  26          
+  27          void lcd_writeonechar(U8 dat)
+  28          {
+  29   1              U8 i;
+  30   1              for(i=0;i<8;i++)
+  31   1              {
+  32   2                      dat<<=1;
+  33   2                      lcd_sid=CY;
+  34   2                      lcd_clk=0;
+  35   2                      lcd_clk=1;
+  36   2              }
+  37   1      }
+  38          
+  39          void lcd_writecd(bit cd,U8 dat)
+  40          {
+  41   1              lcd_cs=1;
+  42   1              lcd_writeonechar(cd==0?0xf8:0xfa);
+  43   1              lcd_writeonechar(dat&0xf0);
+  44   1              lcd_writeonechar(dat<<4);
+  45   1              lcd_cs=0;
+  46   1      }
+  47          
+  48          void lcd_string(U8 add,U8 *pt)
+  49          {
+  50   1              lcd_writecd(0,add);
+  51   1              while(*pt!='\0')
+  52   1                      lcd_writecd(1,*pt++);
+  53   1      }
+  54          
+  55          void main()
+C51 COMPILER V8.09   NO_3                                                                  10/13/2010 19:54:47 PAGE 2   
+
+  56          {
+  57   1              U8 voltage,vol_old;
+  58   1              U16 converted;
+  59   1              lcd_writecd(0,0x0c);
+  60   1              lcd_string(0x80,"µ±Ç°µçÑ¹£º");
+  61   1              while(1)
+  62   1              {
+  63   2                      voltage=ad_read();
+  64   2                      if(voltage!=vol_old)
+  65   2                      {
+  66   3                              converted=(U16)((float)voltage/255*5*100);
+  67   3                              lcd_writecd(0,0x92);
+  68   3                              lcd_writecd(1,converted/100+'0');
+  69   3                              lcd_writecd(1,'.');
+  70   3                              lcd_writecd(1,converted%100/10+'0');
+  71   3                              lcd_writecd(1,converted%10+'0');
+  72   3                              lcd_writecd(1,'V');
+  73   3                              vol_old=voltage;
+  74   3                      }
+  75   2              }
+  76   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    294    ----
+   CONSTANT SIZE    =     11    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       6
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----       1
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

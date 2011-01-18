@@ -1,0 +1,444 @@
+BL51 BANKED LINKER/LOCATER V6.05                                                        07/07/2010  22:10:09  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V6.05, INVOKED BY:
+C:\KEIL\C51\BIN\BL51.EXE STARTUP.obj, zi.obj TO 240_128_LCD RAMSIZE (256)
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  STARTUP.obj (?C_STARTUP)
+  zi.obj (ZI)
+  C:\KEIL\C51\LIB\C51S.LIB (?C?CLDOPTR)
+  C:\KEIL\C51\LIB\C51S.LIB (?C?UIDIV)
+
+
+LINK MAP OF MODULE:  240_128_LCD (?C_STARTUP)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            DATA    0008H     000DH     UNIT         _DATA_GROUP_
+            DATA    0015H     0005H     UNIT         ?DT?ZI
+            IDATA   001AH     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+            CODE    0003H     3AE0H     UNIT         ?CO?ZI
+            CODE    3AE3H     0114H     UNIT         ?PR?_WRITEZI?ZI
+            CODE    3BF7H     0082H     UNIT         ?C?LIB_CODE
+            CODE    3C79H     005FH     UNIT         ?PR?_WRITEIMAGE?ZI
+            CODE    3CD8H     0047H     UNIT         ?PR?_WRITEONECHINESE?ZI
+            CODE    3D1FH     003EH     UNIT         ?PR?LCD_INIT?ZI
+            CODE    3D5DH     0030H     UNIT         ?PR?MAIN?ZI
+            CODE    3D8DH     0028H     UNIT         ?PR?CLEAR?ZI
+            CODE    3DB5H     0021H     UNIT         ?PR?_WRITEDDC?ZI
+            CODE    3DD6H     001EH     UNIT         ?PR?_DELAY?ZI
+            CODE    3DF4H     0013H     UNIT         ?PR?_DELAYUS?ZI
+            CODE    3E07H     000CH     UNIT         ?C_C51STARTUP
+            CODE    3E13H     000CH     UNIT         ?PR?_WRITEDATA?ZI
+            CODE    3E1FH     000CH     UNIT         ?PR?_WRITECOMMAND?ZI
+            CODE    3E2BH     0008H     UNIT         ?PR?_WRITEDC?ZI
+
+
+
+OVERLAY MAP OF MODULE:   240_128_LCD (?C_STARTUP)
+
+
+SEGMENT                           DATA_GROUP 
+  +--> CALLED SEGMENT           START    LENGTH
+-----------------------------------------------
+?C_C51STARTUP                   -----    -----
+  +--> ?PR?MAIN?ZI
+
+?PR?MAIN?ZI                     -----    -----
+  +--> ?PR?_DELAY?ZI
+  +--> ?PR?LCD_INIT?ZI
+BL51 BANKED LINKER/LOCATER V6.05                                                      07/07/2010  22:10:09  PAGE 2
+
+
+  +--> ?PR?CLEAR?ZI
+  +--> ?PR?_WRITEIMAGE?ZI
+  +--> ?PR?_WRITEZI?ZI
+
+?PR?LCD_INIT?ZI                 -----    -----
+  +--> ?PR?_WRITEDDC?ZI
+  +--> ?PR?_WRITECOMMAND?ZI
+
+?PR?_WRITEDDC?ZI                -----    -----
+  +--> ?PR?_WRITEDATA?ZI
+  +--> ?PR?_WRITECOMMAND?ZI
+
+?PR?_WRITEDATA?ZI               -----    -----
+  +--> ?PR?_DELAYUS?ZI
+
+?PR?_WRITECOMMAND?ZI            -----    -----
+  +--> ?PR?_DELAYUS?ZI
+
+?PR?CLEAR?ZI                    -----    -----
+  +--> ?PR?_WRITECOMMAND?ZI
+  +--> ?PR?_WRITEDDC?ZI
+  +--> ?PR?_WRITEDATA?ZI
+
+?PR?_WRITEIMAGE?ZI              0008H    0004H
+  +--> ?PR?_WRITEDDC?ZI
+  +--> ?PR?_WRITECOMMAND?ZI
+  +--> ?CO?ZI
+  +--> ?PR?_WRITEDATA?ZI
+  +--> ?PR?_DELAY?ZI
+
+?PR?_WRITEZI?ZI                 0008H    0009H
+  +--> ?PR?_WRITEDDC?ZI
+  +--> ?PR?_WRITECOMMAND?ZI
+  +--> ?CO?ZI
+  +--> ?PR?_WRITEONECHINESE?ZI
+  +--> ?PR?_DELAY?ZI
+  +--> ?PR?CLEAR?ZI
+
+?PR?_WRITEONECHINESE?ZI         0011H    0004H
+  +--> ?PR?_WRITEDATA?ZI
+  +--> ?PR?_WRITECOMMAND?ZI
+  +--> ?PR?_WRITEDDC?ZI
+
+
+
+SYMBOL TABLE OF MODULE:  240_128_LCD (?C_STARTUP)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        ?C_STARTUP
+  C:3E07H         SEGMENT       ?C_C51STARTUP
+  I:001AH         SEGMENT       ?STACK
+  C:0000H         PUBLIC        ?C_STARTUP
+  D:00E0H         SYMBOL        ACC
+  D:00F0H         SYMBOL        B
+  D:0083H         SYMBOL        DPH
+BL51 BANKED LINKER/LOCATER V6.05                                                      07/07/2010  22:10:09  PAGE 3
+
+
+  D:0082H         SYMBOL        DPL
+  N:0000H         SYMBOL        IBPSTACK
+  N:0100H         SYMBOL        IBPSTACKTOP
+  N:0080H         SYMBOL        IDATALEN
+  C:3E0AH         SYMBOL        IDATALOOP
+  N:0000H         SYMBOL        PBPSTACK
+  N:0100H         SYMBOL        PBPSTACKTOP
+  N:0000H         SYMBOL        PDATALEN
+  N:0000H         SYMBOL        PDATASTART
+  N:0000H         SYMBOL        PPAGE
+  N:0000H         SYMBOL        PPAGEENABLE
+  D:00A0H         SYMBOL        PPAGE_SFR
+  D:0081H         SYMBOL        SP
+  C:3E07H         SYMBOL        STARTUP1
+  N:0000H         SYMBOL        XBPSTACK
+  N:0000H         SYMBOL        XBPSTACKTOP
+  N:0000H         SYMBOL        XDATALEN
+  N:0000H         SYMBOL        XDATASTART
+  C:0000H         LINE#         126
+  C:3E07H         LINE#         133
+  C:3E09H         LINE#         134
+  C:3E0AH         LINE#         135
+  C:3E0BH         LINE#         136
+  C:3E0DH         LINE#         185
+  C:3E10H         LINE#         196
+  -------         ENDMOD        ?C_STARTUP
+
+  -------         MODULE        ZI
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:0080H         PUBLIC        P0
+  D:0090H         PUBLIC        P1
+  D:00A0H         PUBLIC        P2
+  D:00B0H         PUBLIC        P3
+  C:0003H         PUBLIC        CG_code
+  C:3D8DH         PUBLIC        clear
+  C:3E13H         PUBLIC        _WriteData
+  D:00A8H         PUBLIC        IE
+  C:3DD6H         PUBLIC        _delay
+  C:3AE3H         PUBLIC        _writezi
+  C:3E2BH         PUBLIC        _WriteDC
+  D:00B8H         PUBLIC        IP
+  C:3D5DH         PUBLIC        main
+  D:0098H         PUBLIC        SCON
+  D:0015H         PUBLIC        cmd
+  D:0088H         PUBLIC        TCON
+  B:00A0H.6       PUBLIC        cd
+  B:00A0H.7       PUBLIC        ce
+  C:3D1FH         PUBLIC        LCD_Init
+  D:0016H         PUBLIC        data1
+  D:0017H         PUBLIC        data2
+  C:3E1FH         PUBLIC        _WriteCommand
+  B:00B0H.7       PUBLIC        rd
+  C:3DC9H         PUBLIC        _WriteDDC
+  B:00A0H.5       PUBLIC        rst
+  C:2BE3H         PUBLIC        Image_code
+  D:00C8H         PUBLIC        T2CON
+  B:00B0H.6       PUBLIC        rw
+BL51 BANKED LINKER/LOCATER V6.05                                                      07/07/2010  22:10:09  PAGE 4
+
+
+  D:0018H         PUBLIC        address
+  C:3C79H         PUBLIC        _WriteImage
+  C:3CD8H         PUBLIC        _WriteOneChinese
+  D:00D0H         PUBLIC        PSW
+  C:3DFCH         PUBLIC        _delayus
+  -------         PROC          _DELAY
+  D:0006H         SYMBOL        z
+  -------         DO            
+  D:0006H         SYMBOL        i
+  D:0004H         SYMBOL        j
+  -------         ENDDO         
+  C:3DD6H         LINE#         15
+  C:3DD6H         LINE#         16
+  C:3DD6H         LINE#         18
+  C:3DDFH         LINE#         19
+  C:3DF3H         LINE#         20
+  -------         ENDPROC       _DELAY
+  -------         PROC          L?0059
+  -------         ENDPROC       L?0059
+  -------         PROC          _DELAYUS
+  D:0006H         SYMBOL        z
+  C:3DFCH         LINE#         21
+  C:3DFCH         LINE#         22
+  C:3DFCH         LINE#         23
+  C:3E06H         LINE#         24
+  -------         ENDPROC       _DELAYUS
+  -------         PROC          _WRITEDATA
+  D:0007H         SYMBOL        dat
+  C:3E13H         LINE#         25
+  C:3E13H         LINE#         26
+  C:3E15H         LINE#         27
+  C:3E17H         LINE#         28
+  C:3E17H         LINE#         29
+  C:3E17H         LINE#         30
+  C:3E1AH         LINE#         32
+  C:3E1CH         LINE#         33
+  C:3E1EH         LINE#         34
+  -------         ENDPROC       _WRITEDATA
+  -------         PROC          _WRITECOMMAND
+  D:0007H         SYMBOL        cmd
+  C:3E1FH         LINE#         35
+  C:3E1FH         LINE#         36
+  C:3E21H         LINE#         37
+  C:3E23H         LINE#         38
+  C:3E23H         LINE#         39
+  C:3E23H         LINE#         40
+  C:3E26H         LINE#         41
+  C:3E28H         LINE#         42
+  C:3E2AH         LINE#         43
+  -------         ENDPROC       _WRITECOMMAND
+  -------         PROC          _WRITEDC
+  D:0007H         SYMBOL        dat
+  D:0005H         SYMBOL        cmd
+  C:3E2BH         LINE#         44
+  C:3E2BH         LINE#         45
+  C:3E2BH         LINE#         46
+  C:3E2EH         LINE#         47
+BL51 BANKED LINKER/LOCATER V6.05                                                      07/07/2010  22:10:09  PAGE 5
+
+
+  -------         ENDPROC       _WRITEDC
+  C:3DB9H         SYMBOL        L?0056
+  C:3DBEH         SYMBOL        L?0057
+  C:3DC5H         SYMBOL        L?0058
+  -------         PROC          L?0055
+  -------         ENDPROC       L?0055
+  C:3DB9H         SYMBOL        L?0056
+  C:3DBEH         SYMBOL        L?0057
+  C:3DC5H         SYMBOL        L?0058
+  -------         PROC          _WRITEDDC
+  D:0006H         SYMBOL        data1
+  D:0005H         SYMBOL        data2
+  D:0003H         SYMBOL        cmd
+  C:3DC9H         LINE#         49
+  C:3DC9H         LINE#         50
+  C:3DC9H         LINE#         51
+  C:3DCCH         LINE#         52
+  C:3DD1H         LINE#         53
+  -------         ENDPROC       _WRITEDDC
+  -------         PROC          LCD_INIT
+  -------         DO            
+  D:0006H         SYMBOL        data1
+  D:0005H         SYMBOL        data2
+  D:0004H         SYMBOL        cmd
+  -------         ENDDO         
+  C:3D1FH         LINE#         55
+  C:3D1FH         LINE#         56
+  C:3D1FH         LINE#         58
+  C:3D21H         LINE#         61
+  C:3D23H         LINE#         62
+  C:3D25H         LINE#         63
+  C:3D27H         LINE#         64
+  C:3D2DH         LINE#         65
+  C:3D2FH         LINE#         66
+  C:3D31H         LINE#         67
+  C:3D33H         LINE#         68
+  C:3D39H         LINE#         69
+  C:3D3BH         LINE#         70
+  C:3D3BH         LINE#         71
+  C:3D3DH         LINE#         72
+  C:3D42H         LINE#         73
+  C:3D42H         LINE#         74
+  C:3D42H         LINE#         75
+  C:3D44H         LINE#         76
+  C:3D4AH         LINE#         77
+  C:3D4CH         LINE#         78
+  C:3D51H         LINE#         79
+  C:3D53H         LINE#         81
+  C:3D58H         LINE#         82
+  C:3D58H         LINE#         83
+  -------         ENDPROC       LCD_INIT
+  -------         PROC          _WRITEONECHINESE
+  D:0011H         SYMBOL        codes
+  -------         DO            
+  D:0014H         SYMBOL        i
+  D:0005H         SYMBOL        j
+  -------         ENDDO         
+BL51 BANKED LINKER/LOCATER V6.05                                                      07/07/2010  22:10:09  PAGE 6
+
+
+  C:3CD8H         LINE#         88
+  C:3CDEH         LINE#         89
+  C:3CDEH         LINE#         90
+  C:3CE2H         LINE#         91
+  C:3CE4H         LINE#         92
+  C:3CE4H         LINE#         93
+  C:3CF7H         LINE#         94
+  C:3CF8H         LINE#         95
+  C:3CFDH         LINE#         96
+  C:3CFDH         LINE#         97
+  C:3D02H         LINE#         98
+  C:3D0BH         LINE#         99
+  C:3D0BH         LINE#         100
+  C:3D0BH         LINE#         101
+  C:3D0BH         LINE#         102
+  C:3D0EH         LINE#         103
+  C:3D10H         LINE#         104
+  C:3D15H         LINE#         105
+  C:3D15H         LINE#         106
+  C:3D1EH         LINE#         107
+  -------         ENDPROC       _WRITEONECHINESE
+  -------         PROC          _WRITEZI
+  D:0008H         SYMBOL        row
+  D:0009H         SYMBOL        rol
+  -------         DO            
+  D:000AH         SYMBOL        k
+  D:000CH         SYMBOL        h
+  D:000EH         SYMBOL        total
+  D:0010H         SYMBOL        t
+  -------         ENDDO         
+  C:3AE3H         LINE#         108
+  C:3AE7H         LINE#         109
+  C:3AE7H         LINE#         110
+  C:3AECH         LINE#         112
+  C:3AF1H         LINE#         113
+  C:3B00H         LINE#         114
+  C:3B00H         LINE#         115
+  C:3B0CH         LINE#         116
+  C:3B0CH         LINE#         117
+  C:3B0CH         LINE#         118
+  C:3B0CH         LINE#         119
+  C:3B0FH         LINE#         121
+  C:3B15H         LINE#         122
+  C:3B15H         LINE#         123
+  C:3B1DH         LINE#         124
+  C:3B22H         LINE#         125
+  C:3B44H         LINE#         126
+  C:3B44H         LINE#         127
+  C:3B44H         LINE#         128
+  C:3B44H         LINE#         130
+  C:3B47H         LINE#         131
+  C:3B4CH         LINE#         132
+  C:3B70H         LINE#         133
+  C:3B8CH         LINE#         134
+  C:3BA2H         LINE#         135
+  C:3BA9H         LINE#         136
+  C:3BB8H         LINE#         137
+BL51 BANKED LINKER/LOCATER V6.05                                                      07/07/2010  22:10:09  PAGE 7
+
+
+  C:3BC3H         LINE#         138
+  C:3BD7H         LINE#         139
+  C:3BDCH         LINE#         140
+  C:3BEEH         LINE#         141
+  C:3BF1H         LINE#         142
+  C:3BF6H         LINE#         143
+  -------         ENDPROC       _WRITEZI
+  -------         PROC          _WRITEIMAGE
+  D:0007H         SYMBOL        row
+  D:0005H         SYMBOL        rol
+  D:0001H         SYMBOL        hight
+  D:000BH         SYMBOL        width
+  -------         DO            
+  D:0002H         SYMBOL        i
+  -------         ENDDO         
+  C:3C79H         LINE#         144
+  C:3C7BH         LINE#         145
+  C:3C7BH         LINE#         147
+  C:3C8BH         LINE#         148
+  C:3C8EH         LINE#         149
+  C:3C90H         LINE#         150
+  C:3C95H         LINE#         151
+  C:3C9AH         LINE#         152
+  C:3CB5H         LINE#         153
+  C:3CB5H         LINE#         154
+  C:3CC5H         LINE#         155
+  C:3CCCH         LINE#         156
+  C:3CD3H         LINE#         157
+  -------         ENDPROC       _WRITEIMAGE
+  -------         PROC          CLEAR
+  -------         DO            
+  D:0002H         SYMBOL        i
+  -------         ENDDO         
+  C:3D8DH         LINE#         159
+  C:3D8DH         LINE#         160
+  C:3D8DH         LINE#         162
+  C:3D92H         LINE#         163
+  C:3D95H         LINE#         164
+  C:3D95H         LINE#         165
+  C:3D95H         LINE#         166
+  C:3D98H         LINE#         167
+  C:3D9DH         LINE#         168
+  C:3DA0H         LINE#         169
+  C:3DA0H         LINE#         170
+  C:3DA5H         LINE#         171
+  C:3DB0H         LINE#         172
+  -------         ENDPROC       CLEAR
+  -------         PROC          MAIN
+  C:3D5DH         LINE#         174
+  C:3D5DH         LINE#         175
+  C:3D5DH         LINE#         176
+  C:3D5FH         LINE#         177
+  C:3D66H         LINE#         178
+  C:3D68H         LINE#         179
+  C:3D6AH         LINE#         180
+  C:3D6DH         LINE#         181
+  C:3D70H         LINE#         182
+BL51 BANKED LINKER/LOCATER V6.05                                                      07/07/2010  22:10:09  PAGE 8
+
+
+  C:3D7BH         LINE#         183
+  C:3D82H         LINE#         184
+  C:3D85H         LINE#         185
+  C:3D8BH         LINE#         186
+  -------         ENDPROC       MAIN
+  -------         ENDMOD        ZI
+
+  -------         MODULE        ?C?CLDOPTR
+  C:3BF7H         PUBLIC        ?C?CLDOPTR
+  -------         ENDMOD        ?C?CLDOPTR
+
+  -------         MODULE        ?C?UIDIV
+  C:3C24H         PUBLIC        ?C?UIDIV
+  -------         ENDMOD        ?C?UIDIV
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_WRITEDC?ZI
+
+Program Size: data=27.0 xdata=0 code=15923
+LINK/LOCATE RUN COMPLETE.  1 WARNING(S),  0 ERROR(S)

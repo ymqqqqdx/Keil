@@ -1,0 +1,11 @@
+"STARTUP.obj",
+"DS1302.obj",
+"main.obj",
+"LCD.obj",
+"HD7279.obj",
+"DA_TLC5619.obj",
+"LED.obj",
+"LS164.obj",
+"Keyprocess.obj" 
+TO "Composite_1" 
+RAMSIZE(256) 

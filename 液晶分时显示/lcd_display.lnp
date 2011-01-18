@@ -1,0 +1,12 @@
+"main.obj",
+"delay.obj",
+"display.obj",
+"declare.obj",
+"ds1302_driver.obj",
+"ds18b20_driver.obj",
+"12232.obj",
+"keyscan.obj",
+"24c02.obj",
+"555.obj" 
+TO "lcd_display" 
+RAMSIZE(256) 

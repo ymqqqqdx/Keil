@@ -1,0 +1,254 @@
+C51 COMPILER V6.12  333                                                                    01/01/2010 16:22:28 PAGE 1   
+
+
+C51 COMPILER V6.12, COMPILATION OF MODULE 333
+OBJECT MODULE PLACED IN .\333.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE .\333.c DEBUG OBJECTEXTEND
+
+stmt level    source
+
+   1          #include<reg52.h>
+   2          #include<intrins.h>
+   3          #define uint unsigned int
+   4          #define uchar unsigned char
+   5          sbit ln=P2^1;
+   6          sbit ls=P2^0;
+   7          sbit k1=P1^0;
+   8          sbit k2=P1^1;
+   9          sbit k3=P1^2;
+  10          sbit k4=P1^3;
+  11          uchar code table[]="0123456789";
+  12          uchar code table1[]=":.";
+  13          uchar code table2[]="Number";
+  14          uchar m=0,t=0,i,aa=0,max,min1,min0,sec1,sec0,one,num0,num1,num=0,min[34]=0;
+  15          int add,sec[34]=0;
+  16          int s=0;
+  17          void delay(int z)
+  18          {
+  19   1      	int i,j;
+  20   1              for(i=z;i>0;i--)
+  21   1               for(j=110;j>0;j--);
+  22   1      }
+  23          void write_com(uchar com)
+  24          {
+  25   1      	ls=0;
+  26   1          P0=com;
+  27   1          delay(5);
+  28   1          ln=1;
+  29   1          delay(5);
+  30   1          ln=0;
+  31   1      }
+  32          void write_data(uchar date)
+  33          {
+  34   1      	ls=1;
+  35   1          P0=date;
+  36   1          delay(5);
+  37   1          ln=1;
+  38   1          delay(5);
+  39   1          ln=0;
+  40   1      }
+  41          void init()        
+  42          {
+  43   1      	TMOD=0x01;
+  44   1      	TH0=(65536-10000)/256; 
+  45   1      	TL0=(65536-10000)%256;
+  46   1      	EA=1; //开总中断
+  47   1      	ET0=1; //计时器0开启
+  48   1      	TR0=0; //计时器先关闭
+  49   1      	ln=0;
+  50   1         write_com(0x38);
+  51   1         write_com(0x0c);
+  52   1         write_com(0x06);
+  53   1      	write_com(0x01);
+  54   1      }
+  55          void convert0(uchar temp)
+C51 COMPILER V6.12  333                                                                    01/01/2010 16:22:28 PAGE 2   
+
+  56          {
+  57   1      	min1=temp/10;
+  58   1      	min0=temp%10;
+  59   1      }
+  60          void convert1(int temp)
+  61          {
+  62   1      	sec1=temp/100;
+  63   1      	sec0=temp%100/10;
+  64   1      	one=temp%10;
+  65   1      }
+  66          void convert2(uchar temp)
+  67          {
+  68   1      	num1=(temp+0)/10;
+  69   1      	num0=(temp+0)%10;
+  70   1      }
+  71          void displayinit()
+  72          {
+  73   1      	write_com(0x80+0x40+0x03);
+  74   1      	for(i=0;i<6;i++)
+  75   1      	write_data(table2[i]);
+  76   1      }
+  77          void displaytime()
+  78          {
+  79   1      	write_com(0x80+0x04);
+  80   1      	write_data(table[min1]);
+  81   1      	write_data(table[min0]);
+  82   1      	write_data(table1[0]);
+  83   1      	write_data(table[sec1]);
+  84   1      	write_data(table[sec0]);
+  85   1      	write_data(table1[1]);
+  86   1      	write_data(table[one]);
+  87   1      }
+  88          displaynum()
+  89          {
+  90   1      	write_com(0x80+0x47+0x03);
+  91   1      	write_data(table[num1]);
+  92   1      	write_data(table[num0]);
+  93   1      }
+  94          void keyscan()
+  95          {
+  96   1      	if(k1==0&&ET0==1)
+  97   1      	{
+  98   2      		delay(5);
+  99   2      		if(k1==0&&ET0==1)
+ 100   2      		{
+ 101   3      			if(TR0==1)
+ 102   3      			{
+ 103   4      				num++;
+ 104   4      				min[num]=m;
+ 105   4      				sec[num]=s;
+ 106   4      			}
+ 107   3      				if(TR0==0)
+ 108   3      				{TR0=1;}
+ 109   3      		}
+ 110   2      		while(k1==0)
+ 111   2      		{
+ 112   3      		convert0(m);
+ 113   3      		convert1(s);
+ 114   3      		convert2(num);
+ 115   3      		displaytime();
+ 116   3      		displaynum();
+ 117   3      		}
+C51 COMPILER V6.12  333                                                                    01/01/2010 16:22:28 PAGE 3   
+
+ 118   2      	}
+ 119   1      	if(k2==0&&TR0==1)
+ 120   1      	{
+ 121   2      		delay(5);
+ 122   2      		if(k2==0&&TR0==1)
+ 123   2      		{
+ 124   3      			num++;
+ 125   3      			min[num]=m;
+ 126   3      			sec[num]=s;
+ 127   3      			TR0=0;
+ 128   3      			ET0=0;
+ 129   3      			max=num;
+ 130   3      		}
+ 131   2      		while(k2==0)
+ 132   2      		{
+ 133   3      		convert0(m);
+ 134   3      		convert1(s);
+ 135   3      		convert2(num);
+ 136   3      		displaytime();
+ 137   3      		displaynum();
+ 138   3      		}
+ 139   2      	}
+ 140   1      	if(k2==0&&TR0==0)
+ 141   1      	{
+ 142   2      		delay(5);
+ 143   2      		if(k2==0&&TR0==0)
+ 144   2      		{
+ 145   3      			m=0;s=0;num=0;
+ 146   3      			for(i=0;i<max;i++)
+ 147   3      			{
+ 148   4      				min[i]=0;sec[i]=0;
+ 149   4      			}
+ 150   3      			max=0;ET0=1;
+ 151   3      		}
+ 152   2      		while(k2==0);
+ 153   2      	}
+ 154   1      	if(k3==0&&ET0==0)
+ 155   1      	{
+ 156   2      		delay(5);
+ 157   2      		if(k3==0&&ET0==0)
+ 158   2      		{
+ 159   3      			if(ET0==0)
+ 160   3      				if(num>1)
+ 161   3      				num--;
+ 162   3      				m=min[num];
+ 163   3      				s=sec[num];
+ 164   3      		}
+ 165   2      		while(k3==0)
+ 166   2      		{
+ 167   3      		convert0(m);
+ 168   3      		convert1(s);
+ 169   3      		convert2(num);
+ 170   3      		displaytime();
+ 171   3      		displaynum();
+ 172   3      		}
+ 173   2      	}
+ 174   1      	if(k4==0&&ET0==0)
+ 175   1      	{
+ 176   2      		delay(5);
+ 177   2      		if(k4==0)
+ 178   2      		{
+ 179   3      			if(ET0==0)
+C51 COMPILER V6.12  333                                                                    01/01/2010 16:22:28 PAGE 4   
+
+ 180   3      				if(num<max)
+ 181   3      				num++;
+ 182   3      				m=min[num];
+ 183   3      				s=sec[num];
+ 184   3      		}
+ 185   2      		while(k4==0)
+ 186   2      		{
+ 187   3      		convert0(m);
+ 188   3      		convert1(s);
+ 189   3      		convert2(num);
+ 190   3      		displaytime();
+ 191   3      		displaynum();
+ 192   3      		}
+ 193   2      	}
+ 194   1      }
+ 195          void main()
+ 196          {
+ 197   1      	init();
+ 198   1      	displayinit();
+ 199   1      	while(1)
+ 200   1      	{
+ 201   2      		convert0(m);
+ 202   2      		convert1(s);
+ 203   2      		convert2(num);
+ 204   2      		displaytime();
+ 205   2      		displaynum();
+ 206   2      		keyscan();
+ 207   2      	}
+ 208   1      }
+ 209          void timer0() interrupt 1
+ 210          {
+ 211   1      		TH0=(65536-50000)/256;
+ 212   1      	   TL0=(65536-50000)%256;
+ 213   1      		aa++;
+ 214   1      		if(aa==2)
+ 215   1      		{   
+ 216   2      			aa=0;
+ 217   2      			s++;
+ 218   2      			if(s==600)
+ 219   2      			{
+ 220   3      				m++;
+ 221   3      				s=0;
+ 222   3      			}
+ 223   2      		}		
+ 224   1      }
+ 225          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    648    ----
+   CONSTANT SIZE    =     21    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =    119    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

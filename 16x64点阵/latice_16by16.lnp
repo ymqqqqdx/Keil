@@ -1,0 +1,5 @@
+"74hc595.obj",
+"delay.obj",
+"main.obj" 
+TO "latice_16by16" 
+RAMSIZE(256) 

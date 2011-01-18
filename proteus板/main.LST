@@ -1,0 +1,53 @@
+C51 COMPILER V6.12  MAIN                                                                   04/04/2010 21:23:33 PAGE 1   
+
+
+C51 COMPILER V6.12, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\main.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE .\main.c DEBUG OBJECTEXTEND
+
+stmt level    source
+
+   1          #include <reg52.h>
+   2          #include "declare.h"
+   3          sbit dula=P2^0;
+   4          sbit datese=P2^1;
+   5          sbit timese=P2^2;
+   6          sbit tempse=P2^3;
+   7          unsigned char secondold;
+   8          unsigned char year,week,month,day,hour,minute,second,i,week;
+   9          void display1302();
+  10          void gettime();
+  11          void display18b20();
+  12          unsigned char read_clock(unsigned char);
+  13          void main()
+  14          {
+  15   1      	timese=0;
+  16   1      	tempse=0;
+  17   1      	gettime();
+  18   1      	TMOD=0x01;
+  19   1      	TH0=(65536-10000)/256; 
+  20   1      	TL0=(65536-10000)%256;
+  21   1      	EA=1; //开总中断
+  22   1      	ET0=1; //计时器0开启
+  23   1      	TR0=1; //计时器开始运行
+  24   1      	secondold=readsecond;
+  25   1      	while(1)
+  26   1      	{
+  27   2      		display1302();
+  28   2      		display18b20();
+  29   2      	}
+  30   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     37    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      9    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

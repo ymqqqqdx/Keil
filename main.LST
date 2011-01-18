@@ -1,0 +1,191 @@
+C51 COMPILER V8.09   MAIN                                                                  09/11/2010 15:04:27 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE main.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #define readyear read_clock(0x8d)
+   3          #define readweek read_clock(0x8b)
+   4          #define readmonth read_clock(0x89)
+   5          #define readday read_clock(0x87)
+   6          #define readhour read_clock(0x85)
+   7          #define readminute read_clock(0x83)
+   8          #define readsecond read_clock(0x81)
+   9          #define writeyear write_clock(0x8c,year)
+  10          #define writeweek write_clock(0x8a,week)
+  11          #define writemonth write_clock(0x88,month)
+  12          #define writeday write_clock(0x86,day)
+  13          #define writehour write_clock(0x84,hour)
+  14          #define writeminute write_clock(0x82,minute)
+  15          #define writesecond write_clock(0x80,second)
+  16          #define U8 unsigned char
+  17          #define U16 unsigned int
+  18          #define CMD 0
+  19          #define DATA 1
+  20          sbit LCD_CS=P0^3;
+  21          sbit LCD_SCLK=P1^2;
+  22          sbit LCD_SID=P0^2;
+  23          sbit  DS1302_CLK = P1^6;              //????????? 
+  24          sbit  DS1302_IO  = P1^7;              //????????? 
+  25          sbit  DS1302_RST = P3^0;              //?????????
+  26          sbit  ACC0 = ACC^0;
+  27          sbit  ACC7 = ACC^7;
+  28          static xdata unsigned char year;
+  29          static xdata unsigned char week;
+  30          static xdata unsigned char month;
+  31          static xdata unsigned char day;
+  32          static xdata unsigned char hour;
+  33          static xdata unsigned char minute;
+  34          static xdata unsigned char second;
+  35          void Delay_1ms(U16 z)
+  36          {
+  37   1              U8 i;
+  38   1              while(z--)
+  39   1                      for(i=0;i<110;i++);
+  40   1      }
+  41          void LCD_Send_Byte(U8 dat)
+  42          {
+  43   1              U8 i;
+  44   1              for(i=0;i<8;i++)
+  45   1              {
+  46   2                      LCD_SID=(bit)(dat&(1<<(7-i)));
+  47   2                      LCD_SCLK=0;
+  48   2                      LCD_SCLK=1;
+  49   2              }
+  50   1      }
+  51          void LCD_Send_CD(bit CD,U8 dat)
+  52          {
+  53   1              U8 temp;
+  54   1              if(!CD) temp=0xf8;
+  55   1                      else temp=0xfa;
+C51 COMPILER V8.09   MAIN                                                                  09/11/2010 15:04:27 PAGE 2   
+
+  56   1              LCD_CS=1;
+  57   1              LCD_SCLK=0;
+  58   1              LCD_Send_Byte(temp);
+  59   1              temp=dat;
+  60   1              temp&=0xf0;
+  61   1              LCD_Send_Byte(temp);
+  62   1              temp=dat;
+  63   1              temp<<=4;
+  64   1              LCD_Send_Byte(temp);
+  65   1              LCD_CS=0;
+  66   1              Delay_1ms(10);
+  67   1      }
+  68          void LCD_Init()
+  69          {
+  70   1              Delay_1ms(100);
+  71   1              LCD_Send_CD(CMD,0x30);
+  72   1              LCD_Send_CD(CMD,0x02);
+  73   1              LCD_Send_CD(CMD,0x06);
+  74   1              LCD_Send_CD(CMD,0x0c);
+  75   1              LCD_Send_CD(CMD,0x01);
+  76   1              LCD_Send_CD(CMD,0x80);
+  77   1      }
+  78          
+  79          unsigned char bcdconvert(unsigned char bcd)
+  80          {
+  81   1              unsigned char target;
+  82   1              target=bcd>>4;
+  83   1              target=target*10+(bcd&=0x0f);
+  84   1              return(target);
+  85   1      }
+  86          unsigned char convertbcd(unsigned char ten)
+  87          {
+  88   1              unsigned char bcd,a,b;
+  89   1              a=ten/10;
+  90   1              b=ten%10;
+  91   1              a=a<<4;
+  92   1              bcd=(a&=0xf0)+(b&=0x0f);
+  93   1              return(bcd);
+  94   1      }
+  95          void DS1302InputByte(unsigned char d)   //?????????(????)
+  96          { 
+  97   1          unsigned char i;
+  98   1          ACC = d;
+  99   1          for(i=8; i>0; i--)
+ 100   1          {
+ 101   2              DS1302_IO = ACC0;               //??????? RRC
+ 102   2              DS1302_CLK = 1;
+ 103   2              DS1302_CLK = 0;
+ 104   2              ACC = ACC >> 1; 
+ 105   2          } 
+ 106   1      }
+ 107          unsigned char DS1302OutputByte(void)    //?????????(????)
+ 108          { 
+ 109   1          unsigned char i;
+ 110   1          for(i=8; i>0; i--)
+ 111   1          {
+ 112   2              ACC = ACC >>1;                          //??????? RRC 
+ 113   2              ACC7 = DS1302_IO;
+ 114   2              DS1302_CLK = 1;
+ 115   2              DS1302_CLK = 0;
+ 116   2          } 
+ 117   1          return(ACC); 
+C51 COMPILER V8.09   MAIN                                                                  09/11/2010 15:04:27 PAGE 3   
+
+ 118   1      }
+ 119          void write_clock(unsigned char ucAddr, unsigned char ucDa)      //ucAddr: DS1302??, ucData: ?????
+ 120          {
+ 121   1          DS1302_RST = 0;
+ 122   1          DS1302_CLK = 0;
+ 123   1          DS1302_RST = 1;
+ 124   1          DS1302InputByte(ucAddr);            // ??,?? 
+ 125   1          DS1302InputByte(convertbcd(ucDa));          // ?1Byte??
+ 126   1          DS1302_CLK = 1;
+ 127   1          DS1302_RST = 0;
+ 128   1      } 
+ 129          unsigned char read_clock(unsigned char ucAddr)  //??DS1302??????
+ 130          {
+ 131   1          unsigned char ucData;
+ 132   1          DS1302_RST = 0;
+ 133   1          DS1302_CLK = 0;
+ 134   1          DS1302_RST = 1;
+ 135   1          DS1302InputByte(ucAddr|0x01);        // ??,?? 
+ 136   1          ucData = DS1302OutputByte();         // ?1Byte??
+ 137   1          DS1302_CLK = 1;
+ 138   1          DS1302_RST = 0;
+ 139   1          return(bcdconvert(ucData));
+ 140   1      }
+ 141          void init_ds1302()
+ 142          {
+ 143   1              year=10; writeyear;
+ 144   1              month=3; writemonth;
+ 145   1              day=15; writeday;
+ 146   1              hour=17; writehour;
+ 147   1              minute=41; writeminute;
+ 148   1              second=14; writesecond;
+ 149   1      }
+ 150          void main()
+ 151          {
+ 152   1              unsigned char second,secondold;
+ 153   1              init_ds1302();
+ 154   1              LCD_Init();
+ 155   1              while(1)
+ 156   1              {
+ 157   2                      second=readsecond;
+ 158   2                      LCD_Send_CD(CMD,0x80);
+ 159   2                      LCD_Send_CD(DATA,second/10+'0');
+ 160   2                      LCD_Send_CD(DATA,second%10+'0');
+ 161   2                      Delay_1ms(1000);
+ 162   2              }
+ 163   1      }
+*** WARNING C280 IN LINE 152 OF MAIN.C: 'secondold': unreferenced local variable
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    425    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =      7    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       2
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----       1
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)

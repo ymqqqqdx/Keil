@@ -1,0 +1,87 @@
+C51 COMPILER V8.09   12232                                                                 07/07/2010 20:32:11 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE 12232
+OBJECT MODULE PLACED IN 12232.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE 12232.c DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #include "declare.h"
+   3          unsigned char code table[]="0123456789";
+   4          sbit ln=P2^7;
+   5          sbit ls=P2^5;
+   6          sbit rw=P2^6;
+   7          void delay(int);
+   8          void write_com(unsigned char com)
+   9          {
+  10   1              rw=0;
+  11   1              delay(1);
+  12   1              ls=0;
+  13   1              delay(1);
+  14   1          P0=com;
+  15   1          delay(1);
+  16   1          ln=1;
+  17   1          delay(1);
+  18   1          ln=0;
+  19   1               delay(1);
+  20   1               rw=1;
+  21   1               delay(1);
+  22   1      }
+  23          void write_data(unsigned char date)
+  24          {
+  25   1              rw=0;
+  26   1              delay(1);
+  27   1              ls=1;
+  28   1              delay(1);
+  29   1          P0=date;
+  30   1          delay(1);
+  31   1          ln=1;
+  32   1          delay(1);
+  33   1          ln=0;
+  34   1               delay(1);
+  35   1               rw=1;
+  36   1               delay(1);
+  37   1      }
+  38          void init_12232()
+  39          {
+  40   1               rw=0;
+  41   1          ln=0;
+  42   1          write_com(0x30);
+  43   1          write_com(0x02);
+  44   1          write_com(0x0f);
+  45   1               write_com(0x01);       
+  46   1               write_com(0x0c);
+  47   1               delay(50);
+  48   1      }
+  49          void displaytwo(unsigned char add,unsigned char date)
+  50          {
+  51   1              unsigned char shi,ge;
+  52   1              shi=date/10;
+  53   1              ge=date%10;
+  54   1              if(add<10)
+  55   1              write_com(0x80+add);
+C51 COMPILER V8.09   12232                                                                 07/07/2010 20:32:11 PAGE 2   
+
+  56   1              else if(add>=10)
+  57   1              write_com(0x90+add-10);
+  58   1              write_data(table[shi]);
+  59   1              delay(5);
+  60   1              write_data(table[ge]);
+  61   1              delay(5);
+  62   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    229    ----
+   CONSTANT SIZE    =     11    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       5
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

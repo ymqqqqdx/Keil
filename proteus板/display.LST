@@ -1,0 +1,158 @@
+C51 COMPILER V6.12  DISPLAY                                                                04/04/2010 21:23:34 PAGE 1   
+
+
+C51 COMPILER V6.12, COMPILATION OF MODULE DISPLAY
+OBJECT MODULE PLACED IN .\display.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE .\display.c DEBUG OBJECTEXTEND
+
+stmt level    source
+
+   1          #include <reg52.h>
+   2          #include "declare.h"
+   3          sbit dula=P2^0;
+   4          sbit datese=P2^1;
+   5          sbit timese=P2^2;
+   6          sbit tempse=P2^3;
+   7          unsigned char code table[]={0x3f,0x06,0x5b,0x4f,
+   8          0x66,0x6d,0x7d,0x07,
+   9          0x7f,0x6f,0x77,0x7c,
+  10          0x39,0x5e,0x79,0x71,0x00};
+  11          unsigned char code table2[]={0xfe,0xfd,0xfb,0xf7,0xef,0xdf,0xbf,0x7f,0xff};
+  12          unsigned char code point[]={0xBF,0x86,0xDB, 0xCF,0xE6,0xED,0xFD,0x87,0xFF,0xEF};
+  13          unsigned char read_clock(unsigned char);
+  14          int tempnew,aa;
+  15          void delay(int z);
+  16          int readtemp();
+  17          void displayonechar(unsigned char sel,unsigned char add,unsigned char dat)
+  18          {
+  19   1      	if(sel==1)
+  20   1      	{
+  21   2      		datese=1;
+  22   2      		P3=table2[add-1];
+  23   2      		datese=0;
+  24   2      		P3=0xff;
+  25   2      		dula=1;
+  26   2      		P3=table[dat];
+  27   2      		dula=0;
+  28   2      		P3=0x00;
+  29   2      		delay(1);
+  30   2      	}
+  31   1      	if(sel==2)
+  32   1      	{
+  33   2      		timese=1;
+  34   2      		P3=table2[add-1];
+  35   2      		timese=0;
+  36   2      		P3=0xff;
+  37   2      		dula=1;
+  38   2      		P3=table[dat];
+  39   2      		dula=0;
+  40   2      		P3=0x00;
+  41   2      		delay(1);
+  42   2      	}
+  43   1      	if(sel==3)
+  44   1      	{
+  45   2      		tempse=1;
+  46   2      		P3=table2[add-1];
+  47   2      		tempse=0;
+  48   2      		P3=0xff;
+  49   2      		dula=1;
+  50   2      		P3=table[dat];
+  51   2      		dula=0;
+  52   2      		P3=0x00;
+  53   2      		delay(1);
+  54   2      	}
+  55   1      }
+C51 COMPILER V6.12  DISPLAY                                                                04/04/2010 21:23:34 PAGE 2   
+
+  56          void displaydate(unsigned char dyear,unsigned char dmonth,unsigned char dday)
+  57          {
+  58   1      	displayonechar(1,1,2);
+  59   1      	displayonechar(1,2,0);
+  60   1      	displayonechar(1,3,dyear/10);
+  61   1      	displayonechar(1,4,dyear%10);
+  62   1      	displayonechar(1,5,dmonth/10);
+  63   1      	displayonechar(1,6,dmonth%10);
+  64   1      	displayonechar(1,7,dday/10);
+  65   1      	displayonechar(1,8,dday%10);
+  66   1      	displayonechar(1,9,2);//不加此行显示不正常，原因不明
+  67   1      }
+  68          void displaytime(unsigned char dhour,unsigned char dminute,unsigned char dsecond,unsigned char dweek)
+  69          {
+  70   1      	displayonechar(2,1,dhour/10);
+  71   1      	displayonechar(2,2,dhour%10);
+  72   1      	displayonechar(2,3,dminute/10);
+  73   1      	displayonechar(2,4,dminute%10);
+  74   1      	displayonechar(2,5,dsecond/10);
+  75   1      	displayonechar(2,6,dsecond%10);
+  76   1      	displayonechar(2,7,dweek);
+  77   1      	displayonechar(2,8,3);//同上
+  78   1      }
+  79          void gettime()
+  80          {
+  81   1      	hour=readhour; minute=readminute; second=readsecond; year=readyear; month=readmonth; day=readday; week=re
+             -adweek;
+  82   1      }
+  83          void display1302()
+  84          {
+  85   1      	second=readsecond;
+  86   1      	if(second!=secondold)
+  87   1      	{
+  88   2      		secondold=second;
+  89   2      		if(second==0)
+  90   2      		{
+  91   3      			gettime();
+  92   3      		}
+  93   2      	}
+  94   1      	displaydate(year,month,day);
+  95   1      	delay(5);
+  96   1      	displaytime(hour,minute,second,week);
+  97   1      	delay(5);
+  98   1      }
+  99          void display18b20()
+ 100          {
+ 101   1      	unsigned char qian,bai,shi,ge;
+ 102   1      //	tempnew=readtemp();
+ 103   1      	qian=tempnew/1000;
+ 104   1      	bai=tempnew%1000/100;
+ 105   1      	shi=tempnew%100/10;
+ 106   1      	ge=tempnew%10;
+ 107   1      
+ 108   1      	displayonechar(3,1,bai);
+ 109   1      		tempse=1;
+ 110   1      		P3=table2[1];
+ 111   1      		tempse=0;
+ 112   1      		P3=0xff;
+ 113   1      		dula=1;
+ 114   1      		P3=point[shi];
+ 115   1      		dula=0;
+ 116   1      		P3=0x00;
+C51 COMPILER V6.12  DISPLAY                                                                04/04/2010 21:23:34 PAGE 3   
+
+ 117   1      		delay(1);
+ 118   1      	displayonechar(3,3,ge);
+ 119   1      	displayonechar(3,9,1);
+ 120   1      }
+ 121          void timer0() interrupt 1
+ 122          {
+ 123   1      	TH0=(65536-10000)/256; 
+ 124   1      	TL0=(65536-10000)%256;
+ 125   1      	aa++;
+ 126   1      	if(aa==50)
+ 127   1      	{
+ 128   2      		tempnew=readtemp();
+ 129   2      	}
+ 130   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    693    ----
+   CONSTANT SIZE    =     36    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      4      13
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

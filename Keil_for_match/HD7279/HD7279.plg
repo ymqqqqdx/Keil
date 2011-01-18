@@ -1,0 +1,21 @@
+<html>
+<body>
+<pre>
+<h1>µVision3 Build Log</h1>
+<h2>Project:</h2>
+D:\Keil_for_match\HD7279\HD7279.uv2
+Project File Date:  10/12/2010
+
+<h2>Output:</h2>
+Build target 'Target 1'
+assembling STARTUP.A51...
+compiling Re2.c...
+RE2.C(77): error C208: '_hd_writeonechar': too many actual parameters
+Target not created
+Build target 'Target 1'
+assembling STARTUP.A51...
+compiling Re2.c...
+linking...
+Program Size: data=9.0 xdata=0 code=209
+creating hex file from "HD7279"...
+"HD7279" - 0 Error(s), 0 Warning(s).

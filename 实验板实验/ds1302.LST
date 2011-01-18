@@ -1,0 +1,226 @@
+C51 COMPILER V8.09   DS1302                                                                04/29/2010 19:57:04 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE DS1302
+OBJECT MODULE PLACED IN ds1302.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE ds1302.c DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #define readyear read_clock(0x8d)
+   2          #define readweek read_clock(0x8b)
+   3          #define readmonth read_clock(0x89)
+   4          #define readday read_clock(0x87)
+   5          #define readhour read_clock(0x85)
+   6          #define readminute read_clock(0x83)
+   7          #define readsecond read_clock(0x81)
+   8          #define writeyear write_clock(0x8c,year)
+   9          #define writeweek write_clock(0x8a,week)
+  10          #define writemonth write_clock(0x88,month)
+  11          #define writeday write_clock(0x86,day)
+  12          #define writehour write_clock(0x84,hour)
+  13          #define writeminute write_clock(0x82,minute)
+  14          #define writesecond write_clock(0x80,second)
+  15          #include <stdio.h>
+  16          #include <reg52.h>
+  17          #include "declare.h"
+  18          sbit  DS1302_CLK = P3^7;              //实时时钟时钟线引脚 
+  19          sbit  DS1302_IO  = P3^6;              //实时时钟数据线引脚 
+  20          sbit  DS1302_RST = P2^5;              //实时时钟复位线引脚
+  21          sbit  ACC0 = ACC^0;
+  22          sbit  ACC7 = ACC^7;
+  23          static unsigned char year,week,month,day,hour,minute,second,secondold;
+  24          void refresh();
+  25          unsigned char bcdconvert(unsigned char bcd)
+  26          {
+  27   1              unsigned char target;
+  28   1              target=bcd>>4;
+  29   1              target=target*10+(bcd&=0x0f);
+  30   1              return(target);
+  31   1      }
+  32          unsigned char convertbcd(unsigned char ten)
+  33          {
+  34   1              unsigned char bcd,a,b;
+  35   1              a=ten/10;
+  36   1              b=ten%10;
+  37   1              a=a<<4;
+  38   1              bcd=(a&=0xf0)+(b&=0x0f);
+  39   1              return(bcd);
+  40   1      }
+  41          void DS1302InputByte(unsigned char d)   //实时时钟写入一字节(内部函数)
+  42          { 
+  43   1          unsigned char i;
+  44   1          ACC = d;
+  45   1          for(i=8; i>0; i--)
+  46   1          {
+  47   2              DS1302_IO = ACC0;               //相当于汇编中的 RRC
+  48   2              DS1302_CLK = 1;
+  49   2              DS1302_CLK = 0;
+  50   2              ACC = ACC >> 1; 
+  51   2          } 
+  52   1      }
+  53          unsigned char DS1302OutputByte(void)    //实时时钟读取一字节(内部函数)
+  54          { 
+  55   1          unsigned char i;
+C51 COMPILER V8.09   DS1302                                                                04/29/2010 19:57:04 PAGE 2   
+
+  56   1          for(i=8; i>0; i--)
+  57   1          {
+  58   2              ACC = ACC >>1;                          //相当于汇编中的 RRC 
+  59   2              ACC7 = DS1302_IO;
+  60   2              DS1302_CLK = 1;
+  61   2              DS1302_CLK = 0;
+  62   2          } 
+  63   1          return(ACC); 
+  64   1      }
+  65          void write_clock(unsigned char ucAddr, unsigned char ucDa)      //ucAddr: DS1302地址, ucData: 要写的数据
+  66          {
+  67   1          DS1302_RST = 0;
+  68   1          DS1302_CLK = 0;
+  69   1          DS1302_RST = 1;
+  70   1          DS1302InputByte(ucAddr);            // 地址，命令 
+  71   1          DS1302InputByte(convertbcd(ucDa));          // 写1Byte数据
+  72   1          DS1302_CLK = 1;
+  73   1          DS1302_RST = 0;
+  74   1      } 
+  75          unsigned char read_clock(unsigned char ucAddr)  //读取DS1302某地址的数据
+  76          {
+  77   1          unsigned char ucData;
+  78   1          DS1302_RST = 0;
+  79   1          DS1302_CLK = 0;
+  80   1          DS1302_RST = 1;
+  81   1          DS1302InputByte(ucAddr|0x01);        // 地址，命令 
+  82   1          ucData = DS1302OutputByte();         // 读1Byte数据
+  83   1          DS1302_CLK = 1;
+  84   1          DS1302_RST = 0;
+  85   1          return(bcdconvert(ucData));
+  86   1      }
+  87          void init_ds1302()
+  88          {
+  89   1              year=10; writeyear;
+  90   1              month=3; writemonth;
+  91   1              day=15; writeday;
+  92   1              hour=17; writehour;
+  93   1              minute=41; writeminute;
+  94   1              second=14; writesecond;
+  95   1      }
+  96          unsigned char tm;
+  97          unsigned int aa;
+  98          int forpr;
+  99          void gettime();
+ 100          void delay(int);
+ 101          void comm_init();
+ 102          void ds1302commscan()
+ 103          {
+ 104   1              mode=_getkey();
+ 105   1              switch(mode)
+ 106   1              {
+ 107   2                      case '1' : temp=readyear; forpr=temp; tm='1'; printf("%c#%2d",mode,forpr); break;
+ 108   2                      case '2' : temp=readmonth; forpr=temp; tm='2'; printf("%c#%2d",mode,forpr); break;
+ 109   2                      case '3' : temp=readday; forpr=temp; tm='3'; printf("%c#%2d",mode,forpr); break;
+ 110   2                      case '4' : temp=readhour; forpr=temp; tm='4'; printf("%c#%2d",mode,forpr); break;
+ 111   2                      case '5' : temp=readminute; forpr=temp; tm='5'; printf("%c#%2d",mode,forpr); break;
+ 112   2                      case '6' : temp=readsecond; forpr=temp; tm='6'; printf("%c#%2d",mode,forpr); break;
+ 113   2                      case 'g' : gettime(); break;
+ 114   2                      case 'i' : init_ds1302(); break;
+ 115   2                      case '0' : ES=1;
+ 116   2                                                do
+ 117   2                                                {
+C51 COMPILER V8.09   DS1302                                                                04/29/2010 19:57:04 PAGE 3   
+
+ 118   3                                                              secondold=readsecond; 
+ 119   3                                                }
+ 120   2                                                while(secondold>=60);
+ 121   2                                                while(mode=='0')
+ 122   2                                                {
+ 123   3                                                              refresh();
+ 124   3                                                }
+ 125   2                                                ES=0;
+ 126   2              }
+ 127   1              switch(mode)
+ 128   1              {
+ 129   2                      case '+' : temp++;
+ 130   2                              switch(tm)
+ 131   2                              {
+ 132   3                                      case '1' : year=temp; writeyear; break;
+ 133   3                                      case '2' : month=temp; writemonth; break;
+ 134   3                                      case '3' : day=temp; writeday; break;
+ 135   3                                      case '4' : hour=temp; writehour; break;
+ 136   3                                      case '5' : minute=temp; writeminute; break;
+ 137   3                                      case '6' : second=temp; writesecond; break;
+ 138   3                              }
+ 139   2                              forpr=temp; printf("%c#%2d",tm,forpr);
+ 140   2                    break;
+ 141   2                      case '-' : temp--;
+ 142   2                              switch(tm)
+ 143   2                              {
+ 144   3                                      case '1' : year=temp; writeyear; break;
+ 145   3                                      case '2' : month=temp; writemonth; break;
+ 146   3                                      case '3' : day=temp; writeday; break;
+ 147   3                                      case '4' : hour=temp; writehour; break;
+ 148   3                                      case '5' : minute=temp; writeminute; break;
+ 149   3                                      case '6' : second=temp; writesecond; break;
+ 150   3                              }
+ 151   2                              forpr=temp; printf("%c#%2d",tm,forpr);
+ 152   2                              break;
+ 153   2              }
+ 154   1      }
+ 155          void refresh()
+ 156          {
+ 157   1              second=readsecond;
+ 158   1              delay(20);
+ 159   1              if(second!=secondold&&second<60) 
+ 160   1              {
+ 161   2                      forpr=second; printf("6#%2d",forpr); secondold=second;
+ 162   2                      if(second==0)
+ 163   2                      {
+ 164   3                              temp=readyear; forpr=temp; printf("1#%2d",forpr);
+ 165   3                              temp=readmonth; forpr=temp; printf("2#%2d",forpr);
+ 166   3                              temp=readday; forpr=temp; printf("3#%2d",forpr);
+ 167   3                              temp=readhour; forpr=temp; printf("4#%2d",forpr);
+ 168   3                              temp=readminute; forpr=temp; printf("5#%2d",forpr);
+ 169   3                      }
+ 170   2              }
+ 171   1      }
+ 172          void gettime()
+ 173          {
+ 174   1                              temp=readyear; forpr=temp; printf("1#%2d",forpr);
+ 175   1                              temp=readmonth; forpr=temp; printf("2#%2d",forpr);
+ 176   1                              temp=readday; forpr=temp; printf("3#%2d",forpr);
+ 177   1                              temp=readhour; forpr=temp; printf("4#%2d",forpr);
+ 178   1                              temp=readminute; forpr=temp; printf("5#%2d",forpr);
+ 179   1                              temp=readsecond; forpr=temp; printf("6#%2d",forpr);
+C51 COMPILER V8.09   DS1302                                                                04/29/2010 19:57:04 PAGE 4   
+
+ 180   1      }
+ 181          void ds1302()
+ 182          {  
+ 183   1      //      unsigned char buf[20];
+ 184   1         comm_init();
+ 185   1         SCON=0x52;
+ 186   1              write_clock(0x90,0xab);  //允许涓流冲电
+ 187   1      //      if(readsecond>60)
+ 188   1      //      {
+ 189   1      //              second=12; writesecond;
+ 190   1      //      }
+ 191   1              init_ds1302();
+ 192   1              delay(50);
+ 193   1              while(mode!='#')
+ 194   1              {
+ 195   2                      ds1302commscan();
+ 196   2         }
+ 197   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1004    ----
+   CONSTANT SIZE    =     43    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     13    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

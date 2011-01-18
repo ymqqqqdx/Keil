@@ -1,0 +1,115 @@
+C51 COMPILER V8.09   MAIN                                                                  10/09/2010 15:34:19 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE main.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #include <stdio.h>
+   3          #include <intrins.h>
+   4          #define U8 unsigned char
+   5          #define U16 unsigned int
+   6          sbit AD_CLK=P3^2;
+   7          sbit AD_DAT=P3^3;
+   8          sbit AD_CS=P3^4;
+   9          sbit lcd_cs=P0^3;
+  10          sbit lcd_clk=P1^2;
+  11          sbit lcd_sid=P0^2;
+  12          sbit DA_DAT=P3^5;
+  13          sbit DA_CLK=P3^6;
+  14          sbit DA_CS=P3^7;
+  15          void Write_DA(U16 dat)
+  16          {
+  17   1              U8 i;
+  18   1              DA_CS=0;
+  19   1              dat<<=2;
+  20   1              dat|=0x02;
+  21   1              for(i=0;i<16;i++)
+  22   1              {
+  23   2                      DA_CLK=1;
+  24   2                      dat<<=1;
+  25   2                      DA_DAT=CY;
+  26   2                      DA_CLK=0;
+  27   2              }
+  28   1              DA_CS=1;
+  29   1      }
+  30          U8 Read_ADC()
+  31          {
+  32   1              U8 temp=0,i;
+  33   1              AD_CS=0;
+  34   1              for(i=0;i<8;i++)
+  35   1              {
+  36   2                      temp|=((U8)AD_DAT)<<(7-i);
+  37   2                      AD_CLK=1;
+  38   2                      AD_CLK=0;
+  39   2              }
+  40   1              AD_CS=1;
+  41   1              return temp;
+  42   1      }
+  43          void lcd_writeonechar(U8 dat)
+  44          {
+  45   1              U8 i;
+  46   1              for(i=0;i<8;i++)
+  47   1              {
+  48   2                      dat<<=1;
+  49   2                      lcd_sid=CY;
+  50   2                      lcd_clk=0;
+  51   2                      lcd_clk=1;
+  52   2              }
+  53   1      }
+  54          void lcd_writecd(bit cd,U8 dat)
+  55          {
+C51 COMPILER V8.09   MAIN                                                                  10/09/2010 15:34:19 PAGE 2   
+
+  56   1              lcd_cs=1;
+  57   1              lcd_writeonechar(cd==0?0xf8:0xfa);
+  58   1              lcd_writeonechar(dat&0xf0);
+  59   1              lcd_writeonechar(dat<<4);
+  60   1              lcd_cs=0;
+  61   1      }
+  62          void lcd_string(U8 add,U8 *pt)
+  63          {
+  64   1              lcd_writecd(0,add);
+  65   1              while(*pt!='\0')
+  66   1                      lcd_writecd(1,*pt++);
+  67   1      }
+  68          void main()
+  69          {
+  70   1              U8 voltage,vol_old;
+  71   1              U16 converted;
+  72   1              lcd_writecd(0,0x0c);
+  73   1              lcd_string(0x81,"µ±Ç°µçÑ¹£º");
+  74   1              while(1)
+  75   1              {
+  76   2                      voltage=Read_ADC();
+  77   2                      if(voltage!=vol_old)
+  78   2                      {
+  79   3                              converted=(U16)((float)voltage/255*5*100);
+  80   3                              Write_DA(1024-(U16)((float)voltage/255*1024));
+  81   3                              lcd_writecd(0,0x92);
+  82   3                              lcd_writecd(1,converted/100+'0');
+  83   3                              lcd_writecd(1,'.');
+  84   3                              lcd_writecd(1,converted%100/10+'0');
+  85   3                              lcd_writecd(1,converted%10+'0');
+  86   3                              lcd_writecd(1,'V');
+  87   3                              vol_old=voltage;
+  88   3                      }
+  89   2              }
+  90   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    370    ----
+   CONSTANT SIZE    =     11    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       8
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----       1
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

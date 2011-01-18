@@ -1,0 +1,251 @@
+C51 COMPILER V8.09   MAIN                                                                  10/14/2010 21:22:18 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE main.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #include <stdio.h>
+   3          sbit hd_cs=P0^4;
+   4          sbit hd_clk=P0^5;
+   5          sbit hd_dat=P0^6;
+   6          sbit hd_key=P0^7;
+   7          sbit lcd_cs=P0^3;
+   8          sbit lcd_clk=P1^2;
+   9          sbit lcd_sid=P0^2;
+  10          sbit beep=P2^7;
+  11          U8 stat=0,counter=0;
+  12          U8 password_old[5]={0,1,2,3,4};
+  13          U8 password_new[5]=0;
+  14          void hd_longdelay()
+  15          {
+  16   1              U8 i;
+  17   1              for(i=0;i<50;i++);
+  18   1      }
+  19          
+  20          void hd_shortdelay()
+  21          {
+  22   1              U8 i;
+  23   1              for(i=0;i<8;i++);
+  24   1      }
+  25          void delay_1ms(U16 z)
+  26          {
+  27   1              U8 i;
+  28   1              while(z--)
+  29   1                      for(i=0;i<110;i++);
+  30   1      }
+  31          void hd_writeonechar(U8 dat)
+  32          {
+  33   1              U8 i;
+  34   1              hd_cs=0;
+  35   1              hd_dat=0;
+  36   1              hd_longdelay();
+  37   1              for(i=0;i<8;i++)
+  38   1              {
+  39   2                      dat<<=1;
+  40   2                      hd_dat=CY;
+  41   2                      hd_clk=1; hd_shortdelay();
+  42   2                      hd_clk=0; hd_shortdelay();
+  43   2              }
+  44   1              hd_dat=0;
+  45   1      }
+  46          
+  47          U8 hd_readonechar()
+  48          {
+  49   1              U8 i,temp=0;
+  50   1              hd_dat=1;
+  51   1              hd_longdelay();
+  52   1              for(i=0;i<8;i++)
+  53   1              {
+  54   2                      hd_clk=1; hd_shortdelay();
+  55   2                      temp|=((U8)hd_dat)<<(7-i);
+C51 COMPILER V8.09   MAIN                                                                  10/14/2010 21:22:18 PAGE 2   
+
+  56   2                      hd_clk=0; hd_shortdelay();
+  57   2              }
+  58   1              hd_dat=0;
+  59   1              return temp;
+  60   1      }
+  61          
+  62          void hd_write(U8 add,U8 dat)
+  63          {
+  64   1              hd_writeonechar(add);
+  65   1              hd_writeonechar(dat);
+  66   1      }
+  67          
+  68          U8 hd_read(U8 add)
+  69          {
+  70   1              hd_writeonechar(add);
+  71   1              return(hd_readonechar());
+  72   1      }
+  73          
+  74          U8 hd_keyconvert(U8 dat)
+  75          {
+  76   1              switch(dat)
+  77   1              {
+  78   2                      case 6 : dat=1; break;
+  79   2                      case 5 : dat=2; break;
+  80   2                      case 4 : dat=3; break;
+  81   2                      case 3 : dat=13; break;
+  82   2                      case 14 : dat=4; break;
+  83   2                      case 13 : dat=5; break;
+  84   2                      case 12 : dat=6; break;
+  85   2                      case 11 : dat=14; break;
+  86   2                      case 22 : dat=7; break;
+  87   2                      case 21 : dat=8; break;
+  88   2                      case 20 : dat=9; break;
+  89   2                      case 19 : dat=15; break;
+  90   2                      case 30 : dat=11; break;
+  91   2                      case 29 : dat=0; break;
+  92   2                      case 28 : dat=12; break;
+  93   2                      case 27 : dat=16; break;
+  94   2              }
+  95   1              return dat;
+  96   1      }
+  97          void lcd_writeonechar(U8 dat)
+  98          {
+  99   1              U8 i;
+ 100   1              for(i=0;i<8;i++)
+ 101   1              {
+ 102   2                      dat<<=1;
+ 103   2                      lcd_sid=CY;
+ 104   2                      lcd_clk=0;
+ 105   2                      lcd_clk=1;
+ 106   2              }
+ 107   1      }
+ 108          
+ 109          void lcd_writecd(bit cd,U8 dat)
+ 110          {
+ 111   1              lcd_cs=1;
+ 112   1              lcd_writeonechar(cd==0?0xf8:0xfa);
+ 113   1              lcd_writeonechar(dat&0xf0);
+ 114   1              lcd_writeonechar(dat<<4);
+ 115   1              lcd_cs=0;
+ 116   1      }
+ 117          
+C51 COMPILER V8.09   MAIN                                                                  10/14/2010 21:22:18 PAGE 3   
+
+ 118          void lcd_string(U8 add,U8 *pt)
+ 119          {
+ 120   1              lcd_writecd(0,add);
+ 121   1              while(*pt!='\0')
+ 122   1                      lcd_writecd(1,*pt++);
+ 123   1      }
+ 124          
+ 125          bit password_check()
+ 126          {
+ 127   1              U8 i;
+ 128   1              for(i=0;i<5;i++)
+ 129   1              {
+ 130   2                      if(password_new[i]!=password_old[i])
+ 131   2                              return 0;
+ 132   2              }
+ 133   1              return 1;
+ 134   1      }
+ 135          void error_handle()
+ 136          {
+ 137   1              lcd_writecd(0,0x01);
+ 138   1              delay_1ms(5);
+ 139   1              lcd_string(0x80,"´íÎó£¡");      
+ 140   1      }
+ 141          void start()
+ 142          {
+ 143   1              lcd_writecd(0,0x01);
+ 144   1              delay_1ms(5);
+ 145   1              lcd_string(0x80,"ÇëÊäÈëÃÜÂë£º");
+ 146   1      }
+ 147          void right_handle()
+ 148          {
+ 149   1              lcd_writecd(0,0x01);
+ 150   1              delay_1ms(5);
+ 151   1              lcd_string(0x80,"welcome!");
+ 152   1      }
+ 153          void keyprocess(U8 key)
+ 154          {
+ 155   1              U8 i;
+ 156   1              if(key>=0&&key<10)
+ 157   1              {
+ 158   2                      if(counter<5)
+ 159   2                      {
+ 160   3                              password_new[counter]=key;
+ 161   3                              counter++;
+ 162   3                      }
+ 163   2                      lcd_writecd(0,0x90);
+ 164   2                      for(i=0;i<counter;i++)
+ 165   2                              lcd_writecd(1,'*');
+ 166   2                      if(counter==5)
+ 167   2                              counter=0;
+ 168   2              }
+ 169   1              else if(key==16)
+ 170   1              {
+ 171   2                      if(stat==0)
+ 172   2                      {
+ 173   3                              if(password_check())
+ 174   3                              {
+ 175   4                                      right_handle();
+ 176   4                                      stat=1;
+ 177   4                              }
+ 178   3                              else
+ 179   3                              {
+C51 COMPILER V8.09   MAIN                                                                  10/14/2010 21:22:18 PAGE 4   
+
+ 180   4                                      error_handle();
+ 181   4                                      counter=0;
+ 182   4                                      beep=0;
+ 183   4                                      delay_1ms(1000);
+ 184   4                                      beep=1;
+ 185   4                                      start();
+ 186   4                                      stat=0;
+ 187   4                              }
+ 188   3                      }
+ 189   2                      else
+ 190   2                      {
+ 191   3                              for(i=0;i<5;i++)
+ 192   3                                      password_old[i]=password_new[i];
+ 193   3                              lcd_writecd(0,0x01);
+ 194   3                              delay_1ms(5);
+ 195   3                              lcd_string(0x80,"ÃÜÂëÐÞ¸Ä³É¹¦£¡");
+ 196   3                              delay_1ms(1000);
+ 197   3                              start();
+ 198   3                              stat=0;
+ 199   3                      }
+ 200   2              }
+ 201   1              else if(key==15&&stat==1)
+ 202   1              {
+ 203   2                      lcd_writecd(0,0x01);
+ 204   2                      delay_1ms(5);
+ 205   2                      lcd_string(0x80,"ÊäÈëÐÂÃÜÂë");
+ 206   2              }
+ 207   1              
+ 208   1      }
+ 209          void main()
+ 210          {
+ 211   1              hd_writeonechar(0xa4);
+ 212   1              lcd_writecd(0,0x0c);
+ 213   1              start();
+ 214   1              while(1)
+ 215   1              {
+ 216   2                      if(!hd_key)
+ 217   2                      {
+ 218   3                              keyprocess(hd_keyconvert(hd_read(0x15)));
+ 219   3                      }while(!hd_key);
+ 220   2                      delay_1ms(5);
+ 221   2              }
+ 222   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    660    ----
+   CONSTANT SIZE    =     55    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     12       5
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----       1
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

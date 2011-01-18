@@ -1,0 +1,135 @@
+C51 COMPILER V6.12  7219                                                                   04/12/2010 16:38:38 PAGE 1   
+
+
+C51 COMPILER V6.12, COMPILATION OF MODULE 7219
+OBJECT MODULE PLACED IN .\7219.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE .\7219.c DEBUG OBJECTEXTEND
+
+stmt level    source
+
+   1          #include <reg52.h>
+   2          #define decode_mode 0X09 //解码模式，0xff全部解码，0x0f解前四个
+   3          #define intensity 0x0a
+   4          #define scan_limit 0x0b//扫描限度，0x00-0x07
+   5          #define shut_down 0x0c//关闭模式，0x00为关机,0x01为正常
+   6          #define display_test 0x0f//显示模式
+   7          
+   8          sbit load=P2^1;//第1-3片
+   9          sbit din=P2^0;//data in
+  10          sbit clk=P2^2;//clock
+  11          
+  12          sbit load1=P2^5;//第4-6片
+  13          sbit din1=P2^4;
+  14          sbit clk1=P2^6;
+  15          
+  16          sbit load2=P1^3;//第7片
+  17          sbit din2=P1^2;
+  18          sbit clk2=P1^4;
+  19          void write7219onechar0(unsigned char temp)
+  20          {
+  21   1      	unsigned char i;
+  22   1      	for(i=0;i<8;i++)
+  23   1      	{
+  24   2      		clk=0;
+  25   2      		din=(bit)(temp&0x80);
+  26   2      		temp<<=1;
+  27   2      		clk=1;
+  28   2      	}
+  29   1      }
+  30          
+  31          void write7219onechar1(unsigned char temp)
+  32          {
+  33   1      	unsigned char i;
+  34   1      	for(i=0;i<8;i++)
+  35   1      	{
+  36   2      		clk1=0;
+  37   2      		din1=(bit)(temp&0x80);
+  38   2      		temp<<=1;
+  39   2      		clk1=1;
+  40   2      	}
+  41   1      }
+  42          
+  43          void write7219onechar2(unsigned char temp)
+  44          {
+  45   1      	unsigned char i;
+  46   1      	for(i=0;i<8;i++)
+  47   1      	{
+  48   2      		clk2=0;
+  49   2      		din2=(bit)(temp&0x80);
+  50   2      		temp<<=1;
+  51   2      		clk2=1;
+  52   2      	}
+  53   1      }
+  54          
+  55          void write7219one(unsigned char address1,unsigned char dat1,unsigned char address2,unsigned char dat2,unsi
+C51 COMPILER V6.12  7219                                                                   04/12/2010 16:38:38 PAGE 2   
+
+             -gned char address3,unsigned char dat3)
+  56          {
+  57   1      	load=0;
+  58   1      	write7219onechar0(address1);
+  59   1      	write7219onechar0(dat1);
+  60   1      	write7219onechar0(address2);
+  61   1      	write7219onechar0(dat2);
+  62   1      	write7219onechar0(address3);
+  63   1      	write7219onechar0(dat3);
+  64   1      	load=1;
+  65   1      }
+  66          
+  67          void write7219two(unsigned char address1,unsigned char dat1,unsigned char address2,unsigned char dat2,unsi
+             -gned char address3,unsigned char dat3)
+  68          {
+  69   1      	load1=0;
+  70   1      	write7219onechar1(address1);
+  71   1      	write7219onechar1(dat1);
+  72   1      	write7219onechar1(address2);
+  73   1      	write7219onechar1(dat2);
+  74   1      	write7219onechar1(address3);
+  75   1      	write7219onechar1(dat3);
+  76   1      	load1=1;
+  77   1      }
+  78          
+  79          void write7219three(unsigned char address,unsigned char dat)
+  80          {
+  81   1      	load2=0;
+  82   1      	write7219onechar2(address);
+  83   1      	write7219onechar2(dat);
+  84   1      	load2=1;
+  85   1      }
+  86          
+  87          void init7219()
+  88          {
+  89   1      	write7219one(shut_down,0x01,shut_down,0x01,shut_down,0x01);
+  90   1      	write7219one(display_test,0x00,display_test,0x00,display_test,0x00);
+  91   1      	write7219one(decode_mode,0x00,decode_mode,0x00,decode_mode,0x00);
+  92   1      	write7219one(scan_limit,0x07,scan_limit,0x07,scan_limit,0x07);
+  93   1      	write7219one(intensity,0x04,intensity,0x04,intensity,0x04);
+  94   1      
+  95   1      	write7219two(shut_down,0x01,shut_down,0x01,shut_down,0x01);
+  96   1      	write7219two(display_test,0x00,display_test,0x00,display_test,0x00);
+  97   1      	write7219two(decode_mode,0x00,decode_mode,0x00,decode_mode,0x00);
+  98   1      	write7219two(scan_limit,0x07,scan_limit,0x07,scan_limit,0x07);
+  99   1      	write7219two(intensity,0x04,intensity,0x04,intensity,0x04);
+ 100   1      
+ 101   1      	write7219three(shut_down,0x01);
+ 102   1      	write7219three(display_test,0x00);
+ 103   1      	write7219three(decode_mode,0xff);
+ 104   1      	write7219three(scan_limit,0x07);
+ 105   1      	write7219three(intensity,0x04);
+ 106   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    343    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----      12
+   IDATA SIZE       =   ----    ----
+C51 COMPILER V6.12  7219                                                                   04/12/2010 16:38:38 PAGE 3   
+
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

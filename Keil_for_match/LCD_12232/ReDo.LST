@@ -1,0 +1,80 @@
+C51 COMPILER V8.09   REDO                                                                  10/12/2010 13:58:42 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE REDO
+OBJECT MODULE PLACED IN ReDo.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE ReDo.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #include <stdio.h>
+   3          #define U8 unsigned char
+   4          #define U16 unsigned int
+   5          #define CMD 0
+   6          #define DATA 1
+   7          sbit lcd_cs=P0^3;
+   8          sbit lcd_clk=P1^2;
+   9          sbit lcd_sid=P0^2;
+  10          void delay_1ms(int z)
+  11          {
+  12   1              U8 i;
+  13   1              while(z--)
+  14   1                      for(i=0;i<110;i++);     
+  15   1      }
+  16          void lcd_writeonechar(U8 dat)
+  17          {
+  18   1              U8 i;
+  19   1              for(i=0;i<8;i++)
+  20   1              {
+  21   2                      dat<<=1;
+  22   2                      lcd_sid=CY;
+  23   2                      lcd_clk=0;
+  24   2                      lcd_clk=1;
+  25   2              }
+  26   1      }
+  27          
+  28          void lcd_writecd(bit cd,U8 dat)
+  29          {
+  30   1              lcd_cs=1;
+  31   1              lcd_writeonechar(cd==0?0xf8:0xfa);
+  32   1              lcd_writeonechar(dat&0xf0);
+  33   1              lcd_writeonechar(dat<<4);
+  34   1              lcd_cs=0;
+  35   1      }
+  36          
+  37          void lcd_string(U8 add,U8 *pt)
+  38          {
+  39   1              lcd_writecd(0,add);
+  40   1              while(*pt!='\0')
+  41   1                      lcd_writecd(1,*pt++);
+  42   1      }
+  43          void main()
+  44          {
+  45   1              U8 i;
+  46   1              lcd_writecd(CMD,0x0c);
+  47   1              lcd_string(0x87,"Welcome");
+  48   1              lcd_string(0x97,"Good Luck!");
+  49   1              while(1)
+  50   1              {
+  51   2                      lcd_writecd(CMD,0x18);
+  52   2                      delay_1ms(1000);
+  53   2              }
+  54   1      }
+*** WARNING C280 IN LINE 45 OF REDO.C: 'i': unreferenced local variable
+C51 COMPILER V8.09   REDO                                                                  10/12/2010 13:58:42 PAGE 2   
+
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    166    ----
+   CONSTANT SIZE    =     19    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       5
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----       1
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,87 @@
+C51 COMPILER V8.09   MAIN                                                                  07/07/2010 20:32:11 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE main.c DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #include "declare.h"
+   3          //#include <ds1302.h>
+   4          sbit key=P1^7;
+   5          unsigned char code table1[]="ƒÍ‘¬»’:";
+   6          unsigned char secondold;
+   7          void delay(int);
+   8          void init_12232();
+   9          void write_com(unsigned char);
+  10          void write_data(unsigned char);
+  11          void displaytwo(unsigned char,unsigned char);
+  12          void init_ds1302();
+  13          unsigned char read_clock(unsigned char);
+  14          unsigned char year,month,day,hour,minute,second;
+  15          void gettime()
+  16          {
+  17   1                      displaytwo(0,readyear);
+  18   1                      delay(5);
+  19   1                      displaytwo(2,readmonth);
+  20   1                      delay(5);
+  21   1                      displaytwo(4,readday);
+  22   1                      delay(5);
+  23   1                      displaytwo(11,readhour);
+  24   1                      delay(5);
+  25   1                      displaytwo(13,readminute);
+  26   1                      delay(5);
+  27   1                      displaytwo(15,readsecond);
+  28   1                      delay(5);       
+  29   1      }
+  30          void main()
+  31          {
+  32   1              init_ds1302();
+  33   1              init_12232();
+  34   1              write_com(0x81);
+  35   1              write_data(table1[0]);
+  36   1              write_data(table1[1]);
+  37   1              write_com(0x83);
+  38   1              write_data(table1[2]);
+  39   1              write_data(table1[3]);
+  40   1              write_com(0x85);
+  41   1              write_data(table1[4]);
+  42   1              write_data(table1[5]);
+  43   1              write_com(0x92);
+  44   1              write_data(table1[6]);
+  45   1              write_com(0x94);
+  46   1              write_data(table1[6]);
+  47   1              gettime();
+  48   1              secondold=readsecond; 
+  49   1              while(1)
+  50   1              {
+  51   2                      second=readsecond;
+  52   2                      delay(100);
+  53   2                      if(second!=secondold&&second<60) 
+  54   2                      {
+  55   3                              displaytwo(15,second); secondold=second;
+C51 COMPILER V8.09   MAIN                                                                  07/07/2010 20:32:11 PAGE 2   
+
+  56   3                              if(second==0)
+  57   3                              {
+  58   4                                      gettime();
+  59   4                              }
+  60   3                      }         
+  61   2              }
+  62   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    273    ----
+   CONSTANT SIZE    =      8    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      7    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

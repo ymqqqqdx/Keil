@@ -1,0 +1,4 @@
+"STARTUP.obj",
+"main.obj" 
+TO "DA_TLC5415" 
+RAMSIZE(256) 

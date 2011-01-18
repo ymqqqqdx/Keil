@@ -1,0 +1,122 @@
+C51 COMPILER V8.09   REDO                                                                  10/09/2010 15:47:01 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE REDO
+OBJECT MODULE PLACED IN ReDo.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE ReDo.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #define U8 unsigned char
+   3          #define U16 unsigned int
+   4          #define CMD 0
+   5          #define DATA 1
+   6          sbit ad_clk=P3^2;
+   7          sbit ad_dat=P3^3;
+   8          sbit ad_cs=P3^4;
+   9          
+  10          sbit da_dat=P3^5;
+  11          sbit da_clk=P3^6;
+  12          sbit da_cs=P3^7;
+  13          
+  14          sbit lcd_cs=P0^3;
+  15          sbit lcd_clk=P1^2;
+  16          sbit lcd_dat=P0^2;
+  17          
+  18          void da_write(U16 dat)
+  19          {
+  20   1              U8 i;
+  21   1              dat<<=1;
+  22   1              dat|=0x02;
+  23   1              da_cs=0;
+  24   1              for(i=0;i<16;i++)
+  25   1              {
+  26   2                      dat<<=1;
+  27   2                      da_dat=CY;
+  28   2                      da_clk=1;
+  29   2                      da_clk=0;
+  30   2              }
+  31   1              da_cs=1;
+  32   1      }
+  33          
+  34          U8 ad_read()
+  35          {
+  36   1              U8 i,temp;
+  37   1              ad_cs=0;
+  38   1              for(i=0;i<8;i++)
+  39   1              {
+  40   2                      ad_clk=1;
+  41   2                      temp|=((U8)ad_dat)<<(7-i);
+  42   2                      ad_clk=0;
+  43   2              }
+  44   1              ad_cs=1;
+  45   1              return temp;
+  46   1      }
+  47          
+  48          void lcd_writeonechar(U8 dat)
+  49          {
+  50   1              U8 i;
+  51   1              for(i=0;i<8;i++)
+  52   1              {
+  53   2                      dat<<=1;
+  54   2                      lcd_dat=CY;
+  55   2                      lcd_clk=0;
+C51 COMPILER V8.09   REDO                                                                  10/09/2010 15:47:01 PAGE 2   
+
+  56   2                      lcd_clk=1;
+  57   2              }
+  58   1      }
+  59          
+  60          void lcd_writecd(bit cd,U8 dat)
+  61          {
+  62   1              lcd_cs=1;
+  63   1              lcd_writeonechar(cd==0?0xf8:0xfa);
+  64   1              lcd_writeonechar(dat&0xf0);
+  65   1              lcd_writeonechar(dat<<4);
+  66   1              lcd_cs=0;
+  67   1      }
+  68          
+  69          void lcd_string(U8 add,U8 *pt)
+  70          {
+  71   1              lcd_writecd(0,add);
+  72   1              while(*pt!='\0')
+  73   1                      lcd_writecd(1,*pt++);
+  74   1      }
+  75          
+  76          void main()
+  77          {
+  78   1              U8 ad_data,ad_data_old;
+  79   1              U16 ad_vol;
+  80   1              lcd_writecd(0,0x0c);
+  81   1              lcd_string(0x82,"µ±Ç°µçÑ¹£º");
+  82   1              while(1)
+  83   1              {
+  84   2                      da_write(600);
+  85   2                      ad_data=ad_read();
+  86   2                      if(ad_data!=ad_data_old)
+  87   2                      {
+  88   3                              ad_vol=(U16)((float)ad_data)/255*5*100;
+  89   3                              lcd_writecd(0,0x92);
+  90   3                              lcd_writecd(1,ad_vol/100+'0');
+  91   3                              lcd_writecd(1,'.');
+  92   3                              lcd_writecd(1,ad_vol%100/10+'0');
+  93   3                              lcd_writecd(1,ad_vol%10+'0');
+  94   3                              ad_data_old=ad_data;
+  95   3                      }
+  96   2              }
+  97   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    317    ----
+   CONSTANT SIZE    =     11    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       6
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----       1
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

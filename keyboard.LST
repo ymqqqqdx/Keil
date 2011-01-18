@@ -1,0 +1,172 @@
+C51 COMPILER V6.12  KEYBOARD                                                               02/07/2010 21:05:57 PAGE 1   
+
+
+C51 COMPILER V6.12, COMPILATION OF MODULE KEYBOARD
+OBJECT MODULE PLACED IN .\keyboard.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE .\keyboard.c DEBUG OBJECTEXTEND
+
+stmt level    source
+
+   1          #include <reg52.h>
+   2          unsigned char code table[]={0x3f,0x06,0x5b,0x4f,
+   3          0x66,0x6d,0x7d,0x07,
+   4          0x7f,0x6f,0x77,0x7c,
+   5          0x39,0x5e,0x79,0x71};
+   6          unsigned char k,temp;
+   7          void delay(int z)
+   8          {
+   9   1      	int i,j;
+  10   1              for(i=z;i>0;i--)
+  11   1               for(j=110;j>0;j--);
+  12   1      }
+  13          void display(unsigned char dd)
+  14          {
+  15   1      	P2=0x08;
+  16   1      	P0=table[dd/10];
+  17   1      	delay(3);
+  18   1      	P2=0x04;
+  19   1      	P0=table[dd%10];
+  20   1      	delay(3);
+  21   1      }
+  22          void keyscan()
+  23          {
+  24   1      	P1=0xfe;
+  25   1      	temp=P1;
+  26   1      	temp=temp&0xf0;
+  27   1      	while(temp!=0xf0)
+  28   1      	{
+  29   2      		delay(5);
+  30   2      		temp=P1;
+  31   2      		temp=temp&0xf0;
+  32   2      		while(temp!=0xf0)
+  33   2      		{
+  34   3      			switch(temp)
+  35   3      			{
+  36   4      				case 0x70:k=0;
+  37   4      				     break;
+  38   4      				case 0xb0:k=1;
+  39   4      				     break;
+  40   4      				case 0xd0:k=2;
+  41   4      				     break;
+  42   4      				case 0xe0:k=3;
+  43   4      				     break;
+  44   4      			}	       
+  45   3      			P0=table[k];
+  46   3      			temp=P1;
+  47   3      			temp=temp&0xf0;
+  48   3      		}
+  49   2      	}
+  50   1         P1=0xfd;
+  51   1      	temp=P1;
+  52   1      	temp=temp&0xf0;
+  53   1      	while(temp!=0xf0)
+  54   1      	{
+  55   2      		delay(5);
+C51 COMPILER V6.12  KEYBOARD                                                               02/07/2010 21:05:57 PAGE 2   
+
+  56   2      		temp=P3;
+  57   2      		temp=temp&0xf0;
+  58   2      		while(temp!=0xf0)
+  59   2      		{
+  60   3      			switch(temp)
+  61   3      			{
+  62   4      				case 0x70:k=4;
+  63   4      				     break;
+  64   4      				case 0xb0:k=5;
+  65   4      				     break;
+  66   4      				case 0xd0:k=6;
+  67   4      				     break;
+  68   4      				case 0xe0:k=7;
+  69   4      				     break;
+  70   4      			}
+  71   3      			P0=table[k];
+  72   3      			temp=P1;
+  73   3      			temp=temp&0xf0;
+  74   3      		}
+  75   2      	}
+  76   1         P1=0xf7;
+  77   1      	temp=P1;
+  78   1      	temp=temp&0xf0;
+  79   1      	delay(5);
+  80   1      	while(temp!=0xf0)
+  81   1      	{
+  82   2      		delay(5);
+  83   2      		temp=P1;
+  84   2      		temp=temp&0xf0;
+  85   2      		while(temp!=0xf0)
+  86   2      		{
+  87   3      			switch(temp)
+  88   3      			{
+  89   4      				case 0x70:k=12;
+  90   4      				     break;
+  91   4      				case 0xb0:k=13;
+  92   4      				     break;
+  93   4      				case 0xd0:k=14;
+  94   4      				     break;
+  95   4      
+  96   4      				case 0xe0:k=15;
+  97   4      				     break;
+  98   4      			}
+  99   3      		
+ 100   3      			P0=table[k];
+ 101   3      		
+ 102   3      			temp=P1;
+ 103   3      			temp=temp&0xf0;
+ 104   3      		}
+ 105   2      	}
+ 106   1      	P1=0xfb;
+ 107   1      	temp=P1;
+ 108   1      	temp=temp&0xf0;
+ 109   1      	while(temp!=0xf0)
+ 110   1      	{
+ 111   2      		delay(5);
+ 112   2      		temp=P1;
+ 113   2      		temp=temp&0xf0;
+ 114   2      		while(temp!=0xf0)
+ 115   2      		{
+ 116   3      			switch(temp)
+ 117   3      			{
+C51 COMPILER V6.12  KEYBOARD                                                               02/07/2010 21:05:57 PAGE 3   
+
+ 118   4      				case 0x70:k=8;
+ 119   4                           break;
+ 120   4      				case 0xb0:k=9;
+ 121   4      				     break;
+ 122   4      				case 0xd0:k=10;
+ 123   4      				     break;
+ 124   4      
+ 125   4      				case 0xe0:k=11;
+ 126   4      				     break;
+ 127   4      
+ 128   4      			}
+ 129   3      		
+ 130   3                
+ 131   3      			P0=table[k];
+ 132   3      	
+ 133   3      			temp=P1;
+ 134   3      			temp=temp&0xf0;
+ 135   3      		}
+ 136   2      	}
+ 137   1      }
+ 138          void main()
+ 139          {
+ 140   1      	while(1)
+ 141   1      	{
+ 142   2      		keyscan();
+ 143   2      //		display(key);
+ 144   2      	}
+ 145   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    416    ----
+   CONSTANT SIZE    =     16    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      2    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

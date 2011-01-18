@@ -1,0 +1,134 @@
+C51 COMPILER V8.09   RE                                                                    11/24/2010 00:23:59 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE RE
+OBJECT MODULE PLACED IN Re.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Re.c COMPACT BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #include <stdio.h>
+   3          
+   4          sbit DQ=P3^7;
+   5          
+   6          void delayus(U16 z)
+   7          {
+   8   1              U8 i;
+   9   1              while(z--)
+  10   1                      for(i=0;i<24;i++);
+  11   1      }
+  12          
+  13          void delay_1ms(U16 z)
+  14          {
+  15   1              U8 i;
+  16   1              while(z--)
+  17   1                      for(i=0;i<110;i++);
+  18   1      }
+  19          
+  20          bit temp_init()
+  21          {
+  22   1              bit s;
+  23   1              DQ=1;
+  24   1              delayus(8);
+  25   1              DQ=0;
+  26   1              delayus(80);
+  27   1              DQ=1;
+  28   1              delayus(14);
+  29   1              s=DQ;
+  30   1              delayus(20);
+  31   1              return s;
+  32   1      }
+  33          
+  34          void temp_writeonechar(U8 dat)
+  35          {
+  36   1              U8 i;
+  37   1              for(i=0;i<8;i++)
+  38   1              {
+  39   2                      dat>>=1;
+  40   2                      DQ=0;
+  41   2                      DQ=CY;
+  42   2                      delayus(5);
+  43   2                      DQ=1;
+  44   2              }
+  45   1              delayus(7);
+  46   1      }
+  47          
+  48          U8 temp_readonechar()
+  49          {
+  50   1              U8 i,temp=0;
+  51   1              for(i=0;i<8;i++)
+  52   1              {
+  53   2                      DQ=0;
+  54   2                      DQ=1;
+  55   2                      temp|=((U8)DQ)<<i;
+C51 COMPILER V8.09   RE                                                                    11/24/2010 00:23:59 PAGE 2   
+
+  56   2                      delayus(4);
+  57   2              }
+  58   1              return temp;
+  59   1      }
+  60          
+  61          U16 temp_read()
+  62          {
+  63   1              U8 low,high;
+  64   1              U16 t;
+  65   1              float tt;
+  66   1              temp_init();
+  67   1              temp_writeonechar(0xcc);
+  68   1              temp_writeonechar(0x44);
+  69   1              temp_init();
+  70   1              temp_writeonechar(0xcc);
+  71   1              temp_writeonechar(0xbe);
+  72   1              low=temp_readonechar();
+  73   1              high=temp_readonechar();
+  74   1              t=high;
+  75   1              t<<=8;
+  76   1              t|=low;
+  77   1              tt=t*0.0625;
+  78   1              t=tt*10+0.5;
+  79   1              return t;
+  80   1      }
+  81          
+  82          void uart_init()
+  83          {
+  84   1              TMOD=0x21;
+  85   1              SCON=0x52;
+  86   1              TH1=0xfa;
+  87   1              TL1=0xfa;
+  88   1              TR1=1;
+  89   1              EA=1;
+  90   1      }
+  91          
+  92          void main()
+  93          {
+  94   1              U16 temp,temp_old;
+  95   1              uart_init();
+  96   1              puts("Tempreture");
+  97   1              while(1)
+  98   1              {
+  99   2                      temp=temp_read();
+ 100   2      //              if(temp!=temp_old)
+ 101   2      //              {
+ 102   2                              printf("Tempreture: %.1f  C\n",(float)temp/10);
+ 103   2                              temp_old=temp;
+ 104   2      //              }
+ 105   2                      delay_1ms(30000);
+ 106   2              }
+ 107   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    347    ----
+   CONSTANT SIZE    =     32    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----       8
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----       1
+C51 COMPILER V8.09   RE                                                                    11/24/2010 00:23:59 PAGE 3   
+
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

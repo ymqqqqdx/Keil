@@ -1,0 +1,23 @@
+C51 COMPILER V6.12  24C02                                                                  01/03/2010 00:00:18 PAGE 1   
+
+
+C51 COMPILER V6.12, COMPILATION OF MODULE 24C02
+OBJECT MODULE PLACED IN .\24c02.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE .\24c02.c DEBUG OBJECTEXTEND
+
+stmt level    source
+
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   ----    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

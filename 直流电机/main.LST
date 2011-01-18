@@ -1,0 +1,104 @@
+C51 COMPILER V8.09   MAIN                                                                  07/04/2010 20:18:43 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE main.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          sbit a=P3^0;
+   3          sbit key1=P1^0;
+   4          sbit key2=P1^1;
+   5          sbit key3=P1^2;
+   6          unsigned char high=1,low=5;
+   7          unsigned time=0,mode=1;
+   8          unsigned char code table[]={0x3f,0x06,0x5b,0x4f,
+   9          0x66,0x6d,0x7d,0x07,0x7f,0x6f};
+  10          void delay(int z)
+  11          {
+  12   1              unsigned int i,j;
+  13   1              for(i=0;i<z;i++)
+  14   1                      for(j=0;j<110;j++);
+  15   1      }
+  16          void display()
+  17          {
+  18   1              P2=0xef;
+  19   1              P0=table[mode];
+  20   1              delay(5);
+  21   1              
+  22   1              P2=0xdf;
+  23   1              if(time/100)
+  24   1                      P0=table[time/100];
+  25   1              else
+  26   1                      P0=0x00;
+  27   1              delay(5);
+  28   1              
+  29   1              P2=0xbf;
+  30   1              P0=table[time%100/10];
+  31   1              delay(5);
+  32   1              
+  33   1              P2=0x7f;
+  34   1              P0=table[time%10];
+  35   1              delay(5);
+  36   1      }
+  37          void PWM(unsigned char h,unsigned char l)
+  38          {
+  39   1              unsigned char i;
+  40   1              for(i=0;i<h;i++)
+  41   1              {
+  42   2                      a=0; display();
+  43   2              }
+  44   1              for(i=0;i<l;i++)
+  45   1              {
+  46   2                      a=1; display();
+  47   2              }
+  48   1      }
+  49          void drive(unsigned char dat)
+  50          {
+  51   1              switch(dat)
+  52   1              {
+  53   2                      case 1: PWM(1,3); break;
+  54   2                      case 2: PWM(3,1); break;
+  55   2                      case 3: PWM(1,5); break;
+C51 COMPILER V8.09   MAIN                                                                  07/04/2010 20:18:43 PAGE 2   
+
+  56   2              }
+  57   1      }
+  58          void keyscan()
+  59          {
+  60   1              if(key1==0)
+  61   1              {
+  62   2                      delay(5);
+  63   2                      if(key1==0)
+  64   2                      {
+  65   3                              mode++;
+  66   3                              if(mode==4)
+  67   3                                      mode=1;
+  68   3                      }
+  69   2                      while(key1==0) display();
+  70   2              }
+  71   1      }
+  72          void main()
+  73          {
+  74   1              while(1)
+  75   1              {
+  76   2                      keyscan();
+  77   2                      drive(mode);
+  78   2              }
+  79   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    280    ----
+   CONSTANT SIZE    =     10    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      6       2
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

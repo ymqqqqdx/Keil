@@ -1,0 +1,127 @@
+C51 COMPILER V6.12  12232                                                                  04/20/2010 21:33:12 PAGE 1   
+
+
+C51 COMPILER V6.12, COMPILATION OF MODULE 12232
+OBJECT MODULE PLACED IN .\12232.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE .\12232.c DEBUG OBJECTEXTEND
+
+stmt level    source
+
+   1          #include <reg52.h>
+   2          #include "declare.h"
+   3          #include <stdio.h>
+   4          #include <string.h>
+   5          unsigned char code table5[]="0123456789";
+   6          sbit ln=P2^7;
+   7          sbit ls=P2^5;
+   8          sbit rw=P2^6;
+   9          void delay(int);
+  10          void write_com(unsigned char com)
+  11          {
+  12   1      	rw=0;
+  13   1      	delay(1);
+  14   1      	ls=0;
+  15   1      	delay(1);
+  16   1          P0=com;
+  17   1          delay(1);
+  18   1          ln=1;
+  19   1          delay(1);
+  20   1          ln=0;
+  21   1      	 delay(1);
+  22   1      	 rw=1;
+  23   1      	 delay(1);
+  24   1      }
+  25          void write_data(unsigned char date)
+  26          {
+  27   1      	rw=0;
+  28   1      	delay(1);
+  29   1      	ls=1;
+  30   1      	delay(1);
+  31   1          P0=date;
+  32   1          delay(1);
+  33   1          ln=1;
+  34   1          delay(1);
+  35   1          ln=0;
+  36   1      	 delay(1);
+  37   1      	 rw=1;
+  38   1      	 delay(1);
+  39   1      }
+  40          void init_12232()
+  41          {
+  42   1      	 rw=0;
+  43   1          ln=0;
+  44   1          write_com(0x30);
+  45   1          write_com(0x02);
+  46   1          write_com(0x0f);
+  47   1      	 write_com(0x01);	
+  48   1      	 write_com(0x0c);
+  49   1      	 delay(50);
+  50   1      }
+  51          void displaytwo(unsigned char add,unsigned char date)
+  52          {
+  53   1      	unsigned char shi,ge;
+  54   1      	shi=date/10;
+  55   1      	ge=date%10;
+C51 COMPILER V6.12  12232                                                                  04/20/2010 21:33:12 PAGE 2   
+
+  56   1      	if(add<10)
+  57   1      	write_com(0x80+add);
+  58   1      	else if(add>=10)
+  59   1      	write_com(0x90+add-10);
+  60   1      	write_data(table5[shi]);
+  61   1      	delay(5);
+  62   1      	write_data(table5[ge]);
+  63   1      	delay(5);
+  64   1      }
+  65          displaytemp(int temp)
+  66          {
+  67   1      	unsigned char sym,shi,ge,one;
+  68   1      	if(temp>=0)
+  69   1      	{
+  70   2      		sym=0;
+  71   2      	}
+  72   1      	if(temp<0)
+  73   1      	{
+  74   2      		sym=1;
+  75   2      		temp=-temp;
+  76   2      	}
+  77   1      	shi=temp/100;
+  78   1      	ge=temp%100/10;
+  79   1      	one=temp%10;
+  80   1      	write_com(0x90);
+  81   1      	if(sym==1)		write_data('-');
+  82   1      	else	write_data(' ');
+  83   1      	write_data(table5[shi]);
+  84   1      	write_data(table5[ge]);
+  85   1      	write_data('.');
+  86   1      	write_data(table5[one]);
+  87   1      }
+  88          void displayfrequency(unsigned int value)
+  89          {
+  90   1      	unsigned char buf[7];
+  91   1      	sprintf(buf,"%u\0",value);
+  92   1      	write_com(0x91);
+  93   1      	for(i=0;i<6;i++)
+  94   1      	{
+  95   2      		write_data(' ');
+  96   2      	}
+  97   1      	write_com(0x91);
+  98   1      	for(i=0;i<strlen(buf);i++)
+  99   1      	{
+ 100   2      		write_data(buf[i]);
+ 101   2      	}
+ 102   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    453    ----
+   CONSTANT SIZE    =     15    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----      16
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

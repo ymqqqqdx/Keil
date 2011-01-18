@@ -1,0 +1,92 @@
+C51 COMPILER V8.09   MAIN                                                                  06/28/2010 16:48:58 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE main.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #define uchar unsigned char
+   3          #define uint unsigned int
+   4          #define chipselect() cs=0
+   5          #define chipdeselect() cs=1
+   6          sbit cs=P1^0;
+   7          sbit din=P1^1;
+   8          sbit dout=P1^2;
+   9          sbit clk=P1^3;
+  10          void delay()
+  11          {
+  12   1              uchar i;
+  13   1              for(i=0;i<1;i++);
+  14   1      }
+  15          void writeonebit(bit buff)
+  16          {
+  17   1              clk=0;
+  18   1              delay();
+  19   1              if(buff) din=1;
+  20   1              else    din=0;
+  21   1              delay();
+  22   1              clk=1;
+  23   1              delay();
+  24   1      }
+  25          void writeonebyte(uchar dat)
+  26          {
+  27   1              uchar i;
+  28   1              bit t;
+  29   1              for(i=0;i<8;i++)
+  30   1              {
+  31   2                      t=dat&0x80;
+  32   2                      writeonebit(t);
+  33   2                      dat<<=1;
+  34   2              }
+  35   1      }
+  36          void busclock()
+  37          {
+  38   1              clk=0;
+  39   1              delay();
+  40   1              clk=1;
+  41   1              delay();
+  42   1      }
+  43          void init()
+  44          {
+  45   1              uint i=100;
+  46   1              din=1;
+  47   1              while(i--)
+  48   1                      busclock();
+  49   1              chipselect();
+  50   1              writeonebyte(0x40);
+  51   1              for(i=0;i<33;i++)
+  52   1                      writeonebit(0);
+  53   1              writeonebyte(0x95);
+  54   1              din=1;
+  55   1              for(i=0;i<33;i++)
+C51 COMPILER V8.09   MAIN                                                                  06/28/2010 16:48:58 PAGE 2   
+
+  56   1                      busclock();
+  57   1              chipdeselect();
+  58   1      }
+  59          void main()
+  60          {
+  61   1              uint i;
+  62   1              init();
+  63   1      //      for(i=0;i<1233;i++)
+  64   1      //              writeonebyte(i%256);
+  65   1              while(1);
+  66   1      }
+*** WARNING C280 IN LINE 61 OF MAIN.C: 'i': unreferenced local variable
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    142    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       2
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----       2
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)

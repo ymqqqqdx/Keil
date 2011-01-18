@@ -1,0 +1,69 @@
+C51 COMPILER V6.12  SERIALS                                                                03/11/2010 19:52:15 PAGE 1   
+
+
+C51 COMPILER V6.12, COMPILATION OF MODULE SERIALS
+OBJECT MODULE PLACED IN .\serials.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE .\serials.c DEBUG OBJECTEXTEND
+
+stmt level    source
+
+   1          #include <reg52.h>
+   2          //#include <AT89X52.H>
+   3          #include <mscomm.h>
+   4          sbit k1=P1^4;
+   5          sbit k2=P1^5;
+   6          sbit k3=P1^6;
+   7          sbit k4=P1^7;
+   8          void main()
+   9          {
+  10   1      	init_comm();
+  11   1      	while(1)
+  12   1      	{
+  13   2      	if(flag_comm==1)
+  14   2      //		{
+  15   2      			ES=0;
+  16   2      		
+  17   2      			if(k1==0)
+  18   2      			{ 
+  19   3      			   P2=0x02;
+  20   3      				P0=0x01;
+  21   3      				SBUF='1';while(!TI);TI=0;
+  22   3      				while(k1==0);
+  23   3      			}
+  24   2      		/*	if(k2==0)
+  25   2      			{
+  26   2      				SBUF='2';while(!TI);TI=0;
+  27   2      			}
+  28   2      			if(k3==0)
+  29   2      			{
+  30   2      				SBUF='3';while(!TI);TI=0;
+  31   2      			}
+  32   2      			if(k4==0)
+  33   2      			{
+  34   2      				SBUF='4';while(!TI);TI=0;
+  35   2      			}
+  36   2      //			SBUF=buffer;*/
+  37   2      	
+  38   2      			
+  39   2      			ES=1;
+  40   2      		}
+  41   1      //	}
+  42   1      }
+  43          
+  44          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     68    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      2    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+C51 COMPILER V6.12  SERIALS                                                                03/11/2010 19:52:15 PAGE 2   
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

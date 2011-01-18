@@ -1,0 +1,4 @@
+"STARTUP.obj",
+"Re2.obj" 
+TO "LEDs" 
+RAMSIZE(256) 

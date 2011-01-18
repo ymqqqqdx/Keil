@@ -1,0 +1,38 @@
+C51 COMPILER V8.09   DECLARE                                                               07/07/2010 20:32:12 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE DECLARE
+OBJECT MODULE PLACED IN declare.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE declare.h DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #define readyear read_clock(0x8d)
+   2          #define readweek read_clock(0x8b)
+   3          #define readmonth read_clock(0x89)
+   4          #define readday read_clock(0x87)
+   5          #define readhour read_clock(0x85)
+   6          #define readminute read_clock(0x83)
+   7          #define readsecond read_clock(0x81)
+   8          #define writeyear write_clock(0x8c,year)
+   9          #define writeweek write_clock(0x8a,week)
+  10          #define writemonth write_clock(0x88,month)
+  11          #define writeday write_clock(0x86,day)
+  12          #define writehour write_clock(0x84,hour)
+  13          #define writeminute write_clock(0x82,minute)
+  14          #define writesecond write_clock(0x80,second)
+  15          extern unsigned char year,week,month,day,hour,minute,second;
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   ----    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

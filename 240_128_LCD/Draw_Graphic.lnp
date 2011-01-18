@@ -1,0 +1,6 @@
+"STARTUP.obj",
+"240_128_LCD_Driver.obj",
+"main.obj",
+"Graphic2.obj" 
+TO "Draw_Graphic" 
+RAMSIZE(256) 

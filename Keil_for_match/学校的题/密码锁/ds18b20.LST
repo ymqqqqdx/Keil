@@ -1,0 +1,326 @@
+C51 COMPILER V8.09   DS18B20                                                               10/15/2010 13:46:46 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE DS18B20
+OBJECT MODULE PLACED IN ds18b20.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE ds18b20.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #include <intrins.h>
+   3          #define U8 unsigned char
+   4          #define U16 unsigned int
+   5          sbit DQ=P1^0;
+   6          
+   7          sbit lcd_cs=P0^3;
+   8          sbit lcd_clk=P1^2;
+   9          sbit lcd_sid=P0^2;
+  10          
+  11          sbit key1=P3^4;
+  12          sbit key2=P3^5;
+  13          sbit key3=P3^2;
+  14          sbit key4=P3^3;
+  15          
+  16          sbit beep=P2^7;
+  17          
+  18          sbit scl=P2^5;
+  19          sbit sda=P2^6;
+  20          U8 counter=0;
+  21          U16 temp_up=0;
+  22          bit start=0,warned=0;
+  23          void delay_1ms(U16 z)
+  24          {
+  25   1              U8 i;
+  26   1              while(z--)
+  27   1                      for(i=0;i<110;i++);
+  28   1      }
+  29          void start1()
+  30          {
+  31   1              sda=1; _nop_();
+  32   1              scl=1; _nop_();
+  33   1              sda=0; _nop_();
+  34   1      }
+  35          
+  36          void stop()
+  37          {
+  38   1              sda=0; _nop_();
+  39   1              scl=1; _nop_();
+  40   1              sda=1; _nop_();
+  41   1      }
+  42          
+  43          void response()
+  44          {
+  45   1              U8 i=0;
+  46   1              scl=1; _nop_();
+  47   1              while(sda==1&&i<250)
+  48   1                      i++;
+  49   1              scl=0; _nop_();
+  50   1      }
+  51          void iic_writeonechar(U8 dat)
+  52          {
+  53   1              U8 i;
+  54   1              for(i=0;i<8;i++)
+  55   1              {
+C51 COMPILER V8.09   DS18B20                                                               10/15/2010 13:46:46 PAGE 2   
+
+  56   2                      dat<<=1;
+  57   2                      scl=0; _nop_();
+  58   2                      sda=CY;
+  59   2                      scl=1; _nop_();
+  60   2              }
+  61   1              scl=0; _nop_();
+  62   1              sda=1; _nop_();
+  63   1              response();
+  64   1      }
+  65          
+  66          U8 iic_readonechar()
+  67          {
+  68   1              U8 i,temp=0;
+  69   1              scl=0; _nop_();
+  70   1              sda=1; _nop_();
+  71   1              for(i=0;i<8;i++)
+  72   1              {
+  73   2                      scl=1; _nop_();
+  74   2                      temp|=((U8)sda)<<(7-i);
+  75   2                      scl=0; _nop_();
+  76   2              }
+  77   1              return temp;
+  78   1      }
+  79          void iic_write(U8 add,U8 dat)
+  80          {
+  81   1              start1();
+  82   1              iic_writeonechar(0xa0);
+  83   1              iic_writeonechar(add);
+  84   1              iic_writeonechar(dat);
+  85   1              stop();
+  86   1      }
+  87          U8 iic_read(U8 add)
+  88          {
+  89   1              U8 temp=0;
+  90   1              start1();
+  91   1              iic_writeonechar(0xa0);
+  92   1              iic_writeonechar(add);
+  93   1              start1();
+  94   1              iic_writeonechar(0xa1);
+  95   1              temp=iic_readonechar();
+  96   1              stop();
+  97   1              return temp;
+  98   1      }
+  99          void iic_init()
+ 100          {
+ 101   1              scl=1; _nop_();
+ 102   1              sda=1; _nop_();
+ 103   1      }
+ 104          void delayus(U16 z)
+ 105          {
+ 106   1              while(z--);
+ 107   1      }
+ 108          
+ 109          void temp_init()
+ 110          {
+ 111   1              bit s;
+ 112   1              DQ=1;
+ 113   1              delayus(8);
+ 114   1              DQ=0;
+ 115   1              delayus(80);
+ 116   1              DQ=1;
+ 117   1              delayus(14);
+C51 COMPILER V8.09   DS18B20                                                               10/15/2010 13:46:46 PAGE 3   
+
+ 118   1              s=DQ;
+ 119   1              delayus(20);
+ 120   1      }
+ 121          
+ 122          void temp_writeonechar(U8 dat)
+ 123          {
+ 124   1              U8 i;
+ 125   1              for(i=0;i<8;i++)
+ 126   1              {
+ 127   2                      dat>>=1;
+ 128   2                      DQ=0;
+ 129   2                      DQ=CY;
+ 130   2                      delayus(5);
+ 131   2                      DQ=1;
+ 132   2              }
+ 133   1              delayus(4);
+ 134   1      }
+ 135          
+ 136          U8 temp_readonechar()
+ 137          {
+ 138   1              U8 i,temp=0;
+ 139   1              for(i=0;i<8;i++)
+ 140   1              {
+ 141   2                      DQ=0;
+ 142   2                      DQ=1;
+ 143   2                      temp|=((U8)DQ)<<i;
+ 144   2                      delayus(4);
+ 145   2              }
+ 146   1              return temp;
+ 147   1      }
+ 148          
+ 149          U16 temp_read()
+ 150          {
+ 151   1              U8 low,high;
+ 152   1              U16 t;
+ 153   1              float tt;
+ 154   1              temp_init();
+ 155   1              temp_writeonechar(0xcc);
+ 156   1              temp_writeonechar(0x44);
+ 157   1              temp_init();
+ 158   1              temp_writeonechar(0xcc);
+ 159   1              temp_writeonechar(0xbe);
+ 160   1              low=temp_readonechar();
+ 161   1              high=temp_readonechar();
+ 162   1              t=high;
+ 163   1              t<<=8;
+ 164   1              t|=low;
+ 165   1              tt=t*0.0625;
+ 166   1              t=tt*10+0.5;
+ 167   1              return t;
+ 168   1      }
+ 169          
+ 170          void lcd_writeonechar(U8 dat)
+ 171          {
+ 172   1              U8 i;
+ 173   1              for(i=0;i<8;i++)
+ 174   1              {
+ 175   2                      dat<<=1;
+ 176   2                      lcd_sid=CY;
+ 177   2                      lcd_clk=0;
+ 178   2                      lcd_clk=1;
+ 179   2              }
+C51 COMPILER V8.09   DS18B20                                                               10/15/2010 13:46:46 PAGE 4   
+
+ 180   1      }
+ 181          
+ 182          void lcd_writecd(bit cd,U8 dat)
+ 183          {
+ 184   1              lcd_cs=1;
+ 185   1              lcd_writeonechar(cd==0?0xf8:0xfa);
+ 186   1              lcd_writeonechar(dat&0xf0);
+ 187   1              lcd_writeonechar(dat<<4);
+ 188   1              lcd_cs=0;
+ 189   1      }
+ 190          
+ 191          void lcd_string(U8 add,U8 *pt)
+ 192          {
+ 193   1              lcd_writecd(0,add);
+ 194   1              while(*pt!='\0')
+ 195   1                      lcd_writecd(1,*pt++);
+ 196   1      }
+ 197          
+ 198          void lcd_temp(U8 add,U16 dat)
+ 199          {
+ 200   1              lcd_writecd(0,add);
+ 201   1              lcd_writecd(1,dat/100+'0');
+ 202   1              lcd_writecd(1,dat%100/10+'0');
+ 203   1              lcd_writecd(1,'.');
+ 204   1              lcd_writecd(1,dat%10+'0');
+ 205   1              lcd_string(add+2,"℃");
+ 206   1      }
+ 207          
+ 208          void keyscan()
+ 209          {
+ 210   1              if(!key1)
+ 211   1              {
+ 212   2                      delay_1ms(5);
+ 213   2                      if(!key1)
+ 214   2                      {
+ 215   3                              temp_up+=10;
+ 216   3                              lcd_temp(0x84,temp_up);
+ 217   3                              iic_write(0,(U8)(temp_up/10));
+ 218   3                      }while(!key1);
+ 219   2              }
+ 220   1              else if(!key2)
+ 221   1              {
+ 222   2                      delay_1ms(5);
+ 223   2                      if(!key2)
+ 224   2                      {
+ 225   3                              temp_up-=10;
+ 226   3                              lcd_temp(0x84,temp_up);
+ 227   3                              iic_write(0,(U8)(temp_up/10));
+ 228   3                      }while(!key2);
+ 229   2              }
+ 230   1              else if(!key4)
+ 231   1              {
+ 232   2                      delay_1ms(5);
+ 233   2                      if(!key4)
+ 234   2                      {
+ 235   3                              start=1;
+ 236   3                              lcd_string(0x94,"         ");
+ 237   3                      }while(!key4);
+ 238   2              }
+ 239   1              delay_1ms(5);
+ 240   1      }
+ 241          
+C51 COMPILER V8.09   DS18B20                                                               10/15/2010 13:46:46 PAGE 5   
+
+ 242          void main()
+ 243          {
+ 244   1              U16 temp,temp_old;
+ 245   1              iic_init();
+ 246   1              temp_up=iic_read(0);
+ 247   1              temp_up*=10;
+ 248   1              TMOD=0x01;
+ 249   1              TH0=(65536-45278)/256;
+ 250   1              TL0=(65536-45278)%256;
+ 251   1              ET0=1;
+ 252   1              TR0=1;
+ 253   1              EA=1;
+ 254   1              lcd_writecd(0,0x0c);
+ 255   1              lcd_string(0x80,"上限值：");
+ 256   1              lcd_string(0x90,"采集值：按S1开始");
+ 257   1              lcd_temp(0x84,temp_up);
+ 258   1              while(1)
+ 259   1              {
+ 260   2                      if(!start)
+ 261   2                              keyscan();
+ 262   2                      else
+ 263   2                      {
+ 264   3                              temp=temp_read();
+ 265   3                              if(temp!=temp_old)
+ 266   3                              {
+ 267   4                                      temp_old=temp;
+ 268   4                                      lcd_temp(0x94,temp);
+ 269   4                                      if(temp>=temp_up&&warned==0)
+ 270   4                                      {
+ 271   5                                              beep=0;
+ 272   5                                              TR0=1;
+ 273   5                                              warned=1;
+ 274   5                                      }
+ 275   4                                      if(temp<temp_up)
+ 276   4                                              warned=0;
+ 277   4                              }
+ 278   3                      }
+ 279   2              }
+ 280   1      }
+ 281          
+ 282          void timer0() interrupt 1
+ 283          {
+ 284   1              TH0=(65536-45278)/256;
+ 285   1              TL0=(65536-45278)%256;  
+ 286   1              counter++;
+ 287   1              if(counter==60)
+ 288   1              {
+ 289   2                      counter=0;
+ 290   2                      beep=1;
+ 291   2                      TR0=0;
+ 292   2              }
+ 293   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    901    ----
+   CONSTANT SIZE    =     39    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      3      13
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      2       2
+C51 COMPILER V8.09   DS18B20                                                               10/15/2010 13:46:46 PAGE 6   
+
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

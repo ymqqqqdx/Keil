@@ -1,0 +1,74 @@
+C51 COMPILER V8.09   128X64                                                                04/26/2010 21:54:30 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE 128X64
+OBJECT MODULE PLACED IN .\128X64.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE .\128X64.c DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          //#include <absacc.h>
+   3          #define uchar unsigned char
+   4          #define uint unsigned int
+   5          sbit lcden=P2^0;//lcd_enable高电平有效
+   6          sbit rw=P2^1;//H:read    L:write
+   7          sbit rs=P2^2; //H:display  L:command
+   8          sbit cs1=P2^3;
+   9          sbit cs2=P2^4;
+  10          void delay(int z)
+  11          {
+  12   1              int i,j;
+  13   1              for(i=z;i>0;i--)
+  14   1               for(j=110;j>0;j--);
+  15   1      }
+  16          void write_com(uchar dat)
+  17          {
+  18   1              lcden=0;
+  19   1              rw=0;
+  20   1              cs1=0;
+  21   1              rs=1;
+  22   1              lcden=1;
+  23   1              P0=dat;
+  24   1              lcden=0;
+  25   1              rw=1;
+  26   1              cs1=1;
+  27   1              rs=0;
+  28   1      }
+  29          void write_data(uchar dat)
+  30          {
+  31   1              lcden=0;
+  32   1              rw=0;
+  33   1              cs1=0;
+  34   1              rs=0;
+  35   1              lcden=1;
+  36   1              P0=dat;
+  37   1              lcden=0;
+  38   1              rw=1;
+  39   1              cs1=1;
+  40   1              rs=0;
+  41   1      }
+  42          void main()
+  43          {
+  44   1              write_com(0x1f);
+  45   1              write_com(0x61);
+  46   1              write_data('a');
+  47   1              delay(1);
+  48   1              while(1);
+  49   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     96    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+C51 COMPILER V8.09   128X64                                                                04/26/2010 21:54:30 PAGE 2   
+
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

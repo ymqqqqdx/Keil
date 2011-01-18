@@ -1,0 +1,4 @@
+"STARTUP.obj",
+"ReDo.obj" 
+TO "LCD_12232" 
+RAMSIZE(256) 

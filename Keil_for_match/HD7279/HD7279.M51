@@ -1,0 +1,254 @@
+BL51 BANKED LINKER/LOCATER V6.05                                                        10/13/2010  17:02:00  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V6.05, INVOKED BY:
+C:\KEIL\C51\BIN\BL51.EXE STARTUP.obj, Re2.obj TO HD7279 RAMSIZE (256)
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  STARTUP.obj (?C_STARTUP)
+  Re2.obj (RE2)
+
+
+LINK MAP OF MODULE:  HD7279 (?C_STARTUP)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            IDATA   0008H     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+            CODE    0003H     0039H     UNIT         ?PR?MAIN?RE2
+            CODE    003CH     0032H     UNIT         ?PR?HD_READONECHAR?RE2
+            CODE    006EH     0022H     UNIT         ?PR?_HD_WRITEONECHAR?RE2
+            CODE    0090H     0016H     UNIT         ?PR?_DELAY_1MS?RE2
+            CODE    00A6H     000CH     UNIT         ?C_C51STARTUP
+            CODE    00B2H     000AH     UNIT         ?PR?_HD_WRITE?RE2
+            CODE    00BCH     0007H     UNIT         ?PR?HD_SHORTDELAY?RE2
+            CODE    00C3H     0007H     UNIT         ?PR?HD_LONGDELAY?RE2
+            CODE    00CAH     0007H     UNIT         ?PR?_HD_READ?RE2
+
+
+
+OVERLAY MAP OF MODULE:   HD7279 (?C_STARTUP)
+
+
+SEGMENT
+  +--> CALLED SEGMENT
+---------------------
+?C_C51STARTUP
+  +--> ?PR?MAIN?RE2
+
+?PR?MAIN?RE2
+  +--> ?PR?_HD_WRITEONECHAR?RE2
+  +--> ?PR?_HD_WRITE?RE2
+  +--> ?PR?_HD_READ?RE2
+  +--> ?PR?_DELAY_1MS?RE2
+
+?PR?_HD_WRITEONECHAR?RE2
+  +--> ?PR?HD_LONGDELAY?RE2
+  +--> ?PR?HD_SHORTDELAY?RE2
+
+?PR?_HD_WRITE?RE2
+  +--> ?PR?_HD_WRITEONECHAR?RE2
+
+BL51 BANKED LINKER/LOCATER V6.05                                                      10/13/2010  17:02:00  PAGE 2
+
+
+?PR?_HD_READ?RE2
+  +--> ?PR?_HD_WRITEONECHAR?RE2
+  +--> ?PR?HD_READONECHAR?RE2
+
+?PR?HD_READONECHAR?RE2
+  +--> ?PR?HD_LONGDELAY?RE2
+  +--> ?PR?HD_SHORTDELAY?RE2
+
+
+
+SYMBOL TABLE OF MODULE:  HD7279 (?C_STARTUP)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        ?C_STARTUP
+  C:00A6H         SEGMENT       ?C_C51STARTUP
+  I:0008H         SEGMENT       ?STACK
+  C:0000H         PUBLIC        ?C_STARTUP
+  D:00E0H         SYMBOL        ACC
+  D:00F0H         SYMBOL        B
+  D:0083H         SYMBOL        DPH
+  D:0082H         SYMBOL        DPL
+  N:0000H         SYMBOL        IBPSTACK
+  N:0100H         SYMBOL        IBPSTACKTOP
+  N:0080H         SYMBOL        IDATALEN
+  C:00A9H         SYMBOL        IDATALOOP
+  N:0000H         SYMBOL        PBPSTACK
+  N:0100H         SYMBOL        PBPSTACKTOP
+  N:0000H         SYMBOL        PDATALEN
+  N:0000H         SYMBOL        PDATASTART
+  N:0000H         SYMBOL        PPAGE
+  N:0000H         SYMBOL        PPAGEENABLE
+  D:00A0H         SYMBOL        PPAGE_SFR
+  D:0081H         SYMBOL        SP
+  C:00A6H         SYMBOL        STARTUP1
+  N:0000H         SYMBOL        XBPSTACK
+  N:0000H         SYMBOL        XBPSTACKTOP
+  N:0000H         SYMBOL        XDATALEN
+  N:0000H         SYMBOL        XDATASTART
+  C:0000H         LINE#         126
+  C:00A6H         LINE#         133
+  C:00A8H         LINE#         134
+  C:00A9H         LINE#         135
+  C:00AAH         LINE#         136
+  C:00ACH         LINE#         185
+  C:00AFH         LINE#         196
+  -------         ENDMOD        ?C_STARTUP
+
+  -------         MODULE        RE2
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:0080H         PUBLIC        P0
+  D:0090H         PUBLIC        P1
+  D:00B0H         PUBLIC        P3
+  B:0080H.4       PUBLIC        hd_cs
+  C:0090H         PUBLIC        _delay_1ms
+  D:00A8H         PUBLIC        IE
+BL51 BANKED LINKER/LOCATER V6.05                                                      10/13/2010  17:02:00  PAGE 3
+
+
+  D:00B8H         PUBLIC        IP
+  B:00D0H.7       PUBLIC        CY
+  C:0003H         PUBLIC        main
+  C:003CH         PUBLIC        hd_readonechar
+  D:0098H         PUBLIC        SCON
+  D:0088H         PUBLIC        TCON
+  C:006EH         PUBLIC        _hd_writeonechar
+  C:00CAH         PUBLIC        _hd_read
+  C:00B2H         PUBLIC        _hd_write
+  B:0080H.6       PUBLIC        hd_dat
+  D:00C8H         PUBLIC        T2CON
+  B:0080H.5       PUBLIC        hd_clk
+  C:00C3H         PUBLIC        hd_longdelay
+  C:00BCH         PUBLIC        hd_shortdelay
+  B:0080H.7       PUBLIC        hd_key
+  D:00D0H         PUBLIC        PSW
+  -------         PROC          HD_SHORTDELAY
+  -------         DO            
+  D:0007H         SYMBOL        i
+  -------         ENDDO         
+  C:00BCH         LINE#         11
+  C:00BCH         LINE#         12
+  C:00BCH         LINE#         14
+  C:00C2H         LINE#         15
+  -------         ENDPROC       HD_SHORTDELAY
+  -------         PROC          HD_LONGDELAY
+  -------         DO            
+  D:0007H         SYMBOL        i
+  -------         ENDDO         
+  C:00C3H         LINE#         17
+  C:00C3H         LINE#         18
+  C:00C3H         LINE#         20
+  C:00C9H         LINE#         21
+  -------         ENDPROC       HD_LONGDELAY
+  -------         PROC          _DELAY_1MS
+  D:0006H         SYMBOL        z
+  -------         DO            
+  D:0005H         SYMBOL        i
+  -------         ENDDO         
+  C:0090H         LINE#         23
+  C:0090H         LINE#         24
+  C:0090H         LINE#         26
+  C:009AH         LINE#         27
+  C:00A5H         LINE#         28
+  -------         ENDPROC       _DELAY_1MS
+  -------         PROC          _HD_WRITEONECHAR
+  D:0006H         SYMBOL        dat
+  -------         DO            
+  D:0005H         SYMBOL        i
+  -------         ENDDO         
+  C:006EH         LINE#         30
+  C:0070H         LINE#         31
+  C:0070H         LINE#         33
+  C:0072H         LINE#         34
+  C:0074H         LINE#         35
+  C:0077H         LINE#         36
+  C:0079H         LINE#         37
+BL51 BANKED LINKER/LOCATER V6.05                                                      10/13/2010  17:02:00  PAGE 4
+
+
+  C:0079H         LINE#         38
+  C:007DH         LINE#         39
+  C:007FH         LINE#         40
+  C:0084H         LINE#         41
+  C:0089H         LINE#         42
+  C:008DH         LINE#         43
+  C:008FH         LINE#         44
+  -------         ENDPROC       _HD_WRITEONECHAR
+  -------         PROC          HD_READONECHAR
+  -------         DO            
+  D:0005H         SYMBOL        i
+  D:0006H         SYMBOL        temp
+  -------         ENDDO         
+  C:003CH         LINE#         46
+  C:003CH         LINE#         47
+  C:003CH         LINE#         48
+  C:003EH         LINE#         49
+  C:0040H         LINE#         50
+  C:0043H         LINE#         51
+  C:0045H         LINE#         52
+  C:0045H         LINE#         53
+  C:004AH         LINE#         54
+  C:0060H         LINE#         55
+  C:0065H         LINE#         56
+  C:0069H         LINE#         57
+  C:006BH         LINE#         58
+  C:006DH         LINE#         59
+  -------         ENDPROC       HD_READONECHAR
+  -------         PROC          _HD_WRITE
+  D:0007H         SYMBOL        add
+  D:0004H         SYMBOL        dat
+  C:00B2H         LINE#         61
+  C:00B4H         LINE#         62
+  C:00B4H         LINE#         63
+  C:00B7H         LINE#         64
+  -------         ENDPROC       _HD_WRITE
+  -------         PROC          _HD_READ
+  D:0007H         SYMBOL        add
+  C:00CAH         LINE#         67
+  C:00CAH         LINE#         68
+  C:00CAH         LINE#         69
+  C:00CDH         LINE#         70
+  C:00D0H         LINE#         71
+  -------         ENDPROC       _HD_READ
+  -------         PROC          MAIN
+  -------         DO            
+  D:0003H         SYMBOL        temp
+  -------         ENDDO         
+  C:0003H         LINE#         73
+  C:0003H         LINE#         74
+  C:0003H         LINE#         76
+  C:0008H         LINE#         77
+  C:000FH         LINE#         78
+  C:000FH         LINE#         79
+  C:000FH         LINE#         80
+  C:0012H         LINE#         81
+  C:0012H         LINE#         82
+BL51 BANKED LINKER/LOCATER V6.05                                                      10/13/2010  17:02:00  PAGE 5
+
+
+  C:0019H         LINE#         83
+  C:0024H         LINE#         84
+  C:0030H         LINE#         85
+  C:0033H         LINE#         86
+  C:003AH         LINE#         87
+  -------         ENDPROC       MAIN
+  -------         ENDMOD        RE2
+
+Program Size: data=9.0 xdata=0 code=209
+LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)

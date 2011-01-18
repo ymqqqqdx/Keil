@@ -1,0 +1,4 @@
+"STARTUP.obj",
+"ReDo.obj" 
+TO "AD_TLC549" 
+RAMSIZE(256) 

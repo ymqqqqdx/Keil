@@ -1,0 +1,111 @@
+C51 COMPILER V6.12  DS18B20                                                                03/26/2010 18:00:32 PAGE 1   
+
+
+C51 COMPILER V6.12, COMPILATION OF MODULE DS18B20
+OBJECT MODULE PLACED IN .\ds18b20.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE .\ds18b20.c DEBUG OBJECTEXTEND
+
+stmt level    source
+
+   1          #include "reg52.h"
+   2          //#include "1602.h"
+   3          #include "stdio.h"
+   4          //#include "mscomm.h"
+   5          unsigned char code table[]={
+   6          0x3f,0x06,0x5b,0x4f,
+   7          0x66,0x6d,0x7d,0x07,
+   8          0x7f,0x6f,0x77,0x7c,
+   9          0x39,0x5e,0x79,0x71};
+  10          unsigned char code point[]={
+  11                  0xBF,/*0p*/
+  12          		0x86,/*1p*/
+  13                  0xDB,/*2p*/
+  14                  0xCF,/*3p*/
+  15                  0xE6,/*4p*/
+  16                  0xED,/*5p*/
+  17                  0xFD,/*6p*/
+  18                  0x87,/*7p*/
+  19                  0xFF,/*8p*/
+  20                  0xEF,/*9p*/
+  21          };
+  22          //unsigned char code table1[]="0123456789";
+  23          unsigned char bai,shi,ge,one;
+  24          unsigned int tt,aa;
+  25          float d;
+  26          unsigned int readtemp();
+  27          void delay(int z)
+  28          {
+  29   1      	int i,j;
+  30   1              for(i=z;i>0;i--)
+  31   1               for(j=110;j>0;j--);
+  32   1      }
+  33          void display()
+  34          {
+  35   1      		P2=0x08;
+  36   1      		P0=table[bai];
+  37   1      		delay(2);
+  38   1      		P2=0x04;
+  39   1      		P0=table[shi];
+  40   1      		delay(2);
+  41   1      		P2=0x02;
+  42   1      		P0=point[ge];
+  43   1      		delay(2);
+  44   1      		P2=0x01;
+  45   1      		P0=table[one];
+  46   1      		delay(2);
+  47   1      }
+  48          void main()
+  49          {
+  50   1      	//	init_1602();
+  51   1      //	init_comm();
+  52   1      	REN=1; //串行允许
+  53   1      	SCON=0x52;
+  54   1      	TMOD=0X21;//设置定时器1工作方式
+  55   1      	TH1=0XF3;//装初值
+C51 COMPILER V6.12  DS18B20                                                                03/26/2010 18:00:32 PAGE 2   
+
+  56   1      	TL1=0XF3;//装初值
+  57   1      	TR1=1;//打开定时器1
+  58   1      	SM0=0; //设置方式1
+  59   1      	SM1=1;
+  60   1      	TH0=(65536-50000)/256; 
+  61   1      	TL0=(65536-50000)%256;
+  62   1      	EA=1; //开总中断
+  63   1      	ET0=1; //计时器0开启
+  64   1      	TR0=1; //计时器开始运行
+  65   1      	while(1)
+  66   1      	{   
+  67   2      		display();
+  68   2      	} 
+  69   1      }
+  70          void timer0() interrupt 1 //每250ms获取一次温度
+  71          {
+  72   1      		TH0=(65536-50000)/256;
+  73   1      	   TL0=(65536-50000)%256;
+  74   1      		aa++;
+  75   1      		if(aa==30)
+  76   1      		{   
+  77   2      			aa=0;
+  78   2      		tt=readtemp();
+  79   2      		d=tt;
+  80   2      		printf("%.1f\n",d/10);
+  81   2      		bai=tt/1000;
+  82   2              shi=tt%1000/100;
+  83   2              ge=tt%100/10;
+  84   2      		one=tt%10;
+  85   2      		}
+  86   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    325    ----
+   CONSTANT SIZE    =     32    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     12    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

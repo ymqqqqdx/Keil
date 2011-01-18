@@ -1,0 +1,128 @@
+C51 COMPILER V6.12  AT24C                                                                  01/01/2010 16:05:05 PAGE 1   
+
+
+C51 COMPILER V6.12, COMPILATION OF MODULE AT24C
+OBJECT MODULE PLACED IN .\AT24C.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE .\AT24C.c DEBUG OBJECTEXTEND
+
+stmt level    source
+
+   1          #include <reg52.h>
+   2          bit write=0;
+   3          sbit sda=P2^7;
+   4          sbit scl=P2^6;
+   5          void delay0()
+   6          {;;}
+   7          void start()
+   8          {
+   9   1      	sda=1;
+  10   1      	delay0();
+  11   1      	scl=1;
+  12   1      	delay0();
+  13   1      	sda=0;
+  14   1      	delay0();
+  15   1      }
+  16          void stop()
+  17          {
+  18   1      	sda=0;
+  19   1      	delay0();
+  20   1      	scl=1;
+  21   1      	delay0();
+  22   1      	sda=1;
+  23   1      	delay0();
+  24   1      }
+  25          void respons()
+  26          {
+  27   1      	unsigned char i;
+  28   1      	scl=1;
+  29   1      	delay0();
+  30   1      	while((sda==1)&&(i<250))
+  31   1      		i++;
+  32   1      	scl=0;
+  33   1      	delay0();
+  34   1      }
+  35          void init_24c02()
+  36          {
+  37   1      	sda=1;
+  38   1      	delay0();
+  39   1      	scl=1;
+  40   1      	delay0();
+  41   1      }
+  42          void write_byte(unsigned char date)
+  43          {
+  44   1      	unsigned char i,temp;
+  45   1      	temp=date;
+  46   1      	for(i=0;i<8;i++)
+  47   1      	{
+  48   2      		temp=temp<<1;
+  49   2      		scl=0;
+  50   2      		delay0();
+  51   2      		sda=CY;
+  52   2      		delay0();
+  53   2      		scl=1;
+  54   2      		delay0();
+  55   2      	}
+C51 COMPILER V6.12  AT24C                                                                  01/01/2010 16:05:05 PAGE 2   
+
+  56   1      	scl=0;
+  57   1      	delay0();
+  58   1      	sda=1;
+  59   1      	delay0();
+  60   1      }
+  61          unsigned char read_byte()
+  62          {
+  63   1      	unsigned char i,k;
+  64   1      	scl=0;
+  65   1      	delay0();
+  66   1      	sda=1;
+  67   1      	delay0();
+  68   1      	for(i=0;i<8;i++)
+  69   1      	{
+  70   2      		scl=1;
+  71   2      		delay0();
+  72   2      		k=(k<<1)|sda;
+  73   2      		scl=0;
+  74   2      		delay0();
+  75   2      	}
+  76   1      	return k;
+  77   1      }
+  78          void write_add(unsigned char address,unsigned char date)
+  79          {
+  80   1      	start();
+  81   1      	write_byte(0xa0);
+  82   1      	respons();
+  83   1      	write_byte(address);
+  84   1      	respons();
+  85   1      	write_byte(date);
+  86   1      	respons();
+  87   1      	stop();
+  88   1      }
+  89          char read_add(unsigned char address)
+  90          {
+  91   1      	unsigned char date;
+  92   1      	start();
+  93   1      	write_byte(0xa0);
+  94   1      	respons();
+  95   1      	write_byte(address);
+  96   1      	respons();
+  97   1      	start();
+  98   1      	write_byte(0xa1);
+  99   1      	respons();
+ 100   1      	date=read_byte();
+ 101   1      	stop();
+ 102   1      	return date;
+ 103   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    183    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       1
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      1    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

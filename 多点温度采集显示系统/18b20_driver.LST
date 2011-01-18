@@ -1,0 +1,151 @@
+C51 COMPILER V8.09   18B20_DRIVER                                                          06/23/2010 23:54:40 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE 18B20_DRIVER
+OBJECT MODULE PLACED IN 18b20_driver.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE 18b20_driver.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          sbit DQ0=P3^0;//数据线0
+   3          sbit DQ1=P3^1;
+   4          sbit DQ2=P3^2;
+   5          sbit DQ3=P3^3;
+   6          sbit DQ4=P3^4;
+   7          sbit DQ5=P3^5;
+   8          sbit DQ6=P3^6;
+   9          sbit DQ7=P3^7;
+  10          extern bit symbol;//main.c中的symbol
+  11          //微秒延时
+  12          void delayus(unsigned int i)
+  13          {
+  14   1               while(i--);
+  15   1      }
+  16          //对每个数据线分开操作
+  17          void DQoperate(unsigned char num,bit buff)
+  18          {
+  19   1              switch(num)
+  20   1              {
+  21   2                      case 0: if(buff==0) DQ0=0; else DQ0=1; break;
+  22   2                      case 1: if(buff==0) DQ1=0; else DQ1=1; break;
+  23   2                      case 2: if(buff==0) DQ2=0; else DQ2=1; break;
+  24   2                      case 3: if(buff==0) DQ3=0; else DQ3=1; break;
+  25   2                      case 4: if(buff==0) DQ4=0; else DQ4=1; break;
+  26   2                      case 5: if(buff==0) DQ5=0; else DQ5=1; break;
+  27   2                      case 6: if(buff==0) DQ6=0; else DQ6=1; break;
+  28   2                      case 7: if(buff==0) DQ7=0; else DQ7=1; break;
+  29   2              }
+  30   1      }
+  31          //读数据线
+  32          unsigned char readDQ(unsigned char num)
+  33          {
+  34   1              bit buff;
+  35   1              switch(num)
+  36   1              {
+  37   2                      case 0: buff=DQ0; break;
+  38   2                      case 1: buff=DQ1; break;
+  39   2                      case 2: buff=DQ2; break;
+  40   2                      case 3: buff=DQ3; break;
+  41   2                      case 4: buff=DQ4; break;
+  42   2                      case 5: buff=DQ5; break;
+  43   2                      case 6: buff=DQ6; break;
+  44   2                      case 7: buff=DQ7; break;
+  45   2              }
+  46   1              return buff;
+  47   1      }
+  48          //18b20初始化函数
+  49          init_ds18b20(unsigned char num)
+  50          {
+  51   1               unsigned char x=0;
+  52   1               DQoperate(num,1);
+  53   1               delayus(8);  //稍做延时
+  54   1               DQoperate(num,0);
+  55   1               delayus(80); //精确延时 大于 480us
+C51 COMPILER V8.09   18B20_DRIVER                                                          06/23/2010 23:54:40 PAGE 2   
+
+  56   1               DQoperate(num,1);
+  57   1               delayus(14);
+  58   1               x=readDQ(num);      //稍做延时后 如果x=0则初始化成功 x=1则初始化失败
+  59   1               delayus(20);
+  60   1      }
+  61          //读一个字节
+  62          unsigned char readonechar(unsigned char num)
+  63          {
+  64   1              unsigned char i=0;
+  65   1              unsigned char dat=0;
+  66   1              for (i=8;i>0;i--)
+  67   1              {
+  68   2                      DQoperate(num,0);
+  69   2                      dat>>=1;
+  70   2                      DQoperate(num,1);
+  71   2                      if(readDQ(num))
+  72   2                      dat|=0x80;
+  73   2                      delayus(4);
+  74   2              }
+  75   1      return(dat);
+  76   1      }
+  77          //写一个字节
+  78          void writeonechar(unsigned char num,unsigned char dat)
+  79          {       
+  80   1              unsigned char i=0;
+  81   1              for (i=8; i>0; i--)
+  82   1              {
+  83   2                      DQoperate(num,0);
+  84   2                      DQoperate(num,dat&0x01);
+  85   2                      delayus(5);
+  86   2                      DQoperate(num,1);
+  87   2                      dat>>=1;
+  88   2              }
+  89   1      delayus(4);
+  90   1      }
+  91          //读取温度
+  92          unsigned int readtemp(unsigned char num)
+  93          {
+  94   1              unsigned char a=0;
+  95   1              unsigned char b=0;
+  96   1              unsigned int t=0;
+  97   1              float tt=0;
+  98   1              init_ds18b20(num);
+  99   1              writeonechar(num,0xcc); // 跳过读序号列号的操作
+ 100   1              writeonechar(num,0x44); // 启动温度转换
+ 101   1              init_ds18b20(num);
+ 102   1              writeonechar(num,0xcc); //跳过读序号列号的操作
+ 103   1              writeonechar(num,0xbe); //读取温度寄存器等两个就是温度
+ 104   1              a=readonechar(num);
+ 105   1              b=readonechar(num);
+ 106   1              t=b;
+ 107   1              if(t<8) //若最高位为0，则为正数
+ 108   1              {
+ 109   2                      symbol=0;
+ 110   2                      t<<=8;
+ 111   2                      t|=a;
+ 112   2              }
+ 113   1              else
+ 114   1              {
+ 115   2                      symbol=1;
+ 116   2                      t<<=8;
+ 117   2                      t|=a;
+C51 COMPILER V8.09   18B20_DRIVER                                                          06/23/2010 23:54:40 PAGE 3   
+
+ 118   2                      t=~t;//取反+1取相反数
+ 119   2                      t+=1;
+ 120   2              }       
+ 121   1              tt=t*0.0625;
+ 122   1              t= tt*10+0.5;
+ 123   1              return(t);
+ 124   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    513    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       5
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----       2
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

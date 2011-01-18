@@ -1,0 +1,117 @@
+C51 COMPILER V8.09   LCD                                                                   10/08/2010 19:08:42 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE LCD
+OBJECT MODULE PLACED IN LCD.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE LCD.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #include <declare.h>
+   3          sbit lcd_cs=P0^3;
+   4          sbit lcd_clk=P1^2;
+   5          sbit lcd_sid=P0^2;
+   6          extern RTC time;
+   7          extern U8 rtc_secondold;
+   8          void lcd_writeonechar(U8 dat)
+   9          {
+  10   1              U8 i;
+  11   1              for(i=0;i<8;i++)
+  12   1              {
+  13   2                      dat<<=1;
+  14   2                      lcd_sid=CY;
+  15   2                      lcd_clk=0;
+  16   2                      lcd_clk=1;
+  17   2              }
+  18   1      }
+  19          void lcd_writecd(bit cd,U8 dat)
+  20          {
+  21   1              lcd_cs=1;
+  22   1              lcd_writeonechar(cd==0?0xf8:0xfa);
+  23   1              lcd_writeonechar(dat&0xf0);
+  24   1              lcd_writeonechar(dat<<4);
+  25   1              lcd_cs=0;
+  26   1      }
+  27          void lcd_writestring(U8 add,U8 *pt)
+  28          {
+  29   1              lcd_writecd(CMD,add<10?0x80+add:0x90+add-10);
+  30   1              while(*pt!='\0')
+  31   1                      lcd_writecd(DATA,*pt++);
+  32   1      }
+  33          void lcd_displaytwo(U8 add,U8 dat)
+  34          {
+  35   1              lcd_writecd(CMD,add<10?0x80+add:0x90+add-10);
+  36   1              lcd_writecd(DATA,dat/10+'0');
+  37   1              lcd_writecd(DATA,dat%10+'0');
+  38   1      }
+  39          void lcd_normal_init()
+  40          {
+  41   1              lcd_writecd(CMD,0x0c);
+  42   1              lcd_writestring(2,"Äê");
+  43   1              lcd_writestring(4,"ÔÂ");
+  44   1              lcd_writestring(6,"ÈÕ");
+  45   1              lcd_writestring(12,":");
+  46   1              lcd_writestring(14,":");
+  47   1              lcd_displaytwo(0,20);
+  48   1              rtc_gettime();
+  49   1      }
+  50          void lcd_adjust_init()
+  51          {
+  52   1              lcd_normal_init();
+  53   1              lcd_writecd(CMD,0x0f);
+  54   1              lcd_writecd(CMD,0x95);
+  55   1      }
+C51 COMPILER V8.09   LCD                                                                   10/08/2010 19:08:42 PAGE 2   
+
+  56          void lcd_showtime()
+  57          {
+  58   1              lcd_displaytwo(1,time.year);
+  59   1              lcd_displaytwo(3,time.month);
+  60   1              lcd_displaytwo(5,time.day);
+  61   1              lcd_displaytwo(11,time.hour);
+  62   1              lcd_displaytwo(13,time.minute);
+  63   1              lcd_displaytwo(15,time.second);
+  64   1      }
+  65          U8 lcd_position(U8 dat)
+  66          {
+  67   1              switch(dat)
+  68   1              {
+  69   2                      case 0 : dat=0x95; break;
+  70   2                      case 1 : dat=0x93; break;
+  71   2                      case 2 : dat=0x91; break;
+  72   2                      case 3 : dat=0x85; break;
+  73   2                      case 4 : dat=0x83; break;
+  74   2                      case 6 : dat=0x81; break;
+  75   2              }
+  76   1              lcd_writecd(CMD,dat);
+  77   1              return dat;
+  78   1      }
+  79          void lcd_normal()
+  80          {
+  81   1              time.second=rtc_read(0x80);
+  82   1              if(rtc_secondold!=time.second)
+  83   1              {
+  84   2                      lcd_displaytwo(15,time.second);
+  85   2                      hd_displaytwo(1,time.second);
+  86   2                      da_process(time.second);
+  87   2                      LED_process(time.second);
+  88   2                      if(time.second==0)
+  89   2                              rtc_gettime();
+  90   2                      rtc_secondold=time.second;
+  91   2              }       
+  92   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    395    ----
+   CONSTANT SIZE    =     11    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       4
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----       1
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

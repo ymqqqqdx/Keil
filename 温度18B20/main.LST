@@ -1,0 +1,64 @@
+C51 COMPILER V6.12  MAIN                                                                   04/10/2010 19:45:35 PAGE 1   
+
+
+C51 COMPILER V6.12, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\main.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE .\main.c DEBUG OBJECTEXTEND
+
+stmt level    source
+
+   1          #include <stdio.h>
+   2          unsigned char code table[]={0x3f,0x06,0x5b,0x4f,
+   3          0x66,0x6d,0x7d,0x07,
+   4          0x7f,0x6f,0x77,0x7c,
+   5          0x39,0x5e,0x79,0x71};
+   6          unsigned char code point[]={
+   7                  0xBF,/*0p*/
+   8          		0x86,/*1p*/
+   9                  0xDB,/*2p*/
+  10                  0xCF,/*3p*/
+  11                  0xE6,/*4p*/
+  12                  0xED,/*5p*/
+  13                  0xFD,/*6p*/
+  14                  0x87,/*7p*/
+  15                  0xFF,/*8p*/
+  16                  0xEF,/*9p*/
+  17          };
+  18          int temp,tempold;
+  19          unsigned char shi,ge,one;
+  20          void write_onechar(unsigned char);
+  21          void delay(int);
+  22          int readtemp();
+  23          void main()
+  24          {
+  25   1      	while(1)
+  26   1      	{
+  27   2      		temp=readtemp();
+  28   2      		delay(100);
+  29   2      		if(temp!=tempold)
+  30   2      		{
+  31   3      			shi=temp%1000/100;
+  32   3      			ge=temp%100/10;
+  33   3      			one=temp%10;
+  34   3      			write_onechar(table[one]);
+  35   3      			write_onechar(point[ge]);
+  36   3      			write_onechar(table[shi]);
+  37   3      			write_onechar(0x00);
+  38   3      			tempold=temp;
+  39   3      		}
+  40   2      	}
+  41   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    135    ----
+   CONSTANT SIZE    =     26    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      7    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

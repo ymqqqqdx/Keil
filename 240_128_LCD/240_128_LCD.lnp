@@ -1,0 +1,4 @@
+"STARTUP.obj",
+"zi.obj" 
+TO "240_128_LCD" 
+RAMSIZE(256) 

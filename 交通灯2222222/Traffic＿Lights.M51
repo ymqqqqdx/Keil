@@ -1,0 +1,314 @@
+BL51 BANKED LINKER/LOCATER V6.05                                                        07/23/2010  14:28:54  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V6.05, INVOKED BY:
+C:\KEIL\C51\BIN\BL51.EXE STARTUP.obj, 7219.obj, main.obj TO Traffic£ßLights RAMSIZE (256)
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  STARTUP.obj (?C_STARTUP)
+  7219.obj (7219)
+  main.obj (MAIN)
+  C:\KEIL\C51\LIB\C51S.LIB (?C_INIT)
+
+
+LINK MAP OF MODULE:  Traffic£ßLights (?C_STARTUP)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            DATA    0008H     0008H     UNIT         ?DT?MAIN
+            DATA    0010H     0004H     UNIT         _DATA_GROUP_
+            IDATA   0014H     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+            CODE    0003H     0007H     UNIT         ?C_INITSEG
+                    000AH     0001H                  *** GAP ***
+            CODE    000BH     0003H     ABSOLUTE     
+            CODE    000EH     00B2H     UNIT         ?PR?TIMER0?MAIN
+            CODE    00C0H     008CH     UNIT         ?C_C51STARTUP
+            CODE    014CH     0070H     UNIT         ?PR?_SHOWTIME?MAIN
+            CODE    01BCH     0024H     UNIT         ?PR?INIT?MAIN
+            CODE    01E0H     0022H     UNIT         ?PR?INIT7219?7219
+            CODE    0202H     0013H     UNIT         ?PR?_WRITE7219ONECHAR?7219
+            CODE    0215H     000DH     UNIT         ?PR?_WRITE7219?7219
+            CODE    0222H     000CH     UNIT         ?PR?MAIN?MAIN
+
+
+
+OVERLAY MAP OF MODULE:   Traffic£ßLights (?C_STARTUP)
+
+
+SEGMENT                              DATA_GROUP 
+  +--> CALLED SEGMENT              START    LENGTH
+--------------------------------------------------
+?C_C51STARTUP                      -----    -----
+  +--> ?PR?MAIN?MAIN
+  +--> ?C_INITSEG
+
+?PR?MAIN?MAIN                      -----    -----
+  +--> ?PR?INIT7219?7219
+  +--> ?PR?_SHOWTIME?MAIN
+
+?PR?INIT7219?7219                  -----    -----
+  +--> ?PR?_WRITE7219?7219
+BL51 BANKED LINKER/LOCATER V6.05                                                      07/23/2010  14:28:54  PAGE 2
+
+
+
+?PR?_WRITE7219?7219                -----    -----
+  +--> ?PR?_WRITE7219ONECHAR?7219
+
+?PR?_SHOWTIME?MAIN                 0012H    0002H
+  +--> ?PR?_WRITE7219?7219
+
+*** NEW ROOT ***************************************************
+
+?PR?TIMER0?MAIN                    -----    -----
+  +--> ?PR?_SHOWTIME?MAIN
+
+
+
+SYMBOL TABLE OF MODULE:  Traffic£ßLights (?C_STARTUP)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        ?C_STARTUP
+  C:00C0H         SEGMENT       ?C_C51STARTUP
+  I:0014H         SEGMENT       ?STACK
+  C:0000H         PUBLIC        ?C_STARTUP
+  D:00E0H         SYMBOL        ACC
+  D:00F0H         SYMBOL        B
+  D:0083H         SYMBOL        DPH
+  D:0082H         SYMBOL        DPL
+  N:0000H         SYMBOL        IBPSTACK
+  N:0100H         SYMBOL        IBPSTACKTOP
+  N:0080H         SYMBOL        IDATALEN
+  C:00C3H         SYMBOL        IDATALOOP
+  N:0000H         SYMBOL        PBPSTACK
+  N:0100H         SYMBOL        PBPSTACKTOP
+  N:0000H         SYMBOL        PDATALEN
+  N:0000H         SYMBOL        PDATASTART
+  N:0000H         SYMBOL        PPAGE
+  N:0000H         SYMBOL        PPAGEENABLE
+  D:00A0H         SYMBOL        PPAGE_SFR
+  D:0081H         SYMBOL        SP
+  C:00C0H         SYMBOL        STARTUP1
+  N:0000H         SYMBOL        XBPSTACK
+  N:0000H         SYMBOL        XBPSTACKTOP
+  N:0000H         SYMBOL        XDATALEN
+  N:0000H         SYMBOL        XDATASTART
+  C:0000H         LINE#         126
+  C:00C0H         LINE#         133
+  C:00C2H         LINE#         134
+  C:00C3H         LINE#         135
+  C:00C4H         LINE#         136
+  C:00C6H         LINE#         185
+  C:00C9H         LINE#         196
+  -------         ENDMOD        ?C_STARTUP
+
+  -------         MODULE        7219
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:0090H         PUBLIC        P1
+  D:00A0H         PUBLIC        P2
+BL51 BANKED LINKER/LOCATER V6.05                                                      07/23/2010  14:28:54  PAGE 3
+
+
+  C:0215H         PUBLIC        _write7219
+  D:00B0H         PUBLIC        P3
+  C:01E0H         PUBLIC        init7219
+  D:00A8H         PUBLIC        IE
+  D:00B8H         PUBLIC        IP
+  B:00A0H.1       PUBLIC        load
+  D:0098H         PUBLIC        SCON
+  D:0088H         PUBLIC        TCON
+  B:00A0H.2       PUBLIC        clk
+  B:00A0H.0       PUBLIC        din
+  D:00C8H         PUBLIC        T2CON
+  C:0202H         PUBLIC        _write7219onechar
+  D:00D0H         PUBLIC        PSW
+  -------         PROC          _WRITE7219ONECHAR
+  D:0007H         SYMBOL        temp
+  -------         DO            
+  D:0006H         SYMBOL        i
+  -------         ENDDO         
+  C:0202H         LINE#         12
+  C:0202H         LINE#         13
+  C:0202H         LINE#         15
+  C:0204H         LINE#         16
+  C:0204H         LINE#         17
+  C:0206H         LINE#         18
+  C:020AH         LINE#         19
+  C:020EH         LINE#         20
+  C:0210H         LINE#         21
+  C:0214H         LINE#         22
+  -------         ENDPROC       _WRITE7219ONECHAR
+  -------         PROC          _WRITE7219
+  D:0007H         SYMBOL        address
+  D:0005H         SYMBOL        dat
+  C:0215H         LINE#         24
+  C:0215H         LINE#         25
+  C:0215H         LINE#         26
+  C:0217H         LINE#         27
+  C:021AH         LINE#         28
+  C:021FH         LINE#         29
+  C:0221H         LINE#         30
+  -------         ENDPROC       _WRITE7219
+  -------         PROC          INIT7219
+  C:01E0H         LINE#         33
+  C:01E0H         LINE#         34
+  C:01E0H         LINE#         35
+  C:01E7H         LINE#         36
+  C:01EDH         LINE#         37
+  C:01F4H         LINE#         38
+  C:01FBH         LINE#         39
+  -------         ENDPROC       INIT7219
+  -------         ENDMOD        7219
+
+  -------         MODULE        MAIN
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:0090H         PUBLIC        P1
+  D:00B0H         PUBLIC        P3
+  B:00A8H.7       PUBLIC        EA
+  D:00A8H         PUBLIC        IE
+BL51 BANKED LINKER/LOCATER V6.05                                                      07/23/2010  14:28:54  PAGE 4
+
+
+  D:00B8H         PUBLIC        IP
+  D:0008H         PUBLIC        buff
+  C:0222H         PUBLIC        main
+  D:0009H         PUBLIC        count
+  D:0098H         PUBLIC        SCON
+  D:0089H         PUBLIC        TMOD
+  D:0088H         PUBLIC        TCON
+  C:01BCH         PUBLIC        init
+  B:00A8H.1       PUBLIC        ET0
+  D:008CH         PUBLIC        TH0
+  D:008AH         PUBLIC        TL0
+  C:000EH         PUBLIC        timer0
+  D:000AH         PUBLIC        t1bak
+  D:000BH         PUBLIC        t2bak
+  B:0088H.4       PUBLIC        TR0
+  D:000CH         PUBLIC        t3bak
+  D:000DH         PUBLIC        time1
+  D:000EH         PUBLIC        time2
+  D:000FH         PUBLIC        time3
+  D:00C8H         PUBLIC        T2CON
+  C:014CH         PUBLIC        _showtime
+  D:00D0H         PUBLIC        PSW
+  -------         PROC          INIT
+  C:01BCH         LINE#         10
+  C:01BCH         LINE#         11
+  C:01BCH         LINE#         12
+  C:01C5H         LINE#         13
+  C:01CEH         LINE#         14
+  C:01D1H         LINE#         15
+  C:01D4H         LINE#         16
+  C:01D7H         LINE#         17
+  C:01D9H         LINE#         18
+  C:01DBH         LINE#         19
+  C:01DDH         LINE#         20
+  -------         ENDPROC       INIT
+  -------         PROC          MAIN
+  C:0222H         LINE#         22
+  C:0222H         LINE#         23
+  C:0222H         LINE#         25
+  C:0225H         LINE#         26
+  C:022CH         LINE#         27
+  -------         ENDPROC       MAIN
+  -------         PROC          _SHOWTIME
+  D:0012H         SYMBOL        dat1
+  D:0013H         SYMBOL        dat2
+  C:014CH         LINE#         29
+  C:0150H         LINE#         30
+  C:0150H         LINE#         31
+  C:0167H         LINE#         32
+  C:0179H         LINE#         33
+  C:0186H         LINE#         34
+  C:019DH         LINE#         35
+  C:01AFH         LINE#         36
+  -------         ENDPROC       _SHOWTIME
+  -------         PROC          TIMER0
+  C:000EH         LINE#         38
+  C:002BH         LINE#         40
+BL51 BANKED LINKER/LOCATER V6.05                                                      07/23/2010  14:28:54  PAGE 5
+
+
+  C:002EH         LINE#         41
+  C:0031H         LINE#         42
+  C:0033H         LINE#         43
+  C:0039H         LINE#         44
+  C:0039H         LINE#         45
+  C:003BH         LINE#         46
+  C:004AH         LINE#         47
+  C:004AH         LINE#         48
+  C:004AH         LINE#         49
+  C:004AH         LINE#         50
+  C:004DH         LINE#         51
+  C:0057H         LINE#         52
+  C:0059H         LINE#         53
+  C:005DH         LINE#         54
+  C:005DH         LINE#         55
+  C:0060H         LINE#         56
+  C:0062H         LINE#         57
+  C:0062H         LINE#         58
+  C:0064H         LINE#         59
+  C:0064H         LINE#         60
+  C:0064H         LINE#         61
+  C:0067H         LINE#         62
+  C:006EH         LINE#         63
+  C:0070H         LINE#         64
+  C:0074H         LINE#         65
+  C:0074H         LINE#         66
+  C:0077H         LINE#         67
+  C:0079H         LINE#         68
+  C:0079H         LINE#         69
+  C:007BH         LINE#         70
+  C:007BH         LINE#         71
+  C:007BH         LINE#         72
+  C:007EH         LINE#         73
+  C:0088H         LINE#         74
+  C:008BH         LINE#         75
+  C:008BH         LINE#         76
+  C:008BH         LINE#         77
+  C:008EH         LINE#         78
+  C:0090H         LINE#         79
+  C:0090H         LINE#         80
+  C:0092H         LINE#         81
+  C:0092H         LINE#         82
+  C:0092H         LINE#         83
+  C:0095H         LINE#         84
+  C:009CH         LINE#         85
+  C:009FH         LINE#         86
+  C:009FH         LINE#         87
+  C:009FH         LINE#         88
+  C:00A2H         LINE#         89
+  C:00A5H         LINE#         90
+  C:00A5H         LINE#         91
+  C:00A5H         LINE#         92
+  C:00A5H         LINE#         93
+  C:00A5H         LINE#         94
+  -------         ENDPROC       TIMER0
+  -------         ENDMOD        MAIN
+
+BL51 BANKED LINKER/LOCATER V6.05                                                      07/23/2010  14:28:54  PAGE 6
+
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?INIT?MAIN
+
+*** WARNING L15: MULTIPLE CALL TO SEGMENT
+    SEGMENT: ?PR?_SHOWTIME?MAIN
+    CALLER1: ?C_C51STARTUP
+    CALLER2: ?PR?TIMER0?MAIN
+
+Program Size: data=21.0 xdata=0 code=557
+LINK/LOCATE RUN COMPLETE.  2 WARNING(S),  0 ERROR(S)

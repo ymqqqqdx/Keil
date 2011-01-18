@@ -1,0 +1,78 @@
+C51 COMPILER V8.09   REDO                                                                  10/11/2010 14:21:49 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE REDO
+OBJECT MODULE PLACED IN ReDo.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE ReDo.c LARGE BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          sbit clk=P3^6;
+   3          sbit OE=P2^4;
+   4          
+   5          U8 code table[]={0xc0,0xf9,0xa4,0xb0,0x99,0x92,0x82,0xf8,0x80,0x90};
+   6          
+   7          U8 sec=0,counter=0;
+   8          
+   9          void delay_1ms(U16 z)
+  10          {
+  11   1              U8 i;
+  12   1              while(z--)
+  13   1                      for(i=0;i<110;i++);
+  14   1      }
+  15          
+  16          void digit(U8 add,U8 dat)
+  17          {
+  18   1              P2=~(1<<(add-1));
+  19   1              OE=0;
+  20   1              P0=table[dat];
+  21   1              clk=0;
+  22   1              clk=1;
+  23   1              delay_1ms(5);
+  24   1      }
+  25          
+  26          void main()
+  27          {
+  28   1              TMOD=0x01;
+  29   1              TH0=(65536-45872)/256;
+  30   1              TL0=(65536-45872)%256;
+  31   1              EA=1;
+  32   1              ET0=1;
+  33   1              TR0=1;
+  34   1              while(1)
+  35   1              {
+  36   2                      digit(3,sec/10);
+  37   2                      digit(4,sec%10);
+  38   2              }
+  39   1      }
+  40          
+  41          void timer0() interrupt 1
+  42          {
+  43   1              TH0=(65536-45872)/256;
+  44   1              TL0=(65536-45872)%256;  
+  45   1              counter++;
+  46   1              if(counter==20)
+  47   1              {
+  48   2                      sec++;
+  49   2                      if(sec==60)
+  50   2                              sec=0;
+  51   2                      counter=0;
+  52   2              }
+  53   1      }
+
+
+C51 COMPILER V8.09   REDO                                                                  10/11/2010 14:21:49 PAGE 2   
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    153    ----
+   CONSTANT SIZE    =     10    ----
+   XDATA SIZE       =      2    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

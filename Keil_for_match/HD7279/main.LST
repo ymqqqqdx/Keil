@@ -1,0 +1,125 @@
+C51 COMPILER V8.09   MAIN                                                                  09/26/2010 22:06:07 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE main.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #include <stdio.h>
+   3          #include <intrins.h>
+   4          #define U8 unsigned char
+   5          #define U16 unsigned int
+   6          sbit HD_CS=P0^4;
+   7          sbit HD_CLK=P0^5;
+   8          sbit HD_DAT=P0^6;
+   9          sbit HD_KEY=P0^7;
+  10          void Delay_1ms(U16 z)
+  11          {
+  12   1              U8 i;
+  13   1              while(z--)
+  14   1                      for(i=0;i<110;i++);
+  15   1      }
+  16          void Long_Delay()
+  17          {
+  18   1              U8 i;
+  19   1              for (i=0;i<50;i++);
+  20   1      }
+  21          void Short_Delay()
+  22          {
+  23   1              U8 i;
+  24   1              for (i=0;i<8;i++);
+  25   1      }
+  26          void HD_Write_Byte(U8 cmd)
+  27          {
+  28   1              U8 i;
+  29   1              HD_CS=0;
+  30   1              HD_DAT=0;
+  31   1              Long_Delay();
+  32   1              for(i=0;i<8;i++)
+  33   1              {
+  34   2                      cmd<<=1;
+  35   2                      HD_DAT=CY;
+  36   2                      HD_CLK=1; Short_Delay();
+  37   2                      HD_CLK=0; Short_Delay();
+  38   2              }
+  39   1              HD_DAT=0;
+  40   1      }
+  41          U8 HD_Read_Byte()
+  42          {
+  43   1              U8 i,temp=0;
+  44   1              HD_DAT=1;
+  45   1              Long_Delay();
+  46   1              for(i=0;i<8;i++)
+  47   1              {
+  48   2                      HD_CLK=1;       Short_Delay();
+  49   2                      temp|=((char)HD_DAT)<<(7-i);
+  50   2                      HD_CLK=0;       Short_Delay();
+  51   2              }
+  52   1              HD_DAT=0;
+  53   1              return temp;
+  54   1      }
+  55          void HD_Write_CD(U8 cmd,U8 dat)
+C51 COMPILER V8.09   MAIN                                                                  09/26/2010 22:06:07 PAGE 2   
+
+  56          {
+  57   1              HD_Write_Byte(cmd);
+  58   1              HD_Write_Byte(dat);
+  59   1      }
+  60          U8 HD_Read_CD(U8 cmd)
+  61          {
+  62   1              HD_Write_Byte(cmd);
+  63   1              return(HD_Read_Byte());
+  64   1      }
+  65          U8 Key_Convert(U8 temp)
+  66          {
+  67   1              if(temp<28)
+  68   1              {
+  69   2                      switch(temp%8)
+  70   2                      {
+  71   3                              case 6 : return temp/8*3+1; break;
+  72   3                              case 5 : return temp/8*3+2; break;
+  73   3                              case 4 : return temp/8*3+3; break;
+  74   3                              case 3 : return temp/8+13; break;
+  75   3                      }
+  76   2              }
+  77   1              else
+  78   1              {
+  79   2                      if(temp==29) return 0;
+  80   2                      if(temp==30) return 11;
+  81   2                      if(temp==28) return 12;
+  82   2              }
+  83   1      }
+  84          void main()
+  85          {
+  86   1              U8 i,temp;
+  87   1              HD_Write_Byte(0xa4);
+  88   1              while(1)
+  89   1              {
+  90   2                      if(!HD_KEY)
+  91   2                      {
+  92   3                              temp=HD_Read_CD(0x15);
+  93   3                              temp=Key_Convert(temp);
+  94   3                              HD_Write_CD(0xc8+1,temp/10);
+  95   3                              HD_Write_CD(0xc8,temp%10);
+  96   3                      }while(!HD_KEY);
+  97   2                      Delay_1ms(5);
+  98   2              }
+  99   1      }
+*** WARNING C280 IN LINE 86 OF MAIN.C: 'i': unreferenced local variable
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    283    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       1
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)

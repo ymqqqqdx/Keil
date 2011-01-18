@@ -1,0 +1,46 @@
+C51 COMPILER V6.12  DIANJI                                                                 01/20/2010 14:40:08 PAGE 1   
+
+
+C51 COMPILER V6.12, COMPILATION OF MODULE DIANJI
+OBJECT MODULE PLACED IN .\dianji.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE .\dianji.c DEBUG OBJECTEXTEND
+
+stmt level    source
+
+   1          #include <reg52.h>
+   2          unsigned char i;
+   3          void delay(int z)
+   4          {
+   5   1      	int i,j;
+   6   1              for(i=z;i>0;i--)
+   7   1               for(j=110;j>0;j--);
+   8   1      }
+   9          void main()
+  10          {
+  11   1      	P3=0x0f;
+  12   1      	while(1)
+  13   1      	{
+  14   2      		P3=0x9f;
+  15   2      		delay(100);
+  16   2      		P3=0x3f;
+  17   2      		delay(100);
+  18   2      		P3=0x6f;
+  19   2      		delay(100);
+  20   2      		P3=0xcf;
+  21   2      		delay(100);
+  22   2      	}
+  23   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     65    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      1    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,4 @@
+"STARTUP.obj",
+"blue.obj" 
+TO "blue" 
+RAMSIZE(256) 

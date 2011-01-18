@@ -1,0 +1,45 @@
+C51 COMPILER V8.09   18B20                                                                 04/29/2010 19:57:05 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE 18B20
+OBJECT MODULE PLACED IN 18b20.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE 18b20.c DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <stdio.h>
+   2          #include <reg52.h>
+   3          #include "declare.h"
+   4          int tempold,tempnew;
+   5          int readtemp();
+   6          void delay(int);
+   7          void ds18b20()
+   8          {
+   9   1              while(stop!='#')
+  10   1              {
+  11   2                      tempnew=readtemp();
+  12   2                      delay(100);
+  13   2                      ES=1;
+  14   2                      if(tempnew!=tempold)
+  15   2                      {
+  16   3                              printf("%d",tempnew);
+  17   3                              tempold=tempnew;
+  18   3                      }
+  19   2                      ES=0;
+  20   2              }
+  21   1              stop=0;
+  22   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     63    ----
+   CONSTANT SIZE    =      3    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      4    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,87 @@
+C51 COMPILER V8.09   12232                                                                 07/05/2010 09:40:59 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE 12232
+OBJECT MODULE PLACED IN 12232.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE 12232.c DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #include <string.h>
+   3          unsigned char code table[]="河北科技师范学院";
+   4          unsigned char code table1[]="0123456789-";
+   5          sbit ln=P2^7;
+   6          sbit ls=P2^5;
+   7          sbit rw=P2^6;
+   8          void delay(int z)
+   9          {
+  10   1              int i,j;
+  11   1              for(i=0;i<z;i++)
+  12   1                      for(j=0;j<110;j++);
+  13   1      }
+  14          void write_com(unsigned char com)
+  15          {
+  16   1              rw=0;
+  17   1              ls=0;
+  18   1          P0=com;
+  19   1          ln=1;
+  20   1          ln=0;
+  21   1              rw=1;
+  22   1      }
+  23          void write_data(unsigned char date)
+  24          {
+  25   1              rw=0;
+  26   1              ls=1;
+  27   1          P0=date;
+  28   1          ln=1;
+  29   1          ln=0;
+  30   1              rw=1;
+  31   1      }
+  32          void init_12232()
+  33          {
+  34   1               rw=0;
+  35   1          ln=0;
+  36   1          write_com(0x30);
+  37   1          write_com(0x02);
+  38   1          write_com(0x0f);
+  39   1               write_com(0x01);       
+  40   1               write_com(0x0c);
+  41   1               delay(50);
+  42   1      }
+  43          void main()
+  44          {
+  45   1              unsigned char i;
+  46   1              init_12232();
+  47   1              write_com(0x80);
+  48   1              for(i=0;i<16;i++)
+  49   1                      write_data(table[i]);
+  50   1              write_com(0x80+0x40);
+  51   1              write_data(table[2]);
+  52   1              write_data(table[0]);
+  53   1              write_data(table[1]);
+  54   1              write_data(table[0]);
+  55   1              write_data(table[10]);
+C51 COMPILER V8.09   12232                                                                 07/05/2010 09:40:59 PAGE 2   
+
+  56   1              write_data(table[0]);
+  57   1              write_data(table[7]);
+  58   1              write_data(table[10]);
+  59   1              write_data(table[0]);
+  60   1              write_data(table[5]);
+  61   1              while(1);
+  62   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    185    ----
+   CONSTANT SIZE    =     29    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

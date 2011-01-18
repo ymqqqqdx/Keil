@@ -1,0 +1,4 @@
+"STARTUP.obj",
+"Re.obj" 
+TO "main" 
+RAMSIZE(256) 

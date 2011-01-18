@@ -1,0 +1,182 @@
+C51 COMPILER V8.09   MAIN                                                                  06/09/2010 21:13:32 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE main.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #include <intrins.h>
+   3          #include "declare.h"
+   4          #define uchar unsigned char
+   5          #define uint unsigned int
+   6          sbit bee=P3^3;
+   7          unsigned char year,week,month,day,hour,minute,second,i,week,mode;
+   8          unsigned char code tablecc[]={0x3f,0x06,0x5b,0x4f,0x66,0x6d,0x7d,0x07,
+   9          0x7f,0x6f,0x77,0x7c,0x39,0x5e,0x79,0x71};
+  10          uchar code tableca[]={0xC0,/*0*/0xF9,/*1*/0xA4,/*2*/0xB0,/*3*/
+  11          0x99,/*4*/0x92,/*5*/0x82,/*6*/0xF8,/*7*/0x80,/*8*/0x90,/*9*/0x88,/*A*/0x83,/*b*/
+  12          0xC6,/*C*/0xA7,/*c*/0xA1,/*d*/0x86,/*E*/0x8E,/*F*/};
+  13          unsigned char code pointcc[]={0xBF,/*0p*/0x86,/*1p*/0xDB,/*2p*/0xCF,/*3p*/
+  14          0xE6,/*4p*/0xED,/*5p*/0xFD,/*6p*/0x87,/*7p*/0xFF,/*8p*/0xEF,/*9p*/};
+  15          unsigned char code pointca[]={0x40,0x79,0x24,0x30,0x19,0x12,0x02,0x78,0x00,0x10};
+  16          uint temp,tempold;
+  17          uint readtemp();
+  18          void write_onechar(uchar);
+  19          void delay(int);
+  20          void init7219();
+  21          void write7219one(uchar,uchar);
+  22          void refreshtime();
+  23          void init_ds1302();
+  24          uchar read_clock(uchar);
+  25          void beep()
+  26          {
+  27   1              bee=0;
+  28   1              delay(20);
+  29   1              bee=1;
+  30   1      }
+  31          void ls164()
+  32          {
+  33   1              uchar i;
+  34   1              beep(); 
+  35   1              i=15;
+  36   1              while(i--)
+  37   1              {
+  38   2                      write_onechar(tablecc[15-i]);
+  39   2                      delay(1000);
+  40   2              }       
+  41   1      }
+  42          void led()
+  43          {
+  44   1              uchar i;
+  45   1              beep(); 
+  46   1              P2=0xfe;
+  47   1              for(i=0;i<4;i++)
+  48   1              {
+  49   2                      if(i)
+  50   2                      P2=_crol_(P2,2);
+  51   2                      delay(1000);
+  52   2              }
+  53   1              P2=0xfd;
+  54   1              for(i=0;i<4;i++)
+  55   1              {
+C51 COMPILER V8.09   MAIN                                                                  06/09/2010 21:13:32 PAGE 2   
+
+  56   2                      if(i)
+  57   2                      P2=_crol_(P2,2);
+  58   2                      delay(1000);
+  59   2              }
+  60   1              i=3;
+  61   1              while(i--)
+  62   1              {
+  63   2                      P2=0x00; delay(1000);
+  64   2                      P2=0xff; delay(1000);
+  65   2              }
+  66   1      }
+  67          void traffic()
+  68          {
+  69   1              uchar i=2;
+  70   1              beep(); 
+  71   1              while(i--)
+  72   1              {
+  73   2                      P0=0x21; delay(1000);
+  74   2                      P0=0x12; delay(1000);
+  75   2                      P0=0x0c; delay(1000);
+  76   2              }
+  77   1      }
+  78          void segscan()
+  79          {
+  80   1              uchar i;
+  81   1              uint t=200;
+  82   1              beep(); 
+  83   1              while(t--)
+  84   1              {
+  85   2                      i=5;
+  86   2                      P1=0xef;
+  87   2                      while(i--)
+  88   2                      {
+  89   3                      P0=tableca[i];
+  90   3                      if(i-4!=0)
+  91   3                      P1=_crol_(P1,1);
+  92   3                      delay(5);
+  93   3                      P0=0xff;
+  94   3                      }
+  95   2              }
+  96   1      }
+  97          void test7219()
+  98          {
+  99   1              uchar i;
+ 100   1              beep();
+ 101   1              init7219();
+ 102   1              for(i=0;i<16;i++)
+ 103   1                      write7219one(i+1,15);
+ 104   1              for(i=0;i<16;i++)
+ 105   1              {
+ 106   2                      write7219one(i+1,i%8+1);
+ 107   2                      delay(500);
+ 108   2              }
+ 109   1              delay(1000);
+ 110   1              
+ 111   1      }
+ 112          void ds1302()
+ 113          {
+ 114   1              uchar secondold;
+ 115   1              uchar shi,ge,one;
+ 116   1              beep();
+ 117   1              init_ds1302();
+C51 COMPILER V8.09   MAIN                                                                  06/09/2010 21:13:32 PAGE 3   
+
+ 118   1              refreshtime();
+ 119   1              write7219one(2,10); write7219one(7,10); write7219one(10,10); write7219one(15,10); delay(2000);
+ 120   1              while(1)
+ 121   1              {
+ 122   2                      second=readsecond;
+ 123   2                      temp=readtemp();
+ 124   2                      delay(5);
+ 125   2                      if(second!=secondold)
+ 126   2                      {
+ 127   3                              write7219one(11,second/10);write7219one(12,second%10);
+ 128   3                              if(second==0)
+ 129   3                              refreshtime();
+ 130   3                              secondold=second;
+ 131   3                      }
+ 132   2                      if(temp!=tempold)
+ 133   2                      {
+ 134   3                              shi=temp%1000/100;
+ 135   3                              ge=temp%100/10;
+ 136   3                              one=temp%10;
+ 137   3                              write_onechar(0x00);
+ 138   3                              write_onechar(tablecc[shi]);
+ 139   3                              write_onechar(pointcc[ge]);
+ 140   3                              write_onechar(tablecc[one]);
+ 141   3                              tempold=temp;
+ 142   3                      }
+ 143   2              }
+ 144   1      }
+ 145          void main()
+ 146          {
+ 147   1      //      led();
+ 148   1      //      traffic();
+ 149   1      //      ls164();
+ 150   1      //      segscan();
+ 151   1      //      test7219();
+ 152   1              init7219();
+ 153   1              ds1302();
+ 154   1              while(1);
+ 155   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    597    ----
+   CONSTANT SIZE    =     53    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     13      11
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

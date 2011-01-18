@@ -1,0 +1,229 @@
+C51 COMPILER V8.09   RE3                                                                   10/13/2010 13:44:32 PAGE 1   
+
+
+C51 COMPILER V8.09, COMPILATION OF MODULE RE3
+OBJECT MODULE PLACED IN Re3.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Re3.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #include <stdio.h>
+   3          #define U8 unsigned char
+   4          #define U16 unsigned int
+   5          sbit DQ=P1^0;
+   6          sbit clk=P3^6;
+   7          sbit OE=P2^4;
+   8          
+   9          sbit lcd_cs=P0^3;
+  10          sbit lcd_clk=P1^2;
+  11          sbit lcd_sid=P0^2;
+  12          U8 code table[]={0xc0,0xf9,0xa4,0xb0,0x99,0x92,0x82,0xf8,0x80,0x90};
+  13          U8 code rom[2][8]={{0x28,0xd0,0xd3,0xb2,0x02,0x00,0x00,0x13},{0x28,0x5e,0xfa,0xb2,0x02,0x00,0x00,0xe1}};
+  14          void delayus(U16 z)
+  15          {
+  16   1              while(z--);
+  17   1      }
+  18          
+  19          void delay_1ms(U16 z)
+  20          {
+  21   1              U8 i;
+  22   1              while(z--)
+  23   1                      for(i=0;i<110;i++);
+  24   1      }
+  25          
+  26          void temp_init()
+  27          {
+  28   1              bit s;
+  29   1              DQ=1;
+  30   1              delayus(8);
+  31   1              DQ=0;
+  32   1              delayus(80);
+  33   1              DQ=1;
+  34   1              delayus(14);
+  35   1              s=DQ;
+  36   1              delayus(20);
+  37   1      }
+  38          
+  39          void temp_writeonechar(U8 dat)
+  40          {
+  41   1              U8 i;
+  42   1              for(i=0;i<8;i++)
+  43   1              {
+  44   2                      dat>>=1;
+  45   2                      DQ=0;
+  46   2                      DQ=CY;
+  47   2                      delayus(5);
+  48   2                      DQ=1;
+  49   2              }
+  50   1              delayus(4);
+  51   1      }
+  52          
+  53          U8 temp_readonechar()
+  54          {
+  55   1              U8 i,temp=0;
+C51 COMPILER V8.09   RE3                                                                   10/13/2010 13:44:32 PAGE 2   
+
+  56   1              for(i=0;i<8;i++)
+  57   1              {
+  58   2                      DQ=0;
+  59   2                      DQ=1;
+  60   2                      temp|=((U8)DQ)<<i;
+  61   2                      delayus(4);
+  62   2              }
+  63   1              return temp;
+  64   1      }
+  65          
+  66          U16 temp_read__()
+  67          {
+  68   1              U8 low,high;
+  69   1              U16 t;
+  70   1              float tt;
+  71   1              temp_init();
+  72   1              temp_writeonechar(0xcc);
+  73   1              temp_writeonechar(0x44);
+  74   1              temp_init();
+  75   1              temp_writeonechar(0xcc);
+  76   1              temp_writeonechar(0xbe);
+  77   1              low=temp_readonechar();
+  78   1              high=temp_readonechar();
+  79   1              t=high;
+  80   1              t<<=8;
+  81   1              t|=low;
+  82   1              tt=t*0.0625;
+  83   1              t=tt*10+0.5;
+  84   1              return t;
+  85   1      }
+  86          
+  87          U16 temp_read(U8 num)
+  88          {
+  89   1              U8 i;
+  90   1              U8 low,high;
+  91   1              U16 t;
+  92   1              float tt;
+  93   1              temp_init();
+  94   1              temp_writeonechar(0x55);        
+  95   1              for(i=0;i<8;i++)
+  96   1                      temp_writeonechar(rom[num][i]);
+  97   1              temp_writeonechar(0x44);
+  98   1              temp_init();
+  99   1              temp_writeonechar(0x55);        
+ 100   1              for(i=0;i<8;i++)
+ 101   1                      temp_writeonechar(rom[num][i]);
+ 102   1              temp_writeonechar(0xbe);
+ 103   1              low=temp_readonechar();
+ 104   1              high=temp_readonechar();
+ 105   1              t=high;
+ 106   1              t<<=8;
+ 107   1              t|=low;
+ 108   1              tt=t*0.0625;
+ 109   1              t=tt*10+0.5;
+ 110   1              return t;
+ 111   1      }
+ 112          
+ 113          void digit(U16 add,U16 dat)
+ 114          {
+ 115   1              P2=~(1<<(add-1));
+ 116   1              OE=0;
+ 117   1              P0=dat;
+C51 COMPILER V8.09   RE3                                                                   10/13/2010 13:44:32 PAGE 3   
+
+ 118   1              clk=0;
+ 119   1              clk=1;
+ 120   1              delay_1ms(5);
+ 121   1      }
+ 122          
+ 123          void uart_init()
+ 124          {
+ 125   1              TMOD=0x21;
+ 126   1              SCON=0x52;
+ 127   1              TH1=0xfd;
+ 128   1              TL1=0xfd;
+ 129   1              TR1=1;
+ 130   1              EA=1;
+ 131   1      }
+ 132          
+ 133          void temp_rom()
+ 134          {
+ 135   1              U8 i;
+ 136   1              puts("ROM:");
+ 137   1              temp_init();
+ 138   1              temp_writeonechar(0x33);
+ 139   1              for(i=0;i<8;i++)
+ 140   1                      printf(" 0x%hhx ",temp_readonechar());
+ 141   1      }
+ 142          
+ 143          void lcd_writeonechar(U8 dat)
+ 144          {
+ 145   1              U8 i;
+ 146   1              for(i=0;i<8;i++)
+ 147   1              {
+ 148   2                      dat<<=1;
+ 149   2                      lcd_sid=CY;
+ 150   2                      lcd_clk=0;
+ 151   2                      lcd_clk=1;
+ 152   2              }
+ 153   1      }
+ 154          
+ 155          void lcd_writecd(bit cd,U8 dat)
+ 156          {
+ 157   1              lcd_cs=1;
+ 158   1              lcd_writeonechar(cd==0?0xf8:0xfa);
+ 159   1              lcd_writeonechar(dat&0xf0);
+ 160   1              lcd_writeonechar(dat<<4);
+ 161   1              lcd_cs=0;
+ 162   1      }
+ 163          
+ 164          void lcd_string(U8 add,U8 *pt)
+ 165          {
+ 166   1              lcd_writecd(0,add);
+ 167   1              while(*pt!='\0')
+ 168   1                      lcd_writecd(1,*pt++);
+ 169   1      }
+ 170          
+ 171          void lcd_temp(U8 add,U16 dat)
+ 172          {
+ 173   1              lcd_writecd(0,add);
+ 174   1              lcd_writecd(1,dat/100+'0');
+ 175   1              lcd_writecd(1,dat%100/10+'0');
+ 176   1              lcd_writecd(1,'.');
+ 177   1              lcd_writecd(1,dat%10+'0');
+ 178   1      }
+ 179          
+C51 COMPILER V8.09   RE3                                                                   10/13/2010 13:44:32 PAGE 4   
+
+ 180          void main()
+ 181          {
+ 182   1              U16 temp1,temp1_old,temp2,temp2_old;
+ 183   1              lcd_writecd(0,0x0c);
+ 184   1              lcd_string(0x80,"²âÊÔµã1:");
+ 185   1              lcd_string(0x90,"²âÊÔµã2:");
+ 186   1              uart_init();
+ 187   1              while(1)
+ 188   1              {
+ 189   2                      temp1=temp_read(0);
+ 190   2                      temp2=temp_read(1);
+ 191   2                      if(temp1!=temp1_old || temp2!=temp2_old)
+ 192   2                      {
+ 193   3                              lcd_temp(0x84,temp1);
+ 194   3                              lcd_temp(0x94,temp2);
+ 195   3                              temp1_old=temp1;
+ 196   3                              temp2_old=temp2;
+ 197   3                      }
+ 198   2                      delay_1ms(5);
+ 199   2              }
+ 200   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    756    ----
+   CONSTANT SIZE    =     58    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----      19
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----       2
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,166 @@
+C51 COMPILER V6.12  KEYSCAN                                                                04/20/2010 21:33:12 PAGE 1   
+
+
+C51 COMPILER V6.12, COMPILATION OF MODULE KEYSCAN
+OBJECT MODULE PLACED IN .\keyscan.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE .\keyscan.c DEBUG OBJECTEXTEND
+
+stmt level    source
+
+   1          #include <reg52.h>
+   2          #include "declare.h"
+   3          sbit k1=P1^7;
+   4          sbit k2=P1^6;
+   5          sbit k3=P1^5;
+   6          sbit k4=P1^4;
+   7          sbit beep=P3^3;
+   8          char daymax;//每月最多的天数
+   9          char order,timetemp; //order为调时的次数
+  10          void delay(int);//buff=0为正常显示，=1为轮流显示 =2为调时模式
+  11          unsigned char read_clock(unsigned char);
+  12          void write_com(unsigned char);
+  13          void write_clock(unsigned char,unsigned char);
+  14          void write_add(unsigned char,char);
+  15          char read_add(unsigned char);
+  16          /******************月最大天数计算*********************/
+  17          void calcdaymax()
+  18          {
+  19   1      	if(month==1||month==3||month==5||month==7||month==8||month==10||month==12)
+  20   1      		daymax=31;
+  21   1      	else if(month==4||month==6||month==9||month==11)
+  22   1      		daymax=30;
+  23   1      	else if(month==2)
+  24   1      	{
+  25   2      		if((year+2000)%4!=0)
+  26   2      			daymax=28;
+  27   2      		else
+  28   2      			daymax=29;
+  29   2      	}
+  30   1      }
+  31          /******************键盘扫描*****************/
+  32          void keyscan()
+  33          {
+  34   1      	if(k1==0)
+  35   1      	{
+  36   2      		beep=1;//关蜂鸣器
+  37   2      		delay(50);
+  38   2      		if(k1==0&&buff==0)
+  39   2      		{
+  40   3      			if(mode<=3)
+  41   3      			mode++;
+  42   3      			if(mode==4)
+  43   3      			{
+  44   4      				buff=2;
+  45   4      				delay(2);
+  46   4      			}
+  47   3      		}
+  48   2      		if(k1==0&&buff==2)
+  49   2      		{
+  50   3      			order++;
+  51   3      			timetemp=0;
+  52   3      			write_com(0x81);
+  53   3      			delay(200);
+  54   3      			switch(order)
+  55   3      			{
+C51 COMPILER V6.12  KEYSCAN                                                                04/20/2010 21:33:12 PAGE 2   
+
+  56   4      				case 1 : timetemp=read_add(1); write_com(0x81); break;
+  57   4      				case 2 : timetemp=read_add(2); write_com(0x83); break;
+  58   4      				case 3 : timetemp=read_add(3); calcdaymax(); write_com(0x85); break;
+  59   4      				case 4 : timetemp=read_add(4); write_com(0x90); break;
+  60   4      				case 5 : timetemp=read_add(5); write_com(0x92); break;
+  61   4      				case 6 : timetemp=read_add(6); write_com(0x94); break;
+  62   4      				case 7 : timetemp=read_add(7); write_com(0x97); break;
+  63   4      				case 8 : timetemp=alarmhour; mode=5; write_com(0x92); break;
+  64   4      				case 9 : timetemp=alarmminute; write_com(0x94); break;
+  65   4      				case 10 : order=0; buff=0; mode=1; break;
+  66   4      			}
+  67   3      			delay(5);
+  68   3      		}
+  69   2      		if(k1==1)
+  70   2      		delay(10);
+  71   2      		while(k1==0);
+  72   2      	}
+  73   1      	if(k2==0)
+  74   1      	{
+  75   2      		delay(50);
+  76   2      		beep=1;
+  77   2      		if(k2==0&&buff==2)
+  78   2      		{
+  79   3      			switch(order)
+  80   3      			{
+  81   4      				case 1 : timetemp++; if(timetemp>=100) timetemp=0; if(timetemp<0) timetemp=99; year=timetemp; writeyea
+             -r; break;
+  82   4      				case 2 : timetemp++; if(timetemp>=13) timetemp=1; if(timetemp<1) timetemp=12; month=timetemp; writemon
+             -th; break;
+  83   4      				case 3 : timetemp++; if(timetemp>daymax) timetemp=1; if(timetemp<1) timetemp=daymax; day=timetemp; wri
+             -teday; break;
+  84   4      				case 4 : timetemp++; if(timetemp>=24) timetemp=0; if(timetemp<0) timetemp=23; hour=timetemp; writehour
+             -; break;
+  85   4      				case 5 : timetemp++; if(timetemp>=60) timetemp=0; if(timetemp<0) timetemp=59; minute=timetemp; writemi
+             -nute; break;
+  86   4      				case 6 : timetemp++; if(timetemp>=60) timetemp=0; if(timetemp<0) timetemp=59; second=timetemp; writese
+             -cond; break;
+  87   4      				case 7 : timetemp++; if(timetemp>=8) timetemp=1; if(timetemp<=0) timetemp=7; week=timetemp; writeweek;
+             - break;
+  88   4      				case 8 : timetemp++; if(timetemp>=24) timetemp=0; if(timetemp<0) timetemp=23; alarmhour=timetemp;break
+             -;			
+  89   4      				case 9 : timetemp++; if(timetemp>=60) timetemp=0; if(timetemp<0) timetemp=59; alarmminute=timetemp;bre
+             -ak;	
+  90   4      			}
+  91   3      			write_add(order,timetemp);
+  92   3      		}
+  93   2      		if(k2==1);
+  94   2      		delay(10);
+  95   2      		while(k2==0);
+  96   2      	}
+  97   1      	if(k3==0)
+  98   1      	{
+  99   2      		delay(50);
+ 100   2      		beep=1;
+ 101   2      		if(k3==0&&buff==2)
+ 102   2      		{
+ 103   3      			switch(order)
+ 104   3      			{
+ 105   4      				case 1 : timetemp--; if(timetemp>=100) timetemp=0; if(timetemp<0) timetemp=99; year=timetemp; writeyea
+             -r; break;
+ 106   4      				case 2 : timetemp--; if(timetemp>=13) timetemp=1; if(timetemp<1) timetemp=12; month=timetemp; writemon
+             -th; break;
+C51 COMPILER V6.12  KEYSCAN                                                                04/20/2010 21:33:12 PAGE 3   
+
+ 107   4      				case 3 : timetemp--; if(timetemp>daymax) timetemp=1; if(timetemp<1) timetemp=daymax; day=timetemp; wri
+             -teday; break;
+ 108   4      				case 4 : timetemp--; if(timetemp>=24) timetemp=0; if(timetemp<0) timetemp=23; hour=timetemp; writehour
+             -; break;
+ 109   4      				case 5 : timetemp--; if(timetemp>=60) timetemp=0; if(timetemp<0) timetemp=59; minute=timetemp; writemi
+             -nute; break;
+ 110   4      				case 6 : timetemp--; if(timetemp>=60) timetemp=0; if(timetemp<0) timetemp=59; second=timetemp; writese
+             -cond; break;
+ 111   4      				case 7 : timetemp--; if(timetemp>=8) timetemp=1; if(timetemp<=0) timetemp=7; week=timetemp; writeweek;
+             - break;
+ 112   4      				case 8 : timetemp--; if(timetemp>=24) timetemp=0; if(timetemp<0) timetemp=23; alarmhour=timetemp;break
+             -;			
+ 113   4      				case 9 : timetemp--; if(timetemp>=60) timetemp=0; if(timetemp<0) timetemp=59; alarmminute=timetemp;bre
+             -ak;	
+ 114   4      			}
+ 115   3      			write_add(order,timetemp);
+ 116   3      		}
+ 117   2      		if(k3==1)
+ 118   2      		delay(10);
+ 119   2      		while(k3==0);
+ 120   2      	}	
+ 121   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1248    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      3    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
